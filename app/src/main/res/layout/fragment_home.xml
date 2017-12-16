@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragmentHome"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </SearchView>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerView_home">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp" />
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
+</LinearLayout>

@@ -1,24 +1,54 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'buildsystem/ci.gradle'
+apply from: 'buildsystem/dependencies.gradle'
 
 buildscript {
     
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
+        maven {
+            url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
-        
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
+
+
+        // Apt for Java: https://plugins.gradle.org/plugin/net.ltgt.apt
+
+
     }
 }
 
 allprojects {
+
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
+        maven {
+            url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+        }
+
+    }
+
+    ext {
+        androidApplicationId = 'com.shamildev.retro'
+        androidVersionCode = 1
+        androidVersionName = "1.0"
+        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+        testApplicationId = 'com.shamildev.retro.test'
     }
 }
 

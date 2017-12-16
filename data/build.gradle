@@ -1,0 +1,102 @@
+apply plugin: 'com.android.library'
+
+
+buildscript {
+    repositories {
+        google()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.13"
+    }
+}
+
+
+
+
+android {
+    compileSdkVersion 26
+
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+    //buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
+
+    defaultConfig {
+
+        minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+        targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+        versionCode 1
+        versionName globalConfiguration.getAt("androidVersionName")
+        testInstrumentationRunner globalConfiguration.getAt("testApplicationId")
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+
+    def libraries = rootProject.ext.presentationDependencies
+    implementation project(':domain')
+    //DAGGER
+    compile                    libraries.dagger.core
+    annotationProcessor        libraries.dagger.compiler
+    annotationProcessor        libraries.dagger.android.processor
+    compile                    libraries.dagger.android.core
+    //RX
+    compile                    libraries.rx.rxJava
+    //AUTO-VALUE
+    compileOnly                   libraries.autoValue.autoValueAnnotations
+    compileOnly                   libraries.autoValue.autoValueGson
+    annotationProcessor        libraries.autoValue.autoValue
+    annotationProcessor        libraries.autoValue.autoValueParcel
+    annotationProcessor        libraries.autoValue.autoValueGson
+
+    //RETROFIT
+    compile libraries.retrofit.retrofit
+    compile libraries.retrofit.converterGson
+    compile libraries.retrofit.converterMoshi
+    compile libraries.retrofit.adapterRxjava
+
+    //OK-HTTP
+    compile libraries.okhttp.okhttp
+    compile libraries.okhttp.logInterceptor
+
+    //DEV
+    compile libraries.dev.timber
+
+
+   // compile                    "com.google.auto.value:auto-value:1.5"
+    //annotationProcessor         "com.google.auto.value:auto-value:1.2"
+
+//    provided "com.jakewharton.auto.value:auto-value-annotations:$AUTO_VALUE_VERSION"
+//    provided "com.ryanharter.auto.value:auto-value-gson:$AUTO_VALUE_GSON_VERSION"
+//    annotationProcessor "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION"
+//    annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
+//    annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$AUTO_VALUE_GSON_VERSION"
+
+
+
+    implementation project(':domain')
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}

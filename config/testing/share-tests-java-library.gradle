@@ -1,0 +1,24 @@
+
+
+/**
+ * Allows for java libraries to share its test sources to dependent projects.
+ *
+ * The dependent project would then have to add the following to its dependencies:
+ * testCompile project(path: ':library-project', configuration: 'testOutput')
+ * where library-project is the name of the library project.
+ *
+ * Reference: https://softnoise.wordpress.com/2014/09/07/gradle-sub-project-test-dependencies-in-multi-project-builds/
+ */
+
+configurations {
+    testOutput.extendsFrom(testCompile)
+}
+
+task jarTest(type: Jar, dependsOn: testClasses) {
+    from sourceSets.test.output
+    classifier = 'test'
+}
+
+artifacts {
+    testOutput jarTest
+}

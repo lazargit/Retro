@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragmentHome"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GetTMDbConfig" />
+
+    <Button
+    android:id="@+id/button_next"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Bootstrap" />
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/button_fetch_upcoming_movies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="upcoming_movies" />
+
+    <Button
+        android:id="@+id/button_fetch_now_playing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="nowPlaying_movies" />
+
+    <Button
+        android:id="@+id/button_fetch_popular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="popular_movies" />
+
+
+</LinearLayout>

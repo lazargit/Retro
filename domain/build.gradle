@@ -1,0 +1,113 @@
+buildscript {
+
+
+        repositories {
+            google()
+            mavenCentral()
+            maven {
+                url "https://plugins.gradle.org/m2/"
+            }
+        }
+
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.9"
+    }
+
+
+}
+
+
+
+
+
+apply plugin: 'java'
+apply plugin: 'net.ltgt.apt'
+apply plugin: 'idea'
+
+
+
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = 1.8
+//noinspection GroovyUnusedAssignment
+targetCompatibility = 1.8
+
+configurations {
+    provided
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+
+dependencies {
+
+    final AUTO_VALUE_VERSION = '1.3'
+    final AUTO_VALUE_GSON_VERSION = '0.4.6'
+
+    testImplementation 'junit:junit:4.12'
+
+
+   // def presentationDependencies = rootProject.ext.presentationDependencies
+    def libraries = rootProject.ext.presentationDependencies
+
+
+
+    compileOnly "com.google.auto.value:auto-value:1.5"
+    apt "com.google.auto.value:auto-value:1.5"
+
+    compileOnly 'com.ryanharter.auto.value:auto-value-moshi-annotations:0.4.3'
+    apt 'com.ryanharter.auto.value:auto-value-moshi:0.4.3'
+
+    compile 'com.squareup.moshi:moshi:1.4.0'
+    compile libraries.retrofit.converterGson
+
+
+//    compile                    presentationDependencies.dagger.core
+//    annotationProcessor        presentationDependencies.dagger.compiler
+//    annotationProcessor        presentationDependencies.dagger.android.processor
+//    compile                    presentationDependencies.dagger.android.core
+
+   // compileOnly libraries.javaxAnnotation
+    //compileOnly libraries.autoValue
+   //compileOnly "com.google.auto.value:auto-value:1.5"
+//    apt         "com.google.auto.value:auto-value:1.5"
+   // annotationProcessor 'com.google.auto.value:auto-value:1.5'
+    //compileOnly                libraries.autoValue
+    //compileOnly               libraries.javaxAnnotation
+
+   // provided 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+
+    implementation             libraries.dagger.core
+    implementation             libraries.rx.rxJava
+
+
+//    provided "com.jakewharton.auto.value:auto-value-annotations:$AUTO_VALUE_VERSION"
+//    compileOnly "com.ryanharter.auto.value:auto-value-gson:$AUTO_VALUE_GSON_VERSION"
+//    compileOnly "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION"
+//    compileOnly 'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
+//    compileOnly "com.ryanharter.auto.value:auto-value-gson:$AUTO_VALUE_GSON_VERSION"
+
+
+   // apt libraries.autoValue
+
+//    implementation project(':commons')
+//
+//    implementation libraries.rxJava
+//    implementation libraries.dagger.core
+//
+//    compileOnly libraries.javaxAnnotation
+//    compileOnly libraries.autoValue
+//
+//    testImplementation project(path: ':commons', configuration: 'testOutput')
+//    testImplementation libraries.jUnit
+//    testImplementation libraries.assertJ
+//    testImplementation libraries.mockito.core
+
+
+
+}
+
+

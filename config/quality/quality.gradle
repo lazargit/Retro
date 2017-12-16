@@ -1,0 +1,218 @@
+/*
+ * Copyright 2017 Vandolf Estrellado
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Checks quality and style of Java code.
+ */
+
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+
+apply from: "$rootDir/config/building/utils.gradle"
+
+ext.rootConfigDir = "$rootDir/config/quality"
+ext.projectReportsDir = "$buildDir/reports"
+
+// CHECK QUALITY TASK
+check.dependsOn 'checkQuality'
+
+class CheckQuality extends DefaultTask {}
+
+task checkQuality(type: CheckQuality) {
+    group = "Static Analysis"
+    description = "Runs all static analysis checks on all build variants."
+}
+
+def generateCheckQualityTask(String buildVariant, boolean withLint) {
+    buildVariant = buildVariant.capitalize()
+
+    def checkQualityVariant = "check${buildVariant}Quality"
+    def checkQualityVariantTaskDependencies = [
+            "checkstyle${buildVariant}",
+            "pmd${buildVariant}",
+            "findbugs${buildVariant}"
+    ]
+    if (withLint) {
+        checkQualityVariantTaskDependencies += "lint${buildVariant}"
+    }
+
+    task(checkQualityVariant, type: CheckQuality, dependsOn: checkQualityVariantTaskDependencies) {
+        group = "Static Analysis"
+        description = "Runs all static analysis checks on the ${buildVariant} build variant."
+    }
+
+    checkQuality.dependsOn "${checkQualityVariant}"
+}
+
+def generateCheckQualityTaskForVariant(variant) {
+    generateCheckQualityTask(variant.name, true)
+}
+
+// CHECKSTYLE
+// Remove existing plugin task definitions for Java only modules
+removeCheckTaskIf("checkstyle", Checkstyle)
+
+task checkstyle(type: Checkstyle) {
+    group = "Static Analysis"
+    description = "Checks style of source code of all build variants."
+}
+
+def generateCheckstyleTask(String flavor, String buildType, String buildVariant) {
+    def checkstyleVariant = "checkstyle${buildVariant.capitalize()}"
+
+    task(checkstyleVariant, type: Checkstyle) {
+        group = "Static Analysis"
+        description = "Checks style of source code for ${buildVariant} build variant."
+
+        configFile file("$rootConfigDir/checkstyle/checkstyle.xml")
+        configProperties.checkstyleSuppressionsPath = file("$rootConfigDir/checkstyle/suppressions.xml").absolutePath
+        configProperties.checkstyleJavaHeaderPath = file("$rootConfigDir/checkstyle/java.header").absolutePath
+        configProperties.checkstyleXmlHeaderPath = file("$rootConfigDir/checkstyle/xml.header").absolutePath
+
+        source resolveSourceDirs(flavor, buildType, buildVariant)
+        classpath = files() // intentionally blank to prevent duplicate analysis
+        include '**/*.java'
+        include '**/*.xml'
+        exclude '**/gen/**'
+
+        reports {
+            xml.enabled = false
+            html.enabled = true
+            xml {
+                destination "$projectReportsDir/checkstyle/${buildVariant}/${checkstyleVariant}.xml"
+            }
+            html {
+                destination "$projectReportsDir/checkstyle/${buildVariant}/${checkstyleVariant}.html"
+            }
+        }
+    }
+
+    tasks.checkstyle.dependsOn checkstyleVariant
+}
+
+def generateCheckstyleTaskForVariant(variant) {
+    def flavor = variant.flavorName
+    def buildType = variant.buildType.name
+    def buildVariant = flavor + (flavor.isEmpty() ? buildType : buildType.capitalize())
+    generateCheckstyleTask(flavor, buildType, buildVariant)
+}
+
+// PMD
+// Remove existing plugin task definitions for Java only modules
+removeCheckTaskIf("pmd", Pmd)
+
+task pmd(type: Pmd) {
+    group = "Static Analysis"
+    description = "Finds bugs in source code on all build variants."
+}
+
+def generatePMDTask(String flavor, String buildType, String buildVariant) {
+    def pmdVariant = "pmd${buildVariant.capitalize()}"
+
+    task(pmdVariant, type: Pmd) {
+        group = "Static Analysis"
+        description = "Finds bugs in source code on the {$buildVariant} build variant."
+
+        ignoreFailures = false
+        ruleSetFiles = files("$rootConfigDir/pmd/pmd-ruleset.xml")
+        ruleSets = []
+
+        source resolveSourceDirs(flavor, buildType, buildVariant)
+        include '**/*.java'
+        exclude '**/gen/**'
+
+        reports {
+            xml.enabled = false
+            html.enabled = true
+            xml {
+                destination "$projectReportsDir/pmd/${buildVariant}/${pmdVariant}.xml"
+            }
+            html {
+                destination "$projectReportsDir/pmd/${buildVariant}/${pmdVariant}.html"
+            }
+        }
+    }
+}
+
+def generatePMDTaskForVariant(variant) {
+    def flavor = variant.flavorName
+    def buildType = variant.buildType.name
+    def buildVariant = flavor + (flavor.isEmpty() ? buildType : buildType.capitalize())
+    generatePMDTask(flavor, buildType, buildVariant)
+}
+
+// FINDBUGS
+// Remove existing plugin task definitions for Java only modules
+removeCheckTaskIf("findbugs", FindBugs)
+
+task findbugs(type: FindBugs) {
+    group = "Static Analysis"
+    description = "Finds bugs in bytecode on all build variants."
+}
+
+def generateFindbugsTask(String flavor, String buildType, String buildVariant) {
+    def findbugsDependency = buildType.isEmpty() ? "assemble" : "assemble${buildVariant.capitalize()}"
+    def findbugsVariant = "findbugs${buildVariant.capitalize()}"
+
+    task(findbugsVariant, type: FindBugs, dependsOn: "${findbugsDependency}") {
+        group = "Static Analysis"
+        description = "Finds bugs in bytecode on the ${buildVariant} build variant."
+
+        ignoreFailures = false
+        effort = "max"
+        reportLevel = "high"
+        excludeFilter = new File("$rootConfigDir/findbugs/findbugs-filter.xml")
+
+        def classesDir = resolveClassesDir(flavor, buildType, buildVariant)
+        source resolveSourceDirs(flavor, buildType, buildVariant)
+        classes = files(classesDir)
+        classpath = files() // intentionally blank to prevent duplicate analysis
+        include '**/*.java'
+        exclude '**/gen/**'
+
+        reports {
+            xml.enabled = false
+            html.enabled = true
+            xml {
+                destination "$projectReportsDir/findbugs/${buildVariant}/${findbugsVariant}.xml"
+            }
+            html {
+                destination "$projectReportsDir/findbugs/${buildVariant}/${findbugsVariant}.html"
+            }
+        }
+    }
+
+    tasks.findbugs.dependsOn findbugsVariant
+}
+
+def generateFindbugsTaskForVariant(variant) {
+    def flavor = variant.flavorName
+    def buildType = variant.buildType.name
+    def buildVariant = flavor + (flavor.isEmpty() ? buildType : buildType.capitalize())
+    generateFindbugsTask(flavor, buildType, buildVariant)
+}
+
+ext {
+    generateCheckQualityTask = this.&generateCheckQualityTask
+    generateCheckQualityTaskForVariant = this.&generateCheckQualityTaskForVariant
+    generateCheckstyleTask = this.&generateCheckstyleTask
+    generateCheckstyleTaskForVariant = this.&generateCheckstyleTaskForVariant
+    generatePMDTask = this.&generatePMDTask
+    generatePMDTaskForVariant = this.&generatePMDTaskForVariant
+    generateFindbugsTask = this.&generateFindbugsTask
+    generateFindbugsTaskForVariant = this.&generateFindbugsTaskForVariant
+}
