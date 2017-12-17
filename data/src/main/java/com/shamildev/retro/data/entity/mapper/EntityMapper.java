@@ -14,34 +14,21 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data.repository;
+package com.shamildev.retro.data.entity.mapper;
 
-import com.shamildev.retro.data.entity.EntityModule;
-import com.shamildev.retro.data.net.NetModule;
-import com.shamildev.retro.domain.repository.RemoteRepository;
 
-import dagger.Binds;
-import dagger.Module;
-import dagger.Reusable;
+import com.shamildev.retro.data.entity.Entity;
+import com.shamildev.retro.domain.DomainObject;
 
 /**
- * Provides repository dependencies.
+ * Maps entity K to V and vice versa.
+ *
+ * @param <K> the type of the {@link Entity}
+ * @param <V> the type of the {@link DomainObject}
  */
-@Module( includes = {
-        EntityModule.class,
-        NetModule.class
-})
-public abstract class RepositoryModule {
+public interface EntityMapper<K extends Entity, V extends DomainObject> {
 
-    @Binds
-    @Reusable
-    abstract RemoteRepository businessRepository(TMDBRepository repository);
+    V map(K k);
 
-
-
-
-
-
-
-
+    K map(V v);
 }

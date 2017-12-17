@@ -1,7 +1,5 @@
 package com.shamildev.retro.domain.repository;
 
-import com.shamildev.retro.domain.responsemodels.Response;
-
 import io.reactivex.Observable;
 
 /**
@@ -10,7 +8,9 @@ import io.reactivex.Observable;
 public interface RemoteRepository {
 
 
-    Observable<Response> getTestService();
+    Observable<MovieWrapper> getTestService();
+
+   // Single<ResponseMovieDetails> gethMovieWithId(@Nonnull Integer movieId, String language, String appendToResponse);
 
 
 }

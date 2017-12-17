@@ -14,34 +14,21 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data.repository;
-
-import com.shamildev.retro.data.entity.EntityModule;
-import com.shamildev.retro.data.net.NetModule;
-import com.shamildev.retro.domain.repository.RemoteRepository;
-
-import dagger.Binds;
-import dagger.Module;
-import dagger.Reusable;
+package com.shamildev.retro.data.entity;
 
 /**
- * Provides repository dependencies.
+ * Type of all entities.
+ * <p>
+ * <b>DEFAULT VALUES</b>
+ * None of the getter methods defined here return null. If an attribute is missing or null, the
+ * value returned as defaulted to their non-null counterparts:
+ * <ul>
+ * <li>String -> ""</li>
+ * <li>Collection -> empty collection</li>
+ * <li>CustomClass -> non-null CustomClass</li>
+ * <li>Primitives -> default values. E.G. int -> 0</li>
+ * </ul>
+ * This done to prevent null or optional checks for consumers.
  */
-@Module( includes = {
-        EntityModule.class,
-        NetModule.class
-})
-public abstract class RepositoryModule {
-
-    @Binds
-    @Reusable
-    abstract RemoteRepository businessRepository(TMDBRepository repository);
-
-
-
-
-
-
-
-
+public interface Entity {
 }

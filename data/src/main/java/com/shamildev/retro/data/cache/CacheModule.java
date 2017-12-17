@@ -14,34 +14,16 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data.repository;
+package com.shamildev.retro.data.cache;
 
-import com.shamildev.retro.data.entity.EntityModule;
-import com.shamildev.retro.data.net.NetModule;
-import com.shamildev.retro.domain.repository.RemoteRepository;
 
-import dagger.Binds;
+
+
 import dagger.Module;
-import dagger.Reusable;
 
 /**
- * Provides repository dependencies.
+ * Provides entity dependencies.
  */
-@Module( includes = {
-        EntityModule.class,
-        NetModule.class
-})
-public abstract class RepositoryModule {
-
-    @Binds
-    @Reusable
-    abstract RemoteRepository businessRepository(TMDBRepository repository);
-
-
-
-
-
-
-
-
+@Module
+public abstract class CacheModule {
 }

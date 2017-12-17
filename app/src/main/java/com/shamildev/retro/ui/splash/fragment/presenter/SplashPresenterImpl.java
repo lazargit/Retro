@@ -2,9 +2,11 @@ package com.shamildev.retro.ui.splash.fragment.presenter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.Entity;
+import com.shamildev.retro.domain.repository.MovieWrapper;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.responsemodels.Response;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
@@ -43,24 +45,24 @@ import timber.log.Timber;
 
         @Override
         public void onDoSomething() {
-            Timber.d("test","onDoSomething");
+            Log.d("test","onDoSomething");
      this.remoteRepository.getTestService()
              .subscribeOn(Schedulers.io())
              .observeOn(AndroidSchedulers.mainThread())
-             .subscribe(new DisposableObserver<Response>() {
+             .subscribe(new DisposableObserver<MovieWrapper>() {
          @Override
-         public void onNext(Response entity) {
-             Timber.d("test","onDoSomething"+entity.getTotalResults());
+         public void onNext(MovieWrapper entity) {
+             Log.d("test","onDoSomething"+entity.totalPages());
          }
 
          @Override
          public void onError(Throwable e) {
-
+             Log.d("error","onError"+e.getMessage());
          }
 
          @Override
          public void onComplete() {
-             Timber.d("test","");
+             Log.d(" onComplete"," onComplete");
 
          }
      });

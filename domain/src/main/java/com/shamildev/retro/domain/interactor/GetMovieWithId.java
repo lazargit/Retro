@@ -14,34 +14,31 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data.repository;
+package com.shamildev.retro.domain.interactor;
 
-import com.shamildev.retro.data.entity.EntityModule;
-import com.shamildev.retro.data.net.NetModule;
 import com.shamildev.retro.domain.repository.RemoteRepository;
+import com.shamildev.retro.domain.responsemodels.Response;
 
-import dagger.Binds;
-import dagger.Module;
-import dagger.Reusable;
+
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
 
 /**
- * Provides repository dependencies.
+ * Use case for getting a businesses with a given id.
  */
-@Module( includes = {
-        EntityModule.class,
-        NetModule.class
-})
-public abstract class RepositoryModule {
+public final class GetMovieWithId implements UseCase<String, Response> {
 
-    @Binds
-    @Reusable
-    abstract RemoteRepository businessRepository(TMDBRepository repository);
+    private final RemoteRepository repository;
 
+    @Inject
+    GetMovieWithId(RemoteRepository repository) {
+        this.repository = repository;
+    }
 
-
-
-
-
-
-
+    @Override
+    public Observable<Response> execute(String movieId) {
+       return Observable.empty();
+        // return repository.withId(movieId);
+    }
 }

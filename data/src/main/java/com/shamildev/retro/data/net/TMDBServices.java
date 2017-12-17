@@ -2,12 +2,10 @@ package com.shamildev.retro.data.net;
 
 
 
-import com.shamildev.retro.data.responsemodels.Response;
+import com.shamildev.retro.data.entity.MovieWrapperEntity;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -38,11 +36,11 @@ public interface TMDBServices {
 
     ///https://api.themoviedb.org/3/movie/upcoming?api_key=96306bc3cc12ed9ef756ba9a85628586&language=de-DE&page=1&region=de
     @GET("3/movie/upcoming")
-    Single<com.shamildev.retro.domain.responsemodels.Response> fetchUpcomingMovies(
+    Single<MovieWrapperEntity> fetchUpcomingMovies(
             @Query(API_KEY) String apikey,
             @Query(PAGE) String page,
-            @Query(LANGUAGE) String language,
-            @Query(REGION) String region
+            @Query(LANGUAGE) String language
+
     );
 
 

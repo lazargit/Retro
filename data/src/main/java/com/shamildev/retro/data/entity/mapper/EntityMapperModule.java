@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data.repository;
+package com.shamildev.retro.data.entity.mapper;
 
-import com.shamildev.retro.data.entity.EntityModule;
-import com.shamildev.retro.data.net.NetModule;
-import com.shamildev.retro.domain.repository.RemoteRepository;
+import com.shamildev.retro.data.entity.MovieEntity;
+import com.shamildev.retro.data.entity.MovieWrapperEntity;
+import com.shamildev.retro.domain.repository.Movie;
+import com.shamildev.retro.domain.repository.MovieWrapper;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.Reusable;
 
 /**
- * Provides repository dependencies.
+ * Provides entity mapper dependencies.
  */
-@Module( includes = {
-        EntityModule.class,
-        NetModule.class
-})
-public abstract class RepositoryModule {
+@Module
+public abstract class EntityMapperModule {
 
     @Binds
     @Reusable
-    abstract RemoteRepository businessRepository(TMDBRepository repository);
+    abstract EntityMapper<MovieEntity, Movie>  movieEntityMapper(MovieEntityMapper movieEntityMapper);
 
-
-
-
+    @Binds
+    @Reusable
+    abstract EntityMapper<MovieWrapperEntity, MovieWrapper>  movieEntityMapperMapper(MovieWrapperEntityMapper movieWrapperEntityMapper);
 
 
 
