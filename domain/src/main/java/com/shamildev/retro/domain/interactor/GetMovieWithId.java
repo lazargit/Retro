@@ -16,8 +16,8 @@
 
 package com.shamildev.retro.domain.interactor;
 
+import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.repository.RemoteRepository;
-import com.shamildev.retro.domain.responsemodels.Response;
 
 
 import javax.inject.Inject;
@@ -27,7 +27,7 @@ import io.reactivex.Observable;
 /**
  * Use case for getting a businesses with a given id.
  */
-public final class GetMovieWithId implements UseCase<String, Response> {
+public final class GetMovieWithId implements UseCase<String, MovieWrapper> {
 
     private final RemoteRepository repository;
 
@@ -37,8 +37,11 @@ public final class GetMovieWithId implements UseCase<String, Response> {
     }
 
     @Override
-    public Observable<Response> execute(String movieId) {
-       return Observable.empty();
+    public Observable<MovieWrapper> execute(String movieId) {
+       return this.repository.getTestService();
+
+
+       // return Observable.empty();
         // return repository.withId(movieId);
     }
 }

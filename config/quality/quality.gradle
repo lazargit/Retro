@@ -22,7 +22,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
-apply from: "$rootDir/config/building/utils.gradle"
+apply from: "$rootDir/config/building/com.shamildev.retro.data.utils.gradle"
 
 ext.rootConfigDir = "$rootDir/config/quality"
 ext.projectReportsDir = "$buildDir/reports"

@@ -1,5 +1,8 @@
 package com.shamildev.retro;
 import com.shamildev.retro.data.DataModule;
+import com.shamildev.retro.di.scope.ApplicationScope;
+
+
 import javax.inject.Singleton;
 
 import dagger.Component;

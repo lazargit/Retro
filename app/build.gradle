@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId 'com.shamildev.retro'
-        minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+        minSdkVersion 19//globalConfiguration.getAt("androidMinSdkVersion")
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
         versionName globalConfiguration.getAt("androidVersionName")
         testInstrumentationRunner globalConfiguration.getAt("testApplicationId")
@@ -36,7 +36,9 @@ android {
 
 
     }
-
+    buildTypes.each{
+        it.buildConfigField 'String', 'MOVIE_DB_API_TOKEN', MovieDBApiToken
+    }
 
 
     packagingOptions {

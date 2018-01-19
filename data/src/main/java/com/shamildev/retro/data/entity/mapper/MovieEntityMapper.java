@@ -16,8 +16,8 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
-import com.shamildev.retro.data.entity.MovieEntity;
-import com.shamildev.retro.domain.repository.Movie;
+import com.shamildev.retro.data.entity.tmdb.Result;
+import com.shamildev.retro.domain.models.Movie;
 
 
 import javax.inject.Inject;
@@ -25,10 +25,10 @@ import javax.inject.Inject;
 import dagger.Reusable;
 
 /**
- * Maps {@link MovieEntity} to {@link Movie} .
+ * Maps {@link Result} to {@link Movie} .
  */
 @Reusable
-final class MovieEntityMapper implements EntityMapper<MovieEntity, Movie> {
+final class MovieEntityMapper implements EntityMapper<Result, Movie> {
 
 
    // private final EntityListMapper entityListMapper;
@@ -40,63 +40,42 @@ final class MovieEntityMapper implements EntityMapper<MovieEntity, Movie> {
     }
 
     @Override
-    public Movie map(MovieEntity entity) {
+    public Movie map(Result entity) {
 
 
         return Movie.builder()
-                .id(entity.id())
-                .title(entity.title())
-                .overview(entity.overview())
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .overview(entity.getOverview())
 
-                .originalTitle(entity.originalTitle())
-                .originalLanguage(entity.originalLanguage())
+                .originalTitle(entity.getTitle())
+                .originalLanguage(entity.getOriginalLanguage())
 
-                .posterPath(entity.posterPath())
-                .backdropPath(entity.backdropPath())
+                .posterPath(entity.getPosterPath())
+                .backdropPath(entity.getBackdropPath())
 
-                .genreIds(entity.genreIds())
-                .adult(entity.adult())
-                .video(entity.video())
-
-
-
-                .releaseDate(entity.releaseDate())
+                .genreIds(entity.getGenreIds())
+                .adult(entity.getAdult())
+                .video(entity.getVideo())
 
 
-                .popularity(entity.popularity())
-                .voteAverage(entity.voteAverage())
-                .voteCount(entity.voteCount())
+
+
+
+                .releaseDate(entity.getReleaseDate())
+
+
+                .popularity(entity.getPopularity())
+                .voteAverage(entity.getVoteAverage())
+                .voteCount(entity.getVoteCount())
 
                 .build();
     }
 
     @Override
-    public MovieEntity map(Movie entity) {
+    public Result map(Movie entity) {
 
+        return null;
 
-        return MovieEntity.builder()
-                .id(entity.id())
-                .title(entity.title())
-                .overview(entity.overview())
-
-                .originalTitle(entity.originalTitle())
-                .originalLanguage(entity.originalLanguage())
-
-                .posterPath(entity.posterPath())
-                .backdropPath(entity.backdropPath())
-
-                .genreIds(entity.genreIds())
-                .adult(entity.adult())
-                .video(entity.video())
-
-
-
-                .releaseDate(entity.releaseDate())
-
-
-                .popularity(entity.popularity())
-                .voteAverage(entity.voteAverage())
-                .voteCount(entity.voteCount())
-                .build();
     }
 }

@@ -16,10 +16,19 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
-import com.shamildev.retro.data.entity.MovieEntity;
-import com.shamildev.retro.data.entity.MovieWrapperEntity;
-import com.shamildev.retro.domain.repository.Movie;
-import com.shamildev.retro.domain.repository.MovieWrapper;
+
+
+
+
+import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.Result;
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.GenreEntity;
+import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.models.MovieWrapper;
 
 
 import javax.inject.Inject;
@@ -32,25 +41,48 @@ import dagger.Reusable;
 @Reusable
 public final class EntityMapperHolder {
 
-    private final EntityMapper<MovieEntity, Movie> movieEntityMapper;
-    private final EntityMapper<MovieWrapperEntity, MovieWrapper> movieWrapperEntityMapper;
+    private final EntityMapper<Result, Movie> movieEntityMapper;
+    private final EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper;
+
+    private final EntityMapper<ResponseEntity, MovieWrapper> movieWrapperEntityMapper;
+    private final EntityMapper<ConfigurationResponseEntity, Configuration> configurationEntityMapper;
+    private final EntityMapper<GenreEntity, Genre> genreEntityMapper;
 
 
     @Inject
-    EntityMapperHolder( EntityMapper<MovieEntity, Movie> movieEntityMapper,
-                        EntityMapper<MovieWrapperEntity, MovieWrapper> movieWrapperEntityMapper) {
+    EntityMapperHolder( EntityMapper<Result, Movie> movieEntityMapper,
+                        EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper,
+                        EntityMapper<ResponseEntity, MovieWrapper> movieWrapperEntityMapper,
+                        EntityMapper<ConfigurationResponseEntity, Configuration> configurationEntityMapper,
+                        EntityMapper<GenreEntity, Genre> genreEntityMapper) {
 
         this.movieEntityMapper = movieEntityMapper;
+        this.movieDetailsEntityMapper = movieDetailsEntityMapper;
         this.movieWrapperEntityMapper = movieWrapperEntityMapper;
+        this.configurationEntityMapper = configurationEntityMapper;
+        this.genreEntityMapper = genreEntityMapper;
 
     }
 
-    public EntityMapper<MovieEntity, Movie> movieEntityMapper() {
+    public EntityMapper<Result, Movie> movieEntityMapper() {
         return movieEntityMapper;
     }
 
-    public EntityMapper<MovieWrapperEntity, MovieWrapper> movieWrapperEntityMapper() {
+    public EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper() {
+        return movieDetailsEntityMapper;
+    }
+
+    public EntityMapper<ResponseEntity, MovieWrapper> movieWrapperEntityMapper() {
         return movieWrapperEntityMapper;
+    }
+
+    public EntityMapper<ConfigurationResponseEntity, Configuration> configurationEntityMapper() {
+        return configurationEntityMapper;
+    }
+
+
+    public EntityMapper<GenreEntity, Genre> genreEntityMapper() {
+        return genreEntityMapper;
     }
 
 

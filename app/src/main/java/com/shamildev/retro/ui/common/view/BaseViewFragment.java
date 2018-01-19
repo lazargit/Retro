@@ -6,6 +6,7 @@ package com.shamildev.retro.ui.common.view;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.widget.Toast;
 
 import com.shamildev.retro.ui.common.presenter.Presenter;
 
@@ -64,4 +65,13 @@ public abstract class BaseViewFragment<T extends Presenter> extends BaseFragment
         presenter.onEnd();
         super.onDestroyView();
     }
+    /**
+     * Shows a {@link Toast} message.
+     *
+     * @param message An string representing a message to be shown.
+     */
+    protected void showToastMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
 }

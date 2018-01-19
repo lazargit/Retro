@@ -2,13 +2,22 @@ package com.shamildev.retro;
 
 import android.app.Application;
 
-import com.shamildev.retro.App;
-import com.shamildev.retro.data.repository.RepositoryModule;
+import com.shamildev.retro.android.executor.ExecutorModule;
+import com.shamildev.retro.android.executor.IOExecutionThread;
+import com.shamildev.retro.android.executor.MainPostExecutionThread;
+import com.shamildev.retro.config.ConfigModule;
+
+import com.shamildev.retro.di.scope.ApplicationScope;
 import com.shamildev.retro.di.scope.PerActivity;
+import com.shamildev.retro.domain.DomainModule;
+import com.shamildev.retro.domain.executor.ExecutionThread;
+
+import com.shamildev.retro.domain.executor.PostExecutionThread;
+import com.shamildev.retro.net.NetworkManagerImpl;
 import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.splash.SplashActivityModule;
-import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenterModule;
 import com.shamildev.retro.data.DataModule;
+
 import javax.inject.Singleton;
 
 import dagger.Binds;
@@ -23,7 +32,12 @@ import dagger.android.ContributesAndroidInjector;
 
 @Module(
 
-        includes = {AndroidInjectionModule.class,RepositoryModule.class}
+        includes = {AndroidInjectionModule.class,
+                ConfigModule.class,
+                NetworkMangerModule.class,
+                DataModule.class,
+                ExecutorModule.class,
+                DomainModule.class}
 
        )
 public abstract class AppModule {
@@ -33,6 +47,28 @@ public abstract class AppModule {
     @Binds
     @Singleton
     abstract Application application(App app);
+//
+//    @Binds
+//    @ApplicationScope
+//    abstract NetworkManagerImpl networkManager(Application app);
+
+
+    @Binds
+    @Singleton
+    abstract ExecutionThread providesThreadScheduler(IOExecutionThread schedulers);
+
+
+    @Binds
+    @Singleton
+    abstract PostExecutionThread providesPostExecutionScheduler(MainPostExecutionThread mainPostExecutionThread);
+
+
+
+
+
+
+
+
 
     /**
      * Provides the injector for the {@link SplashActivity}, which has access to the dependencies

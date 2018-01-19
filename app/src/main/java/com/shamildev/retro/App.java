@@ -6,6 +6,7 @@ import android.util.Log;
 
 
 import com.shamildev.retro.data.DataModule;
+import com.shamildev.retro.data.net.NetworkManager;
 import com.shamildev.retro.domain.DomainModule;
 
 import javax.inject.Inject;
@@ -27,6 +28,9 @@ public class App extends Application implements HasActivityInjector {
     @Inject
     DispatchingAndroidInjector<Activity> activityInjector;
 
+    @Inject
+    NetworkManager networkManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -34,6 +38,8 @@ public class App extends Application implements HasActivityInjector {
        DaggerAppComponent.builder().create(this).inject(this);
 
         Log.d("App","test");
+       // boolean debug = BuildConfig.MOVIE_DB_API_TOKEN;
+        networkManager.start();
 
     }
 

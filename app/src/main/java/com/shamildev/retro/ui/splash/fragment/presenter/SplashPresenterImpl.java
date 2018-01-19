@@ -1,25 +1,36 @@
 package com.shamildev.retro.ui.splash.fragment.presenter;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.IdRes;
 import android.util.Log;
 
+import com.shamildev.retro.R;
+import com.shamildev.retro.data.net.NetworkManager;
+import com.shamildev.retro.data.net.error.TMDBError;
+import com.shamildev.retro.domain.bootstrap.Bootstrap;
+import com.shamildev.retro.domain.executor.UseCaseHandler;
+import com.shamildev.retro.domain.interactor.GetGenre;
+import com.shamildev.retro.domain.interactor.GetMovieById;
+import com.shamildev.retro.domain.interactor.GetMovieWithId;
+import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
+import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
+import com.shamildev.retro.domain.interactor.UseCaseFlowable;
+import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.di.scope.PerFragment;
-import com.shamildev.retro.domain.Entity;
-import com.shamildev.retro.domain.repository.MovieWrapper;
-import com.shamildev.retro.domain.repository.RemoteRepository;
-import com.shamildev.retro.domain.responsemodels.Response;
+import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.params.ParamsBasic;
+import com.shamildev.retro.domain.util.Pair;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
+import com.shamildev.retro.domain.bootstrap.BootstrapImpl;
 import com.shamildev.retro.ui.splash.fragment.view.SplashView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by Shamil Lazar on 13.12.2017.
@@ -31,42 +42,290 @@ import timber.log.Timber;
      * An implementation of {@link SplashPresenter}.
      */
     @PerFragment
-    final class SplashPresenterImpl extends BasePresenter<SplashView> implements SplashPresenter {
+    final class SplashPresenterImpl extends BasePresenter<SplashView> implements SplashPresenter,NetworkManager.NetworkListener,Bootstrap {
 
 
-        private final RemoteRepository remoteRepository;
+
+        private final NetworkManager networkManager;
+
+
+        private final UseCaseHandler useCaseHandler;
+        private final GetMovieWithId getMovieWithId;
+        private final GetTMDBConfiguration getTMDBConfiguration;
+        private final GetGenre getGenre;
+        private final GetUpcomingMovies getUpcomingMovies;
+        private final GetMovieById getMovieById;
+        private final BootstrapImpl bootstrap;
 
         @Inject
-        SplashPresenterImpl(SplashView view, RemoteRepository remoteRepository) {
+        SplashPresenterImpl(SplashView view,
+                            NetworkManager networkManager,
+                            UseCaseHandler useCaseHandler,
+                            GetMovieWithId getMovieWithId,
+                            GetTMDBConfiguration getTMDBConfiguration,
+                            GetGenre getGenre,
+                            GetUpcomingMovies getUpcomingMovies,
+                            GetMovieById getMovieById,
+                            BootstrapImpl bootstrap
+
+                           ) {
             super(view);
-            this.remoteRepository = remoteRepository;
+
+
+            this.useCaseHandler = useCaseHandler;
+
+            this.getMovieWithId = getMovieWithId;
+            this.getTMDBConfiguration = getTMDBConfiguration;
+            this.getGenre = getGenre;
+            this.getUpcomingMovies = getUpcomingMovies;
+            this.getMovieById = getMovieById;
+
+            this.networkManager = networkManager;
+            this.networkManager.add(toString(), this::refreshData);
+            this.bootstrap = bootstrap;
+            this.bootstrap.setUp(this);
+
+
+        }
+
+
+        @Override
+        public void onNetworkAvailable() {
+            Log.d("test","onNetworkAvailable");
+        }
+        private void refreshData() {
+            Log.d("test","refreshData");
+        }
+
+        @Override
+        public void onDoSomething(@IdRes int id) {
+            if(id == R.id.button){
+
+                Log.d("getTMDBConfiguration","getTMDBConfiguration");
+                useCaseHandler.execute(getTMDBConfiguration,GetTMDBConfiguration.Params.withCacheTime(1), new DisposableSubscriber<Configuration>() {
+                    @Override
+                    public void onNext(Configuration configuration) {
+                        Log.d("onNext",configuration.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        if(t.getCause() instanceof TMDBError){
+                            TMDBError error = (TMDBError) t.getCause();
+                            Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
+
+                        }
+                        Log.d("onError",t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d("onComplete",">>");
+                    }
+                });
+            }
+
+            if(id == R.id.button_save){
+
+                useCaseHandler.execute(getMovieWithId, new DisposableObserver<MovieWrapper>() {
+                    @Override
+                    public void onNext(MovieWrapper response) {
+                        Log.d("useCaseHandler",">>>>>"+response.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if(e.getCause() instanceof TMDBError){
+                            TMDBError error = (TMDBError) e.getCause();
+                            Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
+
+                        }
+                        Log.d("onError","<<<<<"+e);
+                        //   TMDBError error = (TMDBError) e;
+                        //  Log.d("onError",">>>>>"+error.getMessage());
+
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+            }
+
+
+            if(id == R.id.button_genre){
+                GetGenre.Params with = GetGenre.Params.with("de_DE", 1);
+                useCaseHandler.execute(getGenre,with,
+                        new DisposableSubscriber<List<Genre>>() {
+                            @Override
+                            public void onNext(List<Genre> genres) {
+                                Log.d("useCaseHandler","getGenre"+genres);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.d("useCaseHandler","getGenre onError"+t.getMessage());
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                Log.d("useCaseHandler","getGenre onComplete");
+                            }
+                        }
+
+
+
+
+
+               );
+            }
+
+            if(id == R.id.button_fetch_upcoming_movies){
+                useCaseHandler.execute(getUpcomingMovies, new DisposableSubscriber<MovieWrapper>() {
+                            @Override
+                            public void onNext(MovieWrapper movieWrapper) {
+                                Log.d("useCaseHandler","getUpcomingMovies"+movieWrapper.results()+">>>"+movieWrapper.totalResults());
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.d("useCaseHandler","getUpcomingMovies onError"+t.getMessage());
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                Log.d("useCaseHandler","getUpcomingMovies onComplete");
+                            }
+                        });
+            }
+            if(id == R.id.button_fetch_movie){
+                useCaseHandler.execute(getMovieById,155, new DisposableSubscriber<Movie>() {
+                    @Override
+                    public void onNext(Movie movie) {
+                        Log.d("useCaseHandler","getMovieById"+movie+">>>");
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d("useCaseHandler","getMovieById onError"+t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d("useCaseHandler","getMovieById onComplete");
+                    }
+                });
+            }
+            if(id == R.id.button_fetch_movie2){
+                useCaseHandler.execute(getMovieById,354912, new DisposableSubscriber<Movie>() {
+                    @Override
+                    public void onNext(Movie movie) {
+                        Log.d("useCaseHandler","getMovieById"+movie+">>>");
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d("useCaseHandler","getMovieById onError"+t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d("useCaseHandler","getMovieById onComplete");
+                    }
+                });
+            }
+
+
+//     this.remoteRepository.getTestService()
+//             .subscribeOn(Schedulers.io())
+//             .observeOn(AndroidSchedulers.mainThread())
+//             .subscribe(new DisposableObserver<MovieWrapper>() {
+//         @Override
+//         public void onNext(MovieWrapper entity) {
+//             Log.d("test","onDoSomething"+entity.totalPages());
+//
+//
+//            cacheRepository.saveObj(entity);
+//
+//
+//         }
+//
+//         @Override
+//         public void onError(Throwable e) {
+//             Log.d("error","onError"+e.getMessage());
+//         }
+//
+//         @Override
+//         public void onComplete() {
+//             Log.d(" onComplete"," onComplete");
+//
+//         }
+//     });
+//
+//            view.showSomething("something");
+        }
+
+
+        @Override
+        public void onStartBootstrap() {
+
+            GetTMDBConfiguration.Params params = GetTMDBConfiguration.Params.withCacheTime(1);
+            Pair<UseCaseFlowable, ParamsBasic> useCaseGetTMDBConfiguration = new Pair<>(getTMDBConfiguration,params);
+
+            bootstrap.addUseCase(useCaseGetTMDBConfiguration);
+
+
+            GetGenre.Params params_useCaseGetGenre = GetGenre.Params.with("de_DE", 1);
+
+            Pair<UseCaseFlowable, ParamsBasic> useCaseGetGenre = new Pair<>(getGenre,params_useCaseGetGenre);
+
+            bootstrap.addUseCase(useCaseGetGenre);
+
+            bootstrap.executeUseCases();
+
+
+//            useCaseHandler.execute(getTMDBConfiguration,GetTMDBConfiguration.Params.withCacheTime(1), new DisposableSubscriber<Configuration>() {
+//                @Override
+//                public void onNext(Configuration configuration) {
+//                    Log.d("onNext",configuration.toString());
+//                }
+//
+//                @Override
+//                public void onError(Throwable t) {
+//                    if(t.getCause() instanceof TMDBError){
+//                        TMDBError error = (TMDBError) t.getCause();
+//                        Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
+//
+//                    }
+//                    Log.d("onError",t.getMessage());
+//                }
+//
+//                @Override
+//                public void onComplete() {
+//                    Log.d("onComplete",">>");
+//                }
+//            });
 
         }
 
         @Override
-        public void onDoSomething() {
-            Log.d("test","onDoSomething");
-     this.remoteRepository.getTestService()
-             .subscribeOn(Schedulers.io())
-             .observeOn(AndroidSchedulers.mainThread())
-             .subscribe(new DisposableObserver<MovieWrapper>() {
-         @Override
-         public void onNext(MovieWrapper entity) {
-             Log.d("test","onDoSomething"+entity.totalPages());
-         }
+        public void onBootstrapNext(Class clazz) {
+            view.makeToast(clazz.getSimpleName());
 
-         @Override
-         public void onError(Throwable e) {
-             Log.d("error","onError"+e.getMessage());
-         }
+        }
 
-         @Override
-         public void onComplete() {
-             Log.d(" onComplete"," onComplete");
+        @Override
+        public void onBootstrapComplete() {
+            view.makeToast("Bootstrap Complete");
 
-         }
-     });
+        }
 
-            view.showSomething("something");
+        @Override
+        public void onBootstrapError(Throwable t) {
+            view.makeToast("Error "+t);
+
         }
     }

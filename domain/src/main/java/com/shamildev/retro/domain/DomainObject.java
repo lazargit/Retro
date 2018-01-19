@@ -19,5 +19,7 @@ package com.shamildev.retro.domain;
 
 public interface DomainObject {
 
+
+
 }
 

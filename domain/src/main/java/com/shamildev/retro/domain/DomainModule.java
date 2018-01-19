@@ -16,7 +16,9 @@
 
 package com.shamildev.retro.domain;
 
-import com.shamildev.retro.domain.executor.ExecutorModule;
+
+
+
 
 import dagger.Module;
 
@@ -24,7 +26,7 @@ import dagger.Module;
 /**
  * Provides domain dependencies.
  */
-@Module(includes = ExecutorModule.class)
+@Module
 public  class DomainModule {
 
 

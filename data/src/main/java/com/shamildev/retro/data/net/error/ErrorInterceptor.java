@@ -18,10 +18,23 @@
 
 package com.shamildev.retro.data.net.error;
 
+import android.util.Log;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.shamildev.retro.data.entity.ErrorEntity;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
+
+import javax.inject.Inject;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 /**
  *
@@ -36,16 +49,33 @@ import okhttp3.Response;
  */
 
 public class ErrorInterceptor implements Interceptor {
+
+    private static final int ERROR_CODE_401 = 401;
+    private static final int ERROR_CODE_404 = 404;
+    private static final int ERROR_CODE_422 = 422;
+
+
+
+    @Inject
+    public ErrorInterceptor() {
+
+
+    }
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response response = chain.proceed(chain.request());
 
+
         if (!response.isSuccessful()) {
-            throw new GitHubError(
-                    response.code(),
-                    response.message()
-            );
+
+            String rawJson = response.body().string();
+
+            throw TMDBError.getTMDBError(response.code(),rawJson);
+
         }
-            return response;
+
+
+        return response;
     }
 }

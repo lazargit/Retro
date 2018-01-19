@@ -16,20 +16,21 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
-import com.shamildev.retro.data.entity.MovieEntity;
-import com.shamildev.retro.data.entity.MovieWrapperEntity;
-import com.shamildev.retro.domain.repository.Movie;
-import com.shamildev.retro.domain.repository.MovieWrapper;
+import android.util.Log;
+
+
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
+import com.shamildev.retro.domain.models.MovieWrapper;
 
 import javax.inject.Inject;
 
 import dagger.Reusable;
 
 /**
- * Maps {@link MovieEntity} to {@link Movie} .
+ * Maps {@link ResponseEntity} to {@link MovieWrapper} .
  */
 @Reusable
-final class MovieWrapperEntityMapper implements EntityMapper<MovieWrapperEntity, MovieWrapper> {
+final class MovieWrapperEntityMapper implements EntityMapper<ResponseEntity, MovieWrapper> {
 
 
     private final EntityListMapper entityListMapper;
@@ -44,31 +45,24 @@ final class MovieWrapperEntityMapper implements EntityMapper<MovieWrapperEntity,
     }
 
     @Override
-    public MovieWrapper map(MovieWrapperEntity entity) {
+    public MovieWrapper map(ResponseEntity entity) {
 
-
+        Log.d("Mapper",">>>>>"+entity.toString()+"   ");
 
 
         return MovieWrapper.builder()
                 .page(entity.getPage())
-               // .results(entityListMapper.mapToV(movieEntityMapper,entity.results()))
                 .totalPages(entity.getTotalPages())
                 .totalResults(entity.getTotalResults())
-
-
+                .results(entityListMapper.mapToV(movieEntityMapper,entity.getResults()))
                 .build();
     }
 
     @Override
-    public MovieWrapperEntity map(MovieWrapper entity) {
+    public ResponseEntity map(MovieWrapper entity) {
 
-return null;
-//        return MovieWrapperEntity.builder()
-//                .page(entity.page())
-//                //.results(entityListMapper.mapToK(movieEntityMapper,entity.results()))
-//                .totalPages(entity.totalPages())
-//                .totalResults(entity.totalResults())
-//                .build();
+        return null;
+
 
     }
 }

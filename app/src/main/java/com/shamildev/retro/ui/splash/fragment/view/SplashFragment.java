@@ -22,8 +22,7 @@ import timber.log.Timber;
 
  * A fragment implementation of {@link SplashView}.
  */
-public final class SplashFragment extends BaseViewFragment<SplashPresenter>
-        implements SplashView {
+public final class SplashFragment extends BaseViewFragment<SplashPresenter> implements SplashView {
 
 
     private Unbinder butterKnifeUnbinder;
@@ -49,9 +48,67 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter>
     @OnClick(R.id.button_save)
     void onStartBootstrap(View view) {
         Timber.d("onStartBootstrap");
-        presenter.onDoSomething();
+        presenter.onDoSomething(R.id.button_save);
+
+    }
+
+    @OnClick(R.id.button)
+    void onStartGetConfig(View view) {
+        Timber.d("onStartGetConfig");
+        presenter.onDoSomething(R.id.button);
+
+    }
+
+    @OnClick(R.id.button_genre)
+    void onStartFetchGenre(View view) {
+        Timber.d("onStartFetchGenre");
+        presenter.onDoSomething(R.id.button_genre);
+
+    }
+
+    @OnClick(R.id.button_fetch_upcoming_movies)
+    void onButton_fetch_upcoming_movies(View view) {
+
+        presenter.onDoSomething(R.id.button_fetch_upcoming_movies);
+
+    }
+
+    @OnClick(R.id.button_fetch_popular)
+    void onButton_fetch_popular(View view) {
+
+        presenter.onDoSomething(R.id.button_fetch_popular);
+
+    }
+
+    @OnClick(R.id.button_fetch_now_playing)
+    void onButton_fetch_now_playing(View view) {
+
+        presenter.onDoSomething(R.id.button_fetch_now_playing);
+
+    }
+
+    @OnClick(R.id.button_fetch_movie)
+    void onButton_fetch_movie(View view) {
+
+        presenter.onDoSomething(R.id.button_fetch_movie);
+
+    }
+    @OnClick(R.id.button_fetch_movie2)
+    void onButton_fetch_movie2(View view) {
+
+        presenter.onDoSomething(R.id.button_fetch_movie2);
+
+    }
+    @OnClick(R.id.button_start_bootstrap)
+    void onButton_start_bootstrap(View view) {
+
+        presenter.onStartBootstrap();
 
     }
 
 
+    @Override
+    public void makeToast(String message) {
+        showToastMessage(message);
+    }
 }

@@ -16,10 +16,16 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
-import com.shamildev.retro.data.entity.MovieEntity;
-import com.shamildev.retro.data.entity.MovieWrapperEntity;
-import com.shamildev.retro.domain.repository.Movie;
-import com.shamildev.retro.domain.repository.MovieWrapper;
+
+import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.Result;
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.GenreEntity;
+import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.models.MovieWrapper;
 
 import dagger.Binds;
 import dagger.Module;
@@ -33,13 +39,23 @@ public abstract class EntityMapperModule {
 
     @Binds
     @Reusable
-    abstract EntityMapper<MovieEntity, Movie>  movieEntityMapper(MovieEntityMapper movieEntityMapper);
+    abstract EntityMapper<Result, Movie>  movieEntityMapper(MovieEntityMapper movieEntityMapper);
 
     @Binds
     @Reusable
-    abstract EntityMapper<MovieWrapperEntity, MovieWrapper>  movieEntityMapperMapper(MovieWrapperEntityMapper movieWrapperEntityMapper);
+    abstract EntityMapper<MovieDetailsResponseEntity, Movie>  movieDetailsEntityMapper(MovieDetailsEntityMapper movieDetailsEntityMapper);
 
+    @Binds
+    @Reusable
+    abstract EntityMapper<ResponseEntity, MovieWrapper>  movieEntityMapperMapper(MovieWrapperEntityMapper movieWrapperEntityMapper);
 
+    @Binds
+    @Reusable
+    abstract EntityMapper<ConfigurationResponseEntity, Configuration>  configurationEntityMapper(ConfigurationEntityMapper configurationEntityMapper);
+
+    @Binds
+    @Reusable
+    abstract EntityMapper<GenreEntity, Genre>  genrenEntityMapper(GenreEntityMapper genreEntityMapper);
 
 
 }

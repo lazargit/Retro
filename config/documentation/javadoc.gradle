@@ -18,7 +18,7 @@
  * Generates Javadoc.
  */
 
-apply from: "$rootDir/config/building/utils.gradle"
+apply from: "$rootDir/config/building/com.shamildev.retro.data.utils.gradle"
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {

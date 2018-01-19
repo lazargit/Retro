@@ -2,10 +2,18 @@ package com.shamildev.retro.data.net;
 
 
 
-import com.shamildev.retro.data.entity.MovieWrapperEntity;
+
+
+
+
+import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.GenresResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -20,7 +28,35 @@ public interface TMDBServices {
 
 
 
-    String API_KEY = "api_key";
+
+
+
+    public static  enum MEDIA_TYPE {
+
+        MOVIE {
+            public String toString() {
+                return "movie";
+            }
+        },
+
+        TV {
+            public String toString() {
+                return "tv";
+            }
+        },
+        PERSON {
+            public String toString() {
+                return "person";
+            }
+        },
+
+
+        movie , person, tv
+    }
+
+
+
+    public String API_KEY = "api_key";
     String QUERY = "query";
     String LANGUAGE = "language";
     String REGION = "region";
@@ -36,10 +72,39 @@ public interface TMDBServices {
 
     ///https://api.themoviedb.org/3/movie/upcoming?api_key=96306bc3cc12ed9ef756ba9a85628586&language=de-DE&page=1&region=de
     @GET("3/movie/upcoming")
-    Single<MovieWrapperEntity> fetchUpcomingMovies(
+    Single<ResponseEntity> fetchUpcomingMovies(
             @Query(API_KEY) String apikey,
             @Query(PAGE) String page,
             @Query(LANGUAGE) String language
+
+    );
+
+    //https://api.themoviedb.org/3/configuration?api_key=96306bc3cc12ed9ef756ba9a85628586"
+    @GET("3/configuration")
+    Single<ConfigurationResponseEntity> fetchConfiguration(
+            @Query(API_KEY) String apikey
+
+    );
+
+    //https://api.themoviedb.org/3/genre/movie/list?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US
+    //https://api.themoviedb.org/3/genre/tv/list?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US
+    @GET("3/genre/{media}/list")
+    Single<GenresResponseEntity> fetchGenre(
+            @Path("media") String media,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language
+    );
+
+
+
+    //https://api.themoviedb.org/3/movie/284052?api_key=96306bc3cc12ed9ef756ba9a85628586
+    // &append_to_response=videos%2Cimages%2Ctrailers%2Csimilar_movies%2Crelease_dates%2Cchanges%2Ccredits%2Creviews%2Ckeywords%2Clists%2Ctranslations%2Crecommendations
+    @GET("3/movie/{movie_id}")
+    Single<MovieDetailsResponseEntity> fetchMovie(
+            @Path(MOVIE_ID) String movieId,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(APPEND_TO_RESPONSE) String appendToResponse
 
     );
 

@@ -17,6 +17,7 @@
 package com.shamildev.retro.data;
 
 
+import com.shamildev.retro.data.cache.CacheModule;
 import com.shamildev.retro.data.net.NetModule;
 import com.shamildev.retro.data.repository.RepositoryModule;
 
@@ -26,7 +27,8 @@ import dagger.Module;
  * Provides data dependencies.
  */
 @Module(includes = {
-        RepositoryModule.class
+        RepositoryModule.class,
+        CacheModule.class
 })
 public abstract class DataModule {
 

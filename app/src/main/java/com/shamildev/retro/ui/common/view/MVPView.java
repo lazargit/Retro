@@ -5,4 +5,6 @@ package com.shamildev.retro.ui.common.view;
  */
 
 public interface MVPView {
+
+    void makeToast(String message);
 }

@@ -9,4 +9,5 @@ import com.shamildev.retro.ui.common.view.MVPView;
 public interface SplashView extends MVPView {
 
     void showSomething(String something);
+
 }

@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="50dp" />
 
 
     <Button
@@ -24,10 +24,10 @@
         android:text="GetTMDbConfig" />
 
     <Button
-    android:id="@+id/button_next"
+    android:id="@+id/button_genre"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Bootstrap" />
+    android:text="Genre" />
     <Button
         android:id="@+id/button_save"
         android:layout_width="match_parent"
@@ -51,6 +51,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="popular_movies" />
+    <Button
+        android:id="@+id/button_fetch_movie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="get movie" />
+    <Button
+        android:id="@+id/button_fetch_movie2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="get movie2" />
+
+    <Button
+        android:id="@+id/button_start_bootstrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bootstrap" />
 
 
 </LinearLayout>
