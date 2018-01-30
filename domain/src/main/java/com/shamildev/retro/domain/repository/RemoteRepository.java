@@ -13,6 +13,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
 
 /**
  * Represents repository for retrieving business data.
@@ -22,13 +23,21 @@ public interface RemoteRepository {
 
     Observable<MovieWrapper> getTestService();
 
+    Flowable<Movie> fetchMovie(@NonNull int movieId);
+
+    Flowable<MovieWrapper> fetchRecommendations(@NonNull int movieId, int page);
+
+    Flowable<MovieWrapper> fetchSimilarMovies(@NonNull int movieId, int page);
 
     Flowable<MovieWrapper> fetchUpcomingMovies(int page);
 
+    Flowable<MovieWrapper> fetchNowPlayingMovies(int page);
+
+    Flowable<MovieWrapper> fetchTopRatedMovies(int page);
+
+
+
     Flowable<Configuration> fetchConfiguration();
-
-    Flowable<Movie> fetchMovie(int id);
-
 
     Flowable<List<Genre>> fetchGenre(Constants.MEDIA_TYPE mediaType);
 

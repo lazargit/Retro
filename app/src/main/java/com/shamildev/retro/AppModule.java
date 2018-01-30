@@ -17,6 +17,8 @@ import com.shamildev.retro.net.NetworkManagerImpl;
 import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.splash.SplashActivityModule;
 import com.shamildev.retro.data.DataModule;
+import com.shamildev.retro.ui.watchlist.WatchListActivity;
+import com.shamildev.retro.ui.watchlist.WatchListActivityModule;
 
 import javax.inject.Singleton;
 
@@ -76,7 +78,15 @@ public abstract class AppModule {
      */
     @PerActivity
     @ContributesAndroidInjector(modules = SplashActivityModule.class)
-    abstract SplashActivity mainActivityInjector();
+    abstract SplashActivity splashActivityInjector();
+
+    /**
+     * Provides the injector for the {@link WatchListActivity}, which has access to the dependencies
+     * provided by this application instance (singleton scoped objects).
+     */
+    @PerActivity
+    @ContributesAndroidInjector(modules = WatchListActivityModule.class)
+    abstract WatchListActivity watchListActivityInjector();
 
 
 }

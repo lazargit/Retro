@@ -35,7 +35,7 @@ public class MovieDetailsResponseEntity implements Serializable , Entity
     private String homepage;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Long id;
     @SerializedName("imdb_id")
     @Expose
     private String imdbId;
@@ -167,11 +167,11 @@ public class MovieDetailsResponseEntity implements Serializable , Entity
         this.homepage = homepage;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

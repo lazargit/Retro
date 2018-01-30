@@ -16,43 +16,61 @@
 
 package com.shamildev.retro.domain.interactor;
 
-
-import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.params.ParamsBasic;
+import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
+import com.shamildev.retro.domain.util.DateUtil;
+
+import java.util.List;
+
 import javax.inject.Inject;
+
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
+
+/**
+ * Use case for getting movies in my watchlist.
+ */
+public final class GetMyWatchList implements UseCaseFlowable<ParamsBasic, List<Movie>> {
 
 
-
-public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
-
-    private final RemoteRepository repository;
+    private final CacheRepository cache;
 
     @Inject
-    GetUpcomingMovies(RemoteRepository repository) {
-        this.repository = repository;
+    GetMyWatchList(CacheRepository cache) {
+
+        this.cache = cache;
     }
+
+
+
 
     @Override
-    public Flowable<MovieWrapper> execute(ParamsBasic params) {
-        int page = ((Params) params).page;
+    public Flowable<List<Movie>> execute(ParamsBasic params) {
 
-        return this.repository.fetchUpcomingMovies(page);
+
+
+
+        return   Flowable.empty();
+
+
     }
+
+
+
+
 
 
     public static final class Params implements ParamsBasic {
 
-        private int page = 1;
+        private Params() { }
 
-        public Params(int page) {
-            this.page = page;
-        }
-        public static GetUpcomingMovies.Params withPage(int page) {
-            return new GetUpcomingMovies.Params(page);
+        public static GetMyWatchList.Params justVoid() {
+            return new GetMyWatchList.Params();
         }
 
     }
-
 }

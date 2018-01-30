@@ -35,6 +35,15 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class TMDBRestAdapterTest {
 
+
+
+    private static final String UTF_8_CODING = "UTF-8";
+    private static final String API_KEY = "1234567890";
+    private static final String LANGUAGE_US = "en-US";
+    private static final String LANGUAGE_DE = "de-DE";
+    private static final String COUNTRY_DE = "DE";
+    private static final String COUNTRY_US= "US";
+
     //MWS is what we'll use to test the REST Adapter
     private MockWebServer server;
 
@@ -64,6 +73,7 @@ public class TMDBRestAdapterTest {
 
         Retrofit build = new Retrofit.Builder()
                 .client(client)
+
                 .baseUrl(
                         server.url("/").toString()
                 )
@@ -177,6 +187,25 @@ public class TMDBRestAdapterTest {
 
     }
 
+
+
+
+
+    @Test
+    @JsonFileResource(fileName = "UpcomingMoviesResponse.json", clazz = String.class)
+    public void on_FetchUpcomingMovies_Successful() throws Exception {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonParsingRule.getValue().toString()));
+
+        adapter.fetchUpcomingMovies(API_KEY,"1",LANGUAGE_US,COUNTRY_US)
+                .test()
+                .assertSubscribed()
+                .assertComplete()
+                .assertNoErrors();
+
+    }
 
 
 

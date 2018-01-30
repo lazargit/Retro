@@ -48,6 +48,7 @@ public class ConfigModule extends BaseConfigModule {
                 .authClientSecret(BuildConfig.MOVIE_DB_API_TOKEN)
                 .cacheRootDir(application.getExternalCacheDir().getPath())
                 .language(Locale.getDefault().toString())
+                .country(Locale.getDefault().getCountry())
                 .build();
     }
 

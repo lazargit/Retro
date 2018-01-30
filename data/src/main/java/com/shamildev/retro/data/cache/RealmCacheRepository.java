@@ -50,6 +50,7 @@ import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 
@@ -159,6 +160,10 @@ final class RealmCacheRepository implements CacheRepository {
     @Override
     public Flowable<List<Genre>> fetchGenre(final Constants.MEDIA_TYPE mediaType, final String language) {
 
+
+
+
+
         return Flowable.create(new FlowableOnSubscribe<List<Genre>>() {
             @Override
             public void subscribe(FlowableEmitter<List<Genre>> e) throws Exception {
@@ -204,60 +209,100 @@ final class RealmCacheRepository implements CacheRepository {
 
     @Override
     public Flowable<Configuration> fetchConfiguration() {
-
         Log.d("TAG", "fetchConfigurationRealm");
-        return Flowable.create(e -> {
 
-            try (Realm realm = realmProvider.get()) {
-                realm.executeTransaction(realm1 -> {
+        return Flowable.create(new FlowableOnSubscribe<Configuration>() {
+            @Override
+            public void subscribe(FlowableEmitter<Configuration> e) throws Exception {
+                Realm realm = realmProvider.get();
 
-                    RealmResults<TMDbConfigurationRealm> result = realm1.where(TMDbConfigurationRealm.class)
-                            .findAll();
-                    Log.d("result.size","# "+ result.size());
-                    if (result.size() == 0) {
-                        e.onComplete();
-                    }else {
-                        TMDbConfigurationRealm tmDbConfigurationRealm = result.get(0);
-                        Log.d("result.size","## "+ tmDbConfigurationRealm);
-                        Configuration map = realmMapperHolder.configurationRealmMapper().map(tmDbConfigurationRealm);
-                        Log.d("result.size","## "+ map);
-                        e.onNext(map);
-                        e.onComplete();
-                    }
+                RealmQuery<TMDbConfigurationRealm> query = realm.where(TMDbConfigurationRealm.class);
+                RealmResults<TMDbConfigurationRealm> result = query.findAll();
 
-                });
+                if (result.size() == 0) {
+                    e.onComplete();
+
+                }else {
+                    TMDbConfigurationRealm realmObj  = result.get(0);
+                    Configuration map = realmMapperHolder.configurationRealmMapper().map(realmObj);
+                    e.onNext(map);
+                    e.onComplete();
+
+                }
+                realm.close();
+
+
             }
         }, BackpressureStrategy.LATEST);
+
+
+
+//        return Flowable.create(e -> {
+//            Log.d("TAG", "fetchConfigurationRealm>>>");
+//            try (Realm realm = realmProvider.get()) {
+//                realm.executeTransaction(realm1 -> {
+//
+//                    RealmResults<TMDbConfigurationRealm> result = realm1.where(TMDbConfigurationRealm.class)
+//                            .findAll();
+//                    Log.d("result.size","# "+ result.size());
+//                    if (result.size() > 0) {
+//
+//
+//
+//                        TMDbConfigurationRealm tmDbConfigurationRealm = result.get(0);
+//
+//                        Configuration map = realmMapperHolder.configurationRealmMapper().map(tmDbConfigurationRealm);
+//
+//                        e.onNext(map);
+//
+//
+//                    }
+//
+//                });
+//
+//            }
+//            e.onComplete();
+//        }, BackpressureStrategy.MISSING);
     }
 
     @Override
     public Completable saveTMDbConfiguration(Configuration configuration) {
         Log.d("TAG", "saveTMDbConfiguration");
-        return Completable.create(e -> {
 
+
+
+        TMDbConfigurationRealm realmObj = realmMapperHolder.configurationRealmMapper().map(configuration);
+        realmObj.setLast_update(DateUtil.NOW());
+
+
+        return Completable.create(e -> {
             Realm realm = realmProvider.get();
             realm.beginTransaction();
-            TMDbConfigurationRealm realmObj = realmMapperHolder.configurationRealmMapper().map(configuration);
-            realmObj.setLast_update(DateUtil.NOW());
             realm.copyToRealmOrUpdate(realmObj);
             realm.commitTransaction();
             e.onComplete();
             realm.close();
 
-
-//            try (Realm realm = realmProvider.get()) {
-//                realm.executeTransaction(realm1 -> {
-//                    Log.d("TAG", "saveTMDbConfiguration");
-//                    TMDbConfigurationRealm realmObj = realmMapperHolder.configurationRealmMapper().map(configuration);
-//                                           realmObj.setLast_update(DateUtil.NOW());
-//                    realm1.insertOrUpdate(realmObj);
-//                    realm1.commitTransaction();
-//                    e.onComplete();
-//                });
-//
-//            } //autoclose
-
         });
+
+//        return Completable.create(e -> {
+//            Log.d("TAG", "saveTMDbConfiguration RX");
+//            try (Realm realm = realmProvider.get()) {
+//                if(!realm.isInTransaction()) {
+//                    realm.executeTransaction(realm1 -> {
+//
+//                        realm1.insertOrUpdate(realmObj);
+//
+//
+//                    });
+//                }
+//
+//            }
+//            e.onComplete();
+//        });
+
+
+
     }
 
 

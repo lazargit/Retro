@@ -22,9 +22,14 @@ import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.DateUtil;
 
+import org.reactivestreams.Publisher;
+
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -41,20 +46,35 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
         this.cache = cache;
     }
 
+
+    //return a single symbol from the list of symbols, or an error to catch if not.
+    private Flowable<Configuration> lookupStockSymbol() {
+
+        System.out.println("lookupStockSymbol");
+
+        return   repository.fetchConfiguration()
+                 .flatMap(this::saveToCache)
+
+                ;
+    }
+
     @Override
     public Flowable<Configuration> execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
-        return fetchConfigurationFromCache()
-                .switchIfEmpty(fetchConfigurationFromNet())
-                .map(model -> DateUtil.isCacheTimeExpired(model,cacheTime)
-                        .flatMap(aBoolean ->  fetchConfigurationFromNet()).blockingLast());
 
 
 
-//        return  fetchConfigurationFromCache()
-//                .switchIfEmpty(fetchConfigurationFromNet())
-//                .map(model -> DateUtil.isCacheTimeExpired(model,cacheTime)
-//                        .flatMap(aBoolean -> (aBoolean) ? fetchConfigurationFromNet() : fetchConfigurationFromCache()).blockingLast());
+        return   fetchConfigurationFromCache()
+
+                .switchIfEmpty(lookupStockSymbol())
+                .map(configuration -> {
+
+                    if(DateUtil.isCacheTimeExpired(configuration, cacheTime).blockingSingle()){
+                        return fetchConfigurationFromNet().blockingSingle();
+                    }
+                    return configuration;
+                })
+                .map(configuration -> fetchConfigurationFromCache().blockingSingle());
 
 
     }
@@ -62,17 +82,18 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
 
     public Flowable<Configuration> saveToCache(Configuration model ) {
 
+        System.out.println("saveToCache"+model.baseUrl());
         return   Flowable.defer(() -> {
 
             try {
 
                 return Flowable.just(model)
-                        .flatMap(configModel -> Flowable.just(configModel)
-                                .flatMapCompletable(cache::saveTMDbConfiguration)
-                                .toFlowable()
-                                .startWith(configModel)
+                                .flatMap(configModel -> Flowable.just(configModel)
+                                                                .flatMapCompletable(cache::saveTMDbConfiguration)
+                                                                .toFlowable()
+                                                                .startWith(configModel)
 
-                        ).cast(Configuration.class);
+                                ).cast(Configuration.class);
 
             } catch (Exception e) {
 
@@ -84,46 +105,28 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
 
     }
     public Flowable<Configuration> fetchConfigurationFromNet() {
+        System.out.println("fetchConfigurationFromNet");
 
 
-        return   repository.fetchConfiguration()
-                .flatMap(this::saveToCache)
-                .doOnNext(configuration -> cache.fetchConfiguration());
-                //.flatMap(model -> fetchConfigurationFromCache());
+        return    repository.fetchConfiguration()
+                  .flatMap(this::saveToCache)
 
-              //  .subscribeOn(Schedulers.io());
+                ;
+
 
     }
     public Flowable<Configuration> fetchConfigurationFromCache() {
+        System.out.println("fetchConfigurationFromCache");
 
+        return  cache.fetchConfiguration()
+                .subscribeOn(Schedulers.computation())
+                ;
 
-        return  cache.fetchConfiguration();
     }
 
 
 
 
-
-
-
-
-//    @Override
-//    protected Flowable<TMDbConfigurationModel> buildUseCaseFlowable(ParamsBasic params) {
-//
-//        int cacheTime = ((Params) params).cacheTime;
-//
-//        return  fetchTMDbConfigurationFromCache()
-//                .switchIfEmpty(fetchTMDbConfigurationFromNet())
-//                .map(model -> isCacheTimeExpired(model,cacheTime)
-//                        .flatMap(aBoolean -> (aBoolean) ? fetchTMDbConfigurationFromNet() : fetchTMDbConfigurationFromCache()).blockingLast());
-//
-//    }
-//
-//
-//    @Override
-//    protected GetTMDbConfigutartion.Params setParams(GetTMDbConfigutartion.Params params) {
-//        return params;
-//    }
     public static final class Params implements ParamsBasic {
 
         private Params() { }

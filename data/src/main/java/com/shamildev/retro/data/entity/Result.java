@@ -32,7 +32,7 @@ public  class Result implements Entity {
 
     final  List<Integer> genreIds;
 
-    final  int id;
+    final  long id;
 
 
     @Json(name = "original_title")
@@ -58,7 +58,7 @@ public  class Result implements Entity {
     @Json(name = "vote_average")
     final  float voteAverage;
 
-    public Result(String posterPath, boolean adult, String overview, String releaseDate, List<Integer> genreIds, int id, String originalTitle, String originalLanguage, String title, String backdropPath, float popularity, int voteCount, boolean video, float voteAverage) {
+    public Result(String posterPath, boolean adult, String overview, String releaseDate, List<Integer> genreIds, long id, String originalTitle, String originalLanguage, String title, String backdropPath, float popularity, int voteCount, boolean video, float voteAverage) {
         this.posterPath = posterPath;
         this.adult = adult;
         this.overview = overview;
@@ -96,7 +96,7 @@ public  class Result implements Entity {
         return genreIds;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -68,16 +68,75 @@ public interface TMDBServices {
 
 
 
+    //https://api.themoviedb.org/3/movie/284052?api_key=XXX
+    //&append_to_response=videos%2Cimages%2Ctrailers%2Csimilar_movies%2Crelease_dates%2Cchanges%2Ccredits%2Creviews%2Ckeywords%2Clists%2Ctranslations%2Crecommendations
+    @GET("3/movie/{movie_id}")
+    Single<MovieDetailsResponseEntity> fetchMovie(
+            @Path(MOVIE_ID) String movieId,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(APPEND_TO_RESPONSE) String appendToResponse
+
+    );
 
 
-    ///https://api.themoviedb.org/3/movie/upcoming?api_key=96306bc3cc12ed9ef756ba9a85628586&language=de-DE&page=1&region=de
+    //https://api.themoviedb.org/3/movie/238/recommendations?api_key=XXX&language=de-DE&page=1
+    @GET("3/movie/{movie_id}/recommendations")
+    Single<ResponseEntity> fetchRecommendations(
+            @Path(MOVIE_ID) String movieId,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(PAGE) String page
+
+
+    );
+
+
+    //https://api.themoviedb.org/3/movie/238/similar?api_key=XXX&language=de-DE&page=1
+    @GET("3/movie/{movie_id}/similar")
+    Single<ResponseEntity> fetchSimilarMovies(
+            @Path(MOVIE_ID) String movieId,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(PAGE) String page
+
+
+    );
+
+
+
+
+    ///https://api.themoviedb.org/3/movie/upcoming?api_key=XXX&language=de-DE&page=1&region=de
     @GET("3/movie/upcoming")
     Single<ResponseEntity> fetchUpcomingMovies(
             @Query(API_KEY) String apikey,
             @Query(PAGE) String page,
-            @Query(LANGUAGE) String language
+            @Query(LANGUAGE) String language,
+            @Query(REGION) String region
+
 
     );
+
+
+    //https://api.themoviedb.org/3/movie/now_playing?api_key=XXX&language=de-DE&page=1&region=de
+    @GET("3/movie/now_playing")
+    Single<ResponseEntity> fetchNowPlayingMovies(
+            @Query(API_KEY) String apikey,
+            @Query(PAGE) String page,
+            @Query(LANGUAGE) String language,
+            @Query(REGION) String region
+    );
+
+    //https://api.themoviedb.org/3/movie/top_rated?api_key=XXX&language=de-DE&page=1&region=de
+    @GET("3/movie/top_rated")
+    Single<ResponseEntity> fetchTopRatedMovies(
+            @Query(API_KEY) String apikey,
+            @Query(PAGE) String page,
+            @Query(LANGUAGE) String language,
+            @Query(REGION) String region
+    );
+
+
 
     //https://api.themoviedb.org/3/configuration?api_key=96306bc3cc12ed9ef756ba9a85628586"
     @GET("3/configuration")
@@ -97,16 +156,10 @@ public interface TMDBServices {
 
 
 
-    //https://api.themoviedb.org/3/movie/284052?api_key=96306bc3cc12ed9ef756ba9a85628586
-    // &append_to_response=videos%2Cimages%2Ctrailers%2Csimilar_movies%2Crelease_dates%2Cchanges%2Ccredits%2Creviews%2Ckeywords%2Clists%2Ctranslations%2Crecommendations
-    @GET("3/movie/{movie_id}")
-    Single<MovieDetailsResponseEntity> fetchMovie(
-            @Path(MOVIE_ID) String movieId,
-            @Query(API_KEY) String apikey,
-            @Query(LANGUAGE) String language,
-            @Query(APPEND_TO_RESPONSE) String appendToResponse
 
-    );
+
+
+
 
 
 

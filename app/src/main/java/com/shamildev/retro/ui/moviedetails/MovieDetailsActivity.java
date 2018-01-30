@@ -1,5 +1,7 @@
-package com.shamildev.retro.ui.splash;
+package com.shamildev.retro.ui.moviedetails;
+
 import android.os.Bundle;
+
 import com.shamildev.retro.R;
 import com.shamildev.retro.ui.common.BaseActivity;
 import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
@@ -8,7 +10,7 @@ import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
  * Created by Schamil on 30.10.2017.
  */
 
-public class SplashActivity extends BaseActivity {
+public class MovieDetailsActivity extends BaseActivity {
 
 
 

@@ -69,7 +69,7 @@ final class TMDBRepository implements RemoteRepository{
     public Observable<MovieWrapper> getTestService() {
         return   Observable.create(e -> {
 
-            Single<MovieWrapper> map = tmdbServices.fetchUpcomingMovies(dataConfig.authClientSecret(), "1", dataConfig.language())
+            Single<MovieWrapper> map = tmdbServices.fetchUpcomingMovies(dataConfig.authClientSecret(), "1", dataConfig.language(),dataConfig.country())
                     .map(movieWrapperEntity -> {
                         Timber.d("getTestService",movieWrapperEntity);
 
@@ -168,7 +168,7 @@ final class TMDBRepository implements RemoteRepository{
 
 
     @Override
-    public Flowable<Movie> fetchMovie(int id) {
+    public Flowable<Movie> fetchMovie(int id ) {
 
         return tmdbServices.fetchMovie(String.valueOf(id),dataConfig.authClientSecret(), dataConfig.language(), null).toFlowable()
                 .map(movie -> {
@@ -183,7 +183,7 @@ final class TMDBRepository implements RemoteRepository{
     @Override
     public Flowable<MovieWrapper> fetchUpcomingMovies(int page) {
 
-        return tmdbServices.fetchUpcomingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language()).toFlowable()
+        return tmdbServices.fetchUpcomingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country()).toFlowable()
                 .map(movieWrapperEntity -> {
                     Timber.d("fetchUpcomingMovies", movieWrapperEntity);
 
@@ -191,6 +191,49 @@ final class TMDBRepository implements RemoteRepository{
                 });
 
     }
+
+    @Override
+    public Flowable<MovieWrapper> fetchNowPlayingMovies(int page) {
+
+        return tmdbServices.fetchNowPlayingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country()).toFlowable()
+                .map(movieWrapperEntity -> {
+                    Timber.d("fetchNowPlayingMovies", movieWrapperEntity);
+
+                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
+                });
+
+    }
+
+    @Override
+    public Flowable<MovieWrapper> fetchTopRatedMovies(int page) {
+         return tmdbServices.fetchTopRatedMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country()).toFlowable()
+                .map(movieWrapperEntity -> {
+                    Timber.d("fetchTopRatedMovies", movieWrapperEntity);
+
+                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
+                });
+    }
+
+    @Override
+    public Flowable<MovieWrapper> fetchRecommendations(int movieId, int page) {
+        return tmdbServices.fetchRecommendations(String.valueOf(movieId),dataConfig.authClientSecret(),dataConfig.language(),String.valueOf(page)).toFlowable()
+                .map(movieWrapperEntity -> {
+                    Timber.d("fetchRecommendations", movieWrapperEntity);
+
+                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
+                });
+    }
+
+    @Override
+    public Flowable<MovieWrapper> fetchSimilarMovies(int movieId, int page) {
+        return tmdbServices.fetchSimilarMovies(String.valueOf(movieId),dataConfig.authClientSecret(),dataConfig.language(),String.valueOf(page)).toFlowable()
+                .map(movieWrapperEntity -> {
+                    Timber.d("fetchSimilarMovies", movieWrapperEntity);
+
+                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
+                });
+    }
+
 
     //    @Override
 //    public Observable<ResponseEntity> getTestService() {

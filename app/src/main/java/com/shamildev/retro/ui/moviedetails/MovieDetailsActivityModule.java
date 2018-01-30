@@ -1,10 +1,11 @@
-package com.shamildev.retro.ui.splash;
+package com.shamildev.retro.ui.moviedetails;
 
 import android.app.Activity;
 
 import com.shamildev.retro.di.scope.PerActivity;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.BaseActivityModule;
+import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
 import com.shamildev.retro.ui.splash.fragment.view.SplashFragmentModule;
 
@@ -19,7 +20,7 @@ import dagger.android.ContributesAndroidInjector;
  * Provides Splashscreen activity dependencies.
  */
 @Module(includes = BaseActivityModule.class)
-public abstract class SplashActivityModule {
+public abstract class MovieDetailsActivityModule {
 
     /**
      * Provides the injector for the {@link SplashFragment}, which has access to the dependencies

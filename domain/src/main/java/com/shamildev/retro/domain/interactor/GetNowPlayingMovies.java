@@ -20,17 +20,18 @@ package com.shamildev.retro.domain.interactor;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.RemoteRepository;
+
 import javax.inject.Inject;
+
 import io.reactivex.Flowable;
 
 
-
-public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
+public final class GetNowPlayingMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
 
     private final RemoteRepository repository;
 
     @Inject
-    GetUpcomingMovies(RemoteRepository repository) {
+    GetNowPlayingMovies(RemoteRepository repository) {
         this.repository = repository;
     }
 
@@ -38,7 +39,7 @@ public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,Movi
     public Flowable<MovieWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
 
-        return this.repository.fetchUpcomingMovies(page);
+        return this.repository.fetchNowPlayingMovies(page);
     }
 
 
@@ -49,8 +50,8 @@ public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,Movi
         public Params(int page) {
             this.page = page;
         }
-        public static GetUpcomingMovies.Params withPage(int page) {
-            return new GetUpcomingMovies.Params(page);
+        public static GetNowPlayingMovies.Params withPage(int page) {
+            return new GetNowPlayingMovies.Params(page);
         }
 
     }

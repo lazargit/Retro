@@ -39,7 +39,7 @@ public class Result implements Entity {
     private Integer voteCount;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Long id;
     @SerializedName("video")
     @Expose
     private Boolean video;
@@ -122,11 +122,11 @@ public class Result implements Entity {
         this.voteCount = voteCount;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

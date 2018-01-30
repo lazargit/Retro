@@ -57,6 +57,8 @@ public abstract class DataConfig {
 
     public abstract String language();
 
+    public abstract String country();
+
 
     /**
      * Builder used to create instances of {@link DataConfig}
@@ -86,6 +88,8 @@ public abstract class DataConfig {
         public abstract Builder debug(boolean debug);
 
         public abstract Builder language(String language);
+
+        public abstract Builder country(String country);
 
         public abstract DataConfig build();
     }

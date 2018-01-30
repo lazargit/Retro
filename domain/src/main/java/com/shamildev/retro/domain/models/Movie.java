@@ -18,7 +18,8 @@ import io.reactivex.annotations.Nullable;
 @AutoValue
 public abstract class Movie  implements DomainObject ,DomainObjectStorable {
 
-    public abstract long id();
+    @Nullable
+    public abstract Long id();
     public abstract String title();
 
     public abstract String posterPath();
@@ -84,18 +85,22 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable {
     public abstract List<SpokenLanguage> spokenLanguages();
     @Nullable
     public abstract List<Genre> genres();
+
+
+
     @Nullable
     public abstract Long lastUpdate();
 
 
     public static Builder builder() {
-        return null;// new AutoValue_Movie.Builder();
+
+        return new AutoValue_Movie.Builder();
     }
 
 
     @AutoValue.Builder
     public abstract static class Builder {
-        public abstract Builder id(long id);
+        public abstract Builder id(Long id);
 
         public abstract Builder title(String title);
 

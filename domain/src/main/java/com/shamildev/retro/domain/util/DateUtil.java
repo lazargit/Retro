@@ -68,12 +68,12 @@ public class DateUtil {
     public static <T extends DomainObjectStorable> Flowable<Boolean> isCacheTimeExpired(T object,  int cacheExpiredTime) {
 
 
-        System.out.println("isCacheTimeExpired"+object.lastUpdate());
+        System.out.println(convertToDateTime(object.lastUpdate())+" NOW:"+convertToDateTime(NOW())+" isCacheTimeExpired "+cacheExpiredTime+" DIF :"+dateDifFromNowInMinutes(object.lastUpdate()));
 
         return Flowable.defer(() -> {
 
             if(dateDifFromNowInMinutes(object.lastUpdate()) > cacheExpiredTime){
-
+                System.out.println("isCacheTimeExpired"+true);
                 return Flowable.just(true);
             }
 

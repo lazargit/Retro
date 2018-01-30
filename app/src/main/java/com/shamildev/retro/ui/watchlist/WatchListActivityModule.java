@@ -1,33 +1,35 @@
-package com.shamildev.retro.ui.splash;
+package com.shamildev.retro.ui.watchlist;
 
 import android.app.Activity;
 
 import com.shamildev.retro.di.scope.PerActivity;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.BaseActivityModule;
-import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
-import com.shamildev.retro.ui.splash.fragment.view.SplashFragmentModule;
+
+
+import com.shamildev.retro.ui.watchlist.fragment.view.WatchListFragment;
+import com.shamildev.retro.ui.watchlist.fragment.view.WatchListFragmentModule;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
 
 
- * Provides Splashscreen activity dependencies.
+
+ * Provides WatchList activity dependencies.
  */
 @Module(includes = BaseActivityModule.class)
-public abstract class SplashActivityModule {
+public abstract class WatchListActivityModule {
 
     /**
-     * Provides the injector for the {@link SplashFragment}, which has access to the dependencies
+     * Provides the injector for the {@link WatchListFragment}, which has access to the dependencies
      * provided by this activity and application instance (singleton scoped objects).
      */
     @PerFragment
-    @ContributesAndroidInjector(modules = SplashFragmentModule.class)
-    abstract SplashFragment splashFragmentInjector();
+    @ContributesAndroidInjector(modules = WatchListFragmentModule.class)
+    abstract WatchListFragment watchListFragmentInjector();
 
     /**
      * As per the contract specified in {@link BaseActivityModule}; "This must be included in all
@@ -37,10 +39,10 @@ public abstract class SplashActivityModule {
      * {@link BaseActivityModule#ACTIVITY_FRAGMENT_MANAGER} into the
      * {@link com.shamildev.retro.ui.common.BaseActivity}.
      *
-     * @param activity the SplashActivity
+     * @param activity the WatchListActivity
      * @return the activity
      */
     @Binds
     @PerActivity
-    abstract Activity activity(SplashActivity activity);
+    abstract Activity activity(WatchListActivity activity);
 }

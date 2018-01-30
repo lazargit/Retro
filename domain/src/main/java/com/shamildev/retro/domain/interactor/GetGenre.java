@@ -28,6 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -63,7 +64,9 @@ public final class GetGenre implements UseCaseFlowable<ParamsBasic,List<Genre>> 
         final String language = ((GetGenre.Params) params).language;
 
         return  fetchAllGenreFromCache(language)
+
                 .switchIfEmpty(fetchAllGenreFromNet())
+
                 .sorted((o1, o2) -> Long.compare(o2.lastUpdate(), o1.lastUpdate()))
                 .take(1)
                 .map(genreModel ->
@@ -102,7 +105,7 @@ public final class GetGenre implements UseCaseFlowable<ParamsBasic,List<Genre>> 
     }
 
     public Flowable<Genre> fetchAllGenreFromNet() {
-
+        System.out.println("fetchAllGenreFromNet");
         Flowable<List<Genre>> listFlowable1 = this.repository.fetchGenre(Constants.MEDIA_TYPE.MOVIE);
         Flowable<List<Genre>> listFlowable2 = this.repository.fetchGenre(Constants.MEDIA_TYPE.TV);
         return Flowable.concat(listFlowable1,listFlowable2)

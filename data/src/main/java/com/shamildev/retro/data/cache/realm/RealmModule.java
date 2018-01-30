@@ -31,8 +31,8 @@ public class RealmModule {
         Log.d("provideCo", ">>>" + debug);
            if( debug) {
 
-        builder = builder.deleteRealmIfMigrationNeeded();
-       Realm.deleteRealm(builder.build());
+       // builder = builder.deleteRealmIfMigrationNeeded();
+        // Realm.deleteRealm(builder.build());
 
          }
         return builder.build();

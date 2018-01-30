@@ -29,6 +29,7 @@ import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 
@@ -53,7 +54,7 @@ public final class UseCaseHandler {
     private Object previousUseCaseParams;
 
     @Inject
-    UseCaseHandler(
+    public UseCaseHandler(
             ExecutionThread threadScheduler,
             PostExecutionThread postExecutionScheduler,
                    CompositeDisposable disposables) {
@@ -66,9 +67,11 @@ public final class UseCaseHandler {
                                DisposableObserver<V> observer) {
         setLastUseCase(useCase, params);
         Disposable disposable = useCase.execute(params)
+                .subscribeOn(Schedulers.io())
 
-                .subscribeOn(executionThread.scheduler())
                 .observeOn(postExecutionThread.scheduler())
+               // .subscribeOn(executionThread.scheduler())
+                //.observeOn(postExecutionThread.scheduler())
                 .subscribeWith(observer);
         disposables.add(disposable);
     }
@@ -79,10 +82,15 @@ public final class UseCaseHandler {
        // setLastUseCase(useCase, params);
         Disposable disposable = useCase.execute(params)
 
-                .subscribeOn(executionThread.scheduler())
-                .observeOn(postExecutionThread.scheduler())
-                .subscribeWith(observer);
-        disposables.add(disposable);
+                //.subscribeOn(Schedulers.io())
+
+                //  .observeOn(postExecutionThread.scheduler())
+               .subscribeOn(executionThread.scheduler())
+       .observeOn(postExecutionThread.scheduler())
+        .subscribeWith(observer);
+        if(disposables != null) {
+            disposables.add(disposable);
+        }
     }
 
 

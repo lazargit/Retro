@@ -3,6 +3,7 @@ package com.shamildev.retro.domain.models;
 import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.DomainObjectStorable;
+import com.shamildev.retro.domain.util.DateUtil;
 
 
 import java.util.List;
@@ -73,7 +74,9 @@ public abstract class Configuration implements DomainObject, DomainObjectStorabl
 
     @Override
     public String toString() {
-        return baseUrl()+":#:"+secureBaseUrl()+":#:"+changeKeys()+":#:"+lastUpdate();
+        return baseUrl()+"\n#:"
+                +secureBaseUrl()+"\n#:"
+                +lastUpdate()+"--"+ DateUtil.convertToDateTime(lastUpdate())+"\n#:";
 
 
     }
