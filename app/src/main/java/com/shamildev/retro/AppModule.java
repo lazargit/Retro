@@ -1,7 +1,10 @@
 package com.shamildev.retro;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
 import com.shamildev.retro.android.executor.ExecutorModule;
 import com.shamildev.retro.android.executor.IOExecutionThread;
 import com.shamildev.retro.android.executor.MainPostExecutionThread;
@@ -24,6 +27,7 @@ import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.ContributesAndroidInjector;
 
@@ -36,6 +40,7 @@ import dagger.android.ContributesAndroidInjector;
 
         includes = {AndroidInjectionModule.class,
                 ConfigModule.class,
+                GlideModule.class,
                 NetworkMangerModule.class,
                 DataModule.class,
                 ExecutorModule.class,

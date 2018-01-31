@@ -22,10 +22,13 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable {
     public abstract Long id();
     public abstract String title();
 
+
+    @Nullable
     public abstract String posterPath();
 
     public abstract boolean adult();
 
+    @Nullable
     public abstract String overview();
 
     @Nullable
@@ -44,7 +47,7 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable {
 
 
 
-
+    @Nullable
     public abstract String backdropPath();
 
     public abstract float popularity();
@@ -153,5 +156,10 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable {
         public abstract Builder lastUpdate(Long lastUpdate);
 
         public abstract Movie build();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

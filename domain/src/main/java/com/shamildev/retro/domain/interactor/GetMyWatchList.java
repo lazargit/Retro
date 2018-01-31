@@ -54,7 +54,7 @@ public final class GetMyWatchList implements UseCaseFlowable<ParamsBasic, List<M
 
 
 
-        return   Flowable.empty();
+        return cache.fetchWatchList();
 
 
     }

@@ -32,7 +32,7 @@ import dagger.Reusable;
  * Maps lists of entities.
  */
 @Reusable
-final class EntityListMapper {
+public final class EntityListMapper {
 
     @Inject
     EntityListMapper() {

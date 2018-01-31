@@ -47,7 +47,7 @@ final class MovieWrapperEntityMapper implements EntityMapper<ResponseEntity, Mov
     @Override
     public MovieWrapper map(ResponseEntity entity) {
 
-        Log.d("Mapper",">>>>>"+entity.toString()+"   ");
+
 
 
         return MovieWrapper.builder()

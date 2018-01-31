@@ -39,7 +39,7 @@ import dagger.Reusable;
  * Holds instances of {@link EntityMapper}s.
  */
 @Reusable
-public final class EntityMapperHolder {
+public  class EntityMapperHolder {
 
     private final EntityMapper<Result, Movie> movieEntityMapper;
     private final EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper;

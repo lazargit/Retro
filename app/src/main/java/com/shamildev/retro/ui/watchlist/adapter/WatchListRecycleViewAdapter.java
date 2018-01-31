@@ -70,18 +70,21 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
 */
 
 
+        if(movieArrayList.get(position).posterPath()!=null){
+            Glide.with(holder.imageView)
 
-        Glide.with(holder.imageView)
 
-
-                .load("https://image.tmdb.org/t/p/w185"+movieArrayList.get(position).posterPath())
+                    .load("https://image.tmdb.org/t/p/w185/"+movieArrayList.get(position).posterPath())
 
                     .apply(new RequestOptions()
-                    .placeholder(android.R.drawable.ic_dialog_alert)
-                    .override(200, 250) // set exact size
-                    .fitCenter())
+                            .placeholder(android.R.drawable.ic_dialog_alert)
+                            .override(200, 250) // set exact size
+                            .fitCenter())
 
-                .into(holder.imageView);
+                    .into(holder.imageView);
+        }
+
+
 
 //      picasso.load("https://image.tmdb.org/t/p/w185"+movieArrayList.get(position).posterPath())
 //                //.placeholder(R.drawable.movie1)

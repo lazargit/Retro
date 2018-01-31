@@ -22,10 +22,13 @@ public interface CacheRepository {
     void saveObj(DomainObject object);
 
     Completable save(Movie movie);
+    Flowable<List<Movie>> fetchWatchList();
+
+
 
     Flowable<Configuration> fetchConfiguration();
-
     Completable saveTMDbConfiguration(Configuration configuration);
+
 
 
 

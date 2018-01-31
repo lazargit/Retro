@@ -107,20 +107,62 @@ final class RealmCacheRepository implements CacheRepository {
     @Override
     public Completable save(Movie movie) {
         Log.d("TAG", ">>>" + "save Movie"+movie);
-
+        MovieRealm realmObj = realmMapperHolder.movieRealmMapper().map(movie);
+                   realmObj.setLast_update(DateUtil.NOW());
 
         return Completable.create(e -> {
 
             try (Realm realm = realmProvider.get()) {
                 realm.executeTransaction(realm1 -> {
                     Log.d("TAG", ">>>" + realm1.toString());
-                    MovieRealm movieRealm = realmMapperHolder.movieRealmMapper().map(movie);
-                    realm1.copyToRealmOrUpdate(movieRealm);
+
+                    realm1.copyToRealmOrUpdate(realmObj);
                     e.onComplete();
                 });
             } //autoclose
 
         });
+    }
+
+    @Override
+    public Flowable<List<Movie>> fetchWatchList() {
+
+
+
+
+
+        return Flowable.create(e -> {
+
+
+            try (Realm realm = realmProvider.get()) {
+                    realm.executeTransaction(realm1 -> {
+
+                    RealmResults<MovieRealm> result = realm1.where(MovieRealm.class)
+                            .findAll();
+
+                    if (result.size() == 0) {
+                        e.onComplete();
+                    }else {
+
+                        List<Movie> movieList = Observable
+                                .fromIterable(result)
+                                .map(realmMapperHolder.movieRealmMapper()::map)
+                                .toList()
+                                .blockingGet();
+
+                        e.onNext(movieList);
+                        e.onComplete();
+                    }
+
+                });
+            } //autoclose
+
+
+
+
+
+
+        }, BackpressureStrategy.LATEST);
     }
 
 

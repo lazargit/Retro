@@ -16,6 +16,8 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
+import android.util.Log;
+
 import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.domain.models.Movie;
 
@@ -43,12 +45,13 @@ final class MovieEntityMapper implements EntityMapper<Result, Movie> {
     public Movie map(Result entity) {
 
 
+        System.out.println("Mapper>>>>>"+entity.getTitle());
         return Movie.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .overview(entity.getOverview())
 
-                .originalTitle(entity.getTitle())
+                .originalTitle(entity.getOriginalTitle())
                 .originalLanguage(entity.getOriginalLanguage())
 
                 .posterPath(entity.getPosterPath())

@@ -14,7 +14,9 @@ import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
 import com.shamildev.retro.domain.interactor.GetMovieWithId;
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
+import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
+import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.models.Configuration;
@@ -52,6 +54,8 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
     private final UseCaseHandler useCaseHandler;
     private final GetMyWatchList getMyWatchList;
     private final GetUpcomingMovies getUpcomingMovies;
+    private final GetTopRatedMovies getTopRatedMovies;
+    private final GetNowPlayingMovies getNowPlayingMovies;
 
 
 
@@ -59,11 +63,15 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
     WatchListPresenterImpl(WatchListView view,
                            UseCaseHandler useCaseHandler,
                            GetMyWatchList getMyWatchList ,
-                           GetUpcomingMovies getUpcomingMovies) {
+                           GetUpcomingMovies getUpcomingMovies,
+                           GetTopRatedMovies getTopRatedMovies,
+                           GetNowPlayingMovies getNowPlayingMovies) {
         super(view);
         this.useCaseHandler = useCaseHandler;
         this.getMyWatchList = getMyWatchList;
         this.getUpcomingMovies = getUpcomingMovies;
+        this.getTopRatedMovies = getTopRatedMovies;
+        this.getNowPlayingMovies = getNowPlayingMovies;
 
     }
 
@@ -75,11 +83,13 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
         if (id == R.id.button_fetch_watchlist) {
 
             Log.d("getTMDBConfiguration", "getTMDBConfiguration");
-            useCaseHandler.execute(getUpcomingMovies, GetUpcomingMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
-                @Override
-                public void onNext(MovieWrapper movieWrapper) {
 
-                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
+            useCaseHandler.execute(getMyWatchList, GetMyWatchList.Params.justVoid(), new DisposableSubscriber<List<Movie>>() {
+                @Override
+                public void onNext(List<Movie> movieList) {
+
+                    view.fillList(movieList);
+                    Log.d("onNext", "totalPages "+movieList.size());
                 }
 
                 @Override
@@ -97,6 +107,79 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
                     Log.d("onComplete", ">>");
                 }
             });
+
+
+
+//            useCaseHandler.execute(getNowPlayingMovies, GetNowPlayingMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
+//                @Override
+//                public void onNext(MovieWrapper movieWrapper) {
+//
+//                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
+//                }
+//
+//                @Override
+//                public void onError(Throwable t) {
+//                    if (t.getCause() instanceof TMDBError) {
+//                        TMDBError error = (TMDBError) t.getCause();
+//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
+//
+//                    }
+//                    Log.d("onError>>>>", t.getClass().getName());
+//                }
+//
+//                @Override
+//                public void onComplete() {
+//                    Log.d("onComplete", ">>");
+//                }
+//            });
+//
+//
+//            useCaseHandler.execute(getTopRatedMovies, GetTopRatedMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
+//                @Override
+//                public void onNext(MovieWrapper movieWrapper) {
+//
+//                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
+//                }
+//
+//                @Override
+//                public void onError(Throwable t) {
+//                    if (t.getCause() instanceof TMDBError) {
+//                        TMDBError error = (TMDBError) t.getCause();
+//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
+//
+//                    }
+//                    Log.d("onError>>>>", t.getClass().getName());
+//                }
+//
+//                @Override
+//                public void onComplete() {
+//                    Log.d("onComplete", ">>");
+//                }
+//            });
+//
+//
+//            useCaseHandler.execute(getUpcomingMovies, GetUpcomingMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
+//                @Override
+//                public void onNext(MovieWrapper movieWrapper) {
+//
+//                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
+//                }
+//
+//                @Override
+//                public void onError(Throwable t) {
+//                    if (t.getCause() instanceof TMDBError) {
+//                        TMDBError error = (TMDBError) t.getCause();
+//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
+//
+//                    }
+//                    Log.d("onError>>>>", t.getClass().getName());
+//                }
+//
+//                @Override
+//                public void onComplete() {
+//                    Log.d("onComplete", ">>");
+//                }
+//            });
         }
     }
 

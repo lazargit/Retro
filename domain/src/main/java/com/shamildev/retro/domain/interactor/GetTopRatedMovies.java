@@ -17,29 +17,41 @@
 package com.shamildev.retro.domain.interactor;
 
 
+import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
+import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 
 
 public final class GetTopRatedMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
 
     private final RemoteRepository repository;
+    private final CacheRepository cache;
 
     @Inject
-    GetTopRatedMovies(RemoteRepository repository) {
+    GetTopRatedMovies(RemoteRepository repository, CacheRepository cache) {
         this.repository = repository;
+        this.cache = cache;
     }
 
     @Override
     public Flowable<MovieWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
 
-        return this.repository.fetchTopRatedMovies(page);
+
+
+        return  this.repository.fetchTopRatedMovies(page)
+                .flatMap(movieWrapper -> repository.fetchTopRatedMovies(2))
+                .flatMapCompletable(movieWrapper -> Flowable.fromIterable(movieWrapper.results())
+                        .flatMapCompletable(movie -> cache.save(movie))).toFlowable();
+
     }
 
 

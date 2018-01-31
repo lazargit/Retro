@@ -32,7 +32,7 @@ public class ConfigModule extends BaseConfigModule {
     @Provides
     static DataConfig dataConfig(Application application) {
 
-        //        Locale.getDefault().getLanguage()       ---> en
+//                Locale.getDefault().getLanguage()       ---> en
 //        Locale.getDefault().getISO3Language()   ---> eng
 //        Locale.getDefault().getCountry()        ---> US
 //        Locale.getDefault().getISO3Country()    ---> USA
@@ -40,14 +40,14 @@ public class ConfigModule extends BaseConfigModule {
 //        Locale.getDefault().getDisplayName()    ---> English (United States)
 //        Locale.getDefault().toString()          ---> en_US
 //        Locale.getDefault().getDisplayLanguage()---> English
-      //  Log.d("COUNTRY-CODE", " "+ Locale.getDefault().toString());
+        Log.d("COUNTRY-CODE", " "+ Locale.getDefault().toString());
 
 
         return BASE_CONFIG_BUILDER
                 .debug(BuildConfig.DEBUG)
                 .authClientSecret(BuildConfig.MOVIE_DB_API_TOKEN)
                 .cacheRootDir(application.getExternalCacheDir().getPath())
-                .language(Locale.getDefault().toString())
+                .language( Locale.getDefault().toString().replace('_','-'))
                 .country(Locale.getDefault().getCountry())
                 .build();
     }

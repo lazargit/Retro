@@ -55,7 +55,7 @@ final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .overview(entity.getOverview())
-                .originalTitle(entity.getTitle())
+                .originalTitle(entity.getOriginal_title())
                 .originalLanguage(entity.getOriginal_language())
                 .posterPath(entity.getPoster_path())
                 .backdropPath(entity.getBackdrop_path())

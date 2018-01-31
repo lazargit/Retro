@@ -17,28 +17,53 @@
 package com.shamildev.retro.domain.interactor;
 
 
+import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
+import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import javax.inject.Inject;
-import io.reactivex.Flowable;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableSource;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 
 
 public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
 
     private final RemoteRepository repository;
+    private final CacheRepository cache;
 
     @Inject
-    GetUpcomingMovies(RemoteRepository repository) {
+    GetUpcomingMovies(RemoteRepository repository, CacheRepository cache) {
         this.repository = repository;
+        this.cache = cache;
     }
 
     @Override
     public Flowable<MovieWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
 
-        return this.repository.fetchUpcomingMovies(page);
+
+
+
+        return  this.repository.fetchUpcomingMovies(page)
+                .flatMap(movieWrapper -> repository.fetchUpcomingMovies(2))
+                .flatMapCompletable(new Function<MovieWrapper, CompletableSource>() {
+                    @Override
+                    public CompletableSource apply(MovieWrapper movieWrapper) throws Exception {
+                      return Flowable.fromIterable(movieWrapper.results())
+                                .flatMapCompletable(new Function<Movie, CompletableSource>() {
+                                    @Override
+                                    public CompletableSource apply(Movie movie) throws Exception {
+                                        return cache.save(movie);
+                                    }
+                                });
+                    }
+                }).toFlowable();
+
+
     }
 
 
