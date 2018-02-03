@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import dagger.android.AndroidInjector;
 
+
 /**
  * Created by Shamil Lazar on 13.12.2017.
  */

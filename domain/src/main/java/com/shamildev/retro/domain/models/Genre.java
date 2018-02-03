@@ -5,6 +5,7 @@ import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.DomainObjectStorable;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import io.reactivex.annotations.Nullable;
@@ -14,10 +15,11 @@ import io.reactivex.annotations.Nullable;
  */
 
 @AutoValue
-public abstract class Genre implements DomainObject,DomainObjectStorable {
+public abstract class Genre implements DomainObject,DomainObjectStorable,Serializable {
 
 
     public abstract int id();
+    @Nullable
     public abstract String name();
     @Nullable
     public abstract String type();

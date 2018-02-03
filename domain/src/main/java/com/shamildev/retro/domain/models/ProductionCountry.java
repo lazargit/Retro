@@ -3,6 +3,8 @@ package com.shamildev.retro.domain.models;
 import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Schamil Mischijew on 10.12.2017.
  */

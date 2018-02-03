@@ -7,6 +7,7 @@ import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.DomainObjectStorable;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 import io.reactivex.annotations.Nullable;
@@ -16,7 +17,7 @@ import io.reactivex.annotations.Nullable;
  */
 
 @AutoValue
-public abstract class Movie  implements DomainObject ,DomainObjectStorable {
+public abstract class Movie  implements DomainObject ,DomainObjectStorable, Serializable {
 
     @Nullable
     public abstract Long id();
@@ -81,7 +82,7 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable {
     public abstract String imdbId();
 
     @Nullable
-    public abstract List<ProductionCompany> productionCompanies();
+    public abstract  List<ProductionCompany> productionCompanies();
     @Nullable
     public abstract List<ProductionCountry> productionCountries();
     @Nullable

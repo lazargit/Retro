@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.shamildev.retro.R;
 import com.shamildev.retro.ui.common.BaseActivity;
-import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
+
 
 /**
  * Created by Schamil on 30.10.2017.
@@ -22,7 +22,7 @@ public class MovieDetailsActivity extends BaseActivity {
 
 
         if (savedInstanceState == null) {
-            addFragment(R.id.fragmentContainer, new SplashFragment());
+           // addFragment(R.id.fragmentContainer, new SplashFragment());
         }
     }
 

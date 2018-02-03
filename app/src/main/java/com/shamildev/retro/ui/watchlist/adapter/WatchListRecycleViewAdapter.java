@@ -1,9 +1,13 @@
 package com.shamildev.retro.ui.watchlist.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,7 +15,13 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.models.Movie;
 
@@ -26,10 +36,11 @@ import javax.inject.Inject;
 
 public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListRecycleViewAdapter.MyViewHolder> {
 
-    ArrayList<Movie> movieArrayList = new ArrayList<>();
+    private ArrayList<Movie> movieArrayList = new ArrayList<>();
 
     Glide glide;
     Context context;
+
 
 
 
@@ -44,8 +55,12 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-       View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_movie,parent,false);
+       View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_thumbnail,parent,false);
         return new MyViewHolder(view,this.glide);
+    }
+
+    public  ArrayList<Movie> getMovieArrayList(){
+        return movieArrayList;
     }
 
     @Override
@@ -53,7 +68,7 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
         // movieArrayList.get(position).getPoster_path();
 
 
-        Log.d("onBindViewHolder","https://image.tmdb.org/t/p/original"+movieArrayList.get(position).posterPath());
+       // Log.d("onBindViewHolder","https://image.tmdb.org/t/p/original"+movieArrayList.get(position).posterPath());
 
         /*  Glide.with(context)
 
@@ -70,18 +85,67 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
 */
 
 
-        if(movieArrayList.get(position).posterPath()!=null){
-            Glide.with(holder.imageView)
+        if(movieArrayList.get(position).posterPath()!= null){
 
-
-                    .load("https://image.tmdb.org/t/p/w185/"+movieArrayList.get(position).posterPath())
+            Glide.with(this.context).load("https://image.tmdb.org/t/p/w500/"+movieArrayList.get(position).posterPath())
+                    .thumbnail(0.2f)
 
                     .apply(new RequestOptions()
-                            .placeholder(android.R.drawable.ic_dialog_alert)
-                            .override(200, 250) // set exact size
-                            .fitCenter())
+
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+
+//                            .placeholder(R.drawable.movie1)
+//                            .dontAnimate()
+//
+//
+//                            .override(250, 300) // set exact size
+                            .fitCenter()
+                     )
+                    .transition(DrawableTransitionOptions.withCrossFade())
+
+
+
+
+
+
+//            Glide.with(this.context)
+//
+//
+//                    .load("https://image.tmdb.org/t/p/w500/"+movieArrayList.get(position).posterPath())
+//
+//                    .apply(new RequestOptions()
+//                            .placeholder(R.drawable.movie1)
+//                            .dontAnimate()
+//
+//
+//                            .override(250, 300) // set exact size
+//                            .fitCenter())
+
+
+
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            Log.e("TAG","onLoadFailed.."+movieArrayList.get(position).title());
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+
+                            Log.e("TAG","onResourceReady"+isFirstResource);
+                            return false;
+                        }
+                    })
+
+
 
                     .into(holder.imageView);
+        }else {
+            Glide.with(this.context)
+                    .load(R.drawable.movie1)
+                    .into(holder.imageView);
+
         }
 
 
@@ -96,7 +160,7 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
 //                .noFade()
 //                .into(holder.imageView);
 
-        holder.textViewTitle.setText(movieArrayList.get(position).title());
+      //  holder.textViewTitle.setText(movieArrayList.get(position).title());
     }
 
     @Override
@@ -110,6 +174,69 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
     }
 
 
+
+
+
+
+
+    public interface ClickListener {
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
+    }
+    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+        private GestureDetector gestureDetector;
+        private WatchListRecycleViewAdapter.ClickListener clickListener;
+
+
+
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final WatchListRecycleViewAdapter.ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
+                    }
+                }
+            });
+        }
+
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                clickListener.onClick(child, rv.getChildPosition(child));
+            }
+            return false;
+
+
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    }
+
+
+
+
+
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
 
@@ -117,8 +244,8 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
         TextView textViewTitle;
         public MyViewHolder(View itemView,Glide glide) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.movieImg);
-            textViewTitle = (TextView) itemView.findViewById(R.id.titleTextView);
+            imageView = (ImageView) itemView.findViewById(R.id.thumbnail);
+          //  textViewTitle = (TextView) itemView.findViewById(R.id.userrating);
             //https://image.tmdb.org/t/p/original/ogrFPm9i2oVo6CiSXl0XNSPBzjI.jpg
         }
     }

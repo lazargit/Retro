@@ -1,12 +1,22 @@
 package com.shamildev.retro.data.cache.realm.mapper;
 
+import android.util.Log;
+
 import com.shamildev.retro.data.cache.realm.models.MovieRealm;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.util.Constants;
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import javax.inject.Inject;
 
 import dagger.Reusable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import io.realm.RealmList;
 
 /**
@@ -16,6 +26,8 @@ import io.realm.RealmList;
 @Reusable
 final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
 
+    @Inject
+    RealmListMapper realmListMapper;
 
     @Inject
     MovieRealmMapper() {
@@ -51,6 +63,13 @@ final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
     @Override
     public Movie map(MovieRealm entity) {
 
+
+
+
+
+
+
+
         return Movie.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -59,7 +78,7 @@ final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
                 .originalLanguage(entity.getOriginal_language())
                 .posterPath(entity.getPoster_path())
                 .backdropPath(entity.getBackdrop_path())
-                .genreIds(entity.getGenre_ids())
+                .genreIds(RealmListMapper.mapToList(entity.getGenre_ids()))
                 .adult(entity.getAdult())
                 .video(entity.getVideo())
                 .releaseDate(entity.getRelease_date())

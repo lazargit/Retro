@@ -24,11 +24,16 @@ import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.DateUtil;
 
+import org.reactivestreams.Publisher;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -51,10 +56,39 @@ public final class GetMyWatchList implements UseCaseFlowable<ParamsBasic, List<M
     @Override
     public Flowable<List<Movie>> execute(ParamsBasic params) {
 
+        // return cache.fetchWatchList().cast(Movie.class).toList().toFlowable();
+
+        Movie build = Movie.builder()
+                .id(1L)
+                .title("schamil")
+                .overview("nichts")
+                .adult(false)
+                .originalTitle("schamilo")
+                .originalLanguage("de")
+                .popularity(7.5F)
+                .video(false)
+                .voteAverage(7.7F)
+                .build();
 
 
+        Movie build2 = Movie.builder()
+                .id(1L)
+                .title("katja")
+                .overview("nichts")
+                .adult(false)
+                .originalTitle("schamilo")
+                .originalLanguage("de")
+                .popularity(7.5F)
+                .video(false)
+                .voteAverage(7.7F)
+                .build();
+        ArrayList<Movie> list = new ArrayList<>();
+                         list.add(build);
+                         list.add(build2);
 
-        return cache.fetchWatchList();
+
+        //  return Flowable.fromArray(list);
+      return cache.fetchWatchList();
 
 
     }

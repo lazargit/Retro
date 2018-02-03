@@ -21,6 +21,7 @@ package com.shamildev.retro.data.cache.realm.mapper;
 import com.shamildev.retro.data.entity.Entity;
 import com.shamildev.retro.data.entity.mapper.EntityMapper;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.models.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ import javax.inject.Inject;
 
 import dagger.Reusable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 import io.realm.RealmList;
 
 /**
@@ -50,10 +53,15 @@ final class RealmListMapper {
     }
 
 
-    public static RealmList mapToList(List<String> list) {
-        return Observable.fromArray(new RealmList<>())
-                .flatMap(item -> Observable.fromArray(list))
-                .collect(RealmList::new, RealmList::addAll).blockingGet();
+    public static List mapToList(RealmList<Integer> list) {
+
+
+        List<Integer> vList = new ArrayList<>();
+        for (Integer id : list) {
+            vList.add(id);
+        }
+        return vList;
+
 
     }
 

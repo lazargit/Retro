@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.shamildev.retro.di.scope.ApplicationScope;
+import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.watchlist.WatchListActivity;
 
@@ -47,6 +49,14 @@ public final class Navigator {
 //            Intent intent = new Intent(context, HomeActivity.class);
 //            context.startActivity(intent);
 //        }
+
+            public void navigateToDetails(Context context, Movie movie) {
+            if (context != null) {
+                Intent intent = DetailsActivity.getCallingIntent(context, movie);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        }
 
 
     }

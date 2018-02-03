@@ -5,7 +5,7 @@ import android.app.Application;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
-import com.shamildev.retro.di.scope.ApplicationScope;
+
 
 import javax.inject.Singleton;
 
@@ -19,7 +19,7 @@ public class GlideModule {
     @Provides
     @Singleton
     public Glide glide(Application application) {
-        return new GlideBuilder().build(application);
+        return  Glide.get(application);
 
     }
 

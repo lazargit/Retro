@@ -1,4 +1,4 @@
-package com.shamildev.retro.ui.watchlist.adapter;
+package com.shamildev.retro.ui.layout;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;

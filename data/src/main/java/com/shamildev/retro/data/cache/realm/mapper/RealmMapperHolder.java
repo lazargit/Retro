@@ -32,9 +32,13 @@ import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.Reusable;
+import io.realm.RealmList;
 
 /**
  * Holds instances of {@link EntityMapper}s.
@@ -45,6 +49,7 @@ public final class RealmMapperHolder {
     private final RealmMapper<Movie, MovieRealm> movieRealmMapper;
     private final RealmMapper<Configuration, TMDbConfigurationRealm> configurationRealmMapper;
     private final RealmMapper<Genre, GenreRealm> genreRealmMapper;
+
 
 
 

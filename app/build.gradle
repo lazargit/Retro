@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId 'com.shamildev.retro'
-        minSdkVersion 19//globalConfiguration.getAt("androidMinSdkVersion")
+        minSdkVersion 21//globalConfiguration.getAt("androidMinSdkVersion")
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
         versionName globalConfiguration.getAt("androidVersionName")
         testInstrumentationRunner globalConfiguration.getAt("testApplicationId")
@@ -95,6 +95,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 
+
+
     compile                           presentationDependencies.butterKnife.core
     annotationProcessor               presentationDependencies.butterKnife.compiler
 
@@ -102,6 +104,13 @@ dependencies {
     annotationProcessor               presentationDependencies.dagger.compiler
     annotationProcessor               presentationDependencies.dagger.android.processor
     implementation                    presentationDependencies.dagger.android.core
+    implementation                    presentationDependencies.dagger.android.support
+
+
+
+
+
+
     implementation                    presentationDependencies.androidSupport.recyclerView
     implementation                    presentationDependencies.androidSupport.supportCompat
     implementation                    presentationDependencies.androidSupport.coreUi

@@ -3,6 +3,7 @@ package com.shamildev.retro.ui.common;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
 import com.shamildev.retro.di.scope.PerActivity;
 
@@ -20,6 +21,8 @@ public abstract class BaseActivityModule {
 
     static final String ACTIVITY_FRAGMENT_MANAGER = "BaseActivityModule.activityFragmentManager";
 
+    static final String ACTIVITY_FRAGMENT_MANAGER2 = "BaseActivityModule.activityFragmentManager2";
+
     @Binds
    // @PerActivity
     abstract Context activityContext(Activity activity);
@@ -29,5 +32,17 @@ public abstract class BaseActivityModule {
     @PerActivity
     static FragmentManager activityFragmentManager(Activity activity) {
         return activity.getFragmentManager();
+    }
+
+
+    @Provides
+    @Named(ACTIVITY_FRAGMENT_MANAGER2)
+    @PerActivity
+    static android.support.v4.app.FragmentManager activityFragmentManager2(AppCompatActivity activity) {
+        return activity.getSupportFragmentManager();
+
+
+
+
     }
 }

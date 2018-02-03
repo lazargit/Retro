@@ -147,6 +147,7 @@ final class RealmCacheRepository implements CacheRepository {
                         List<Movie> movieList = Observable
                                 .fromIterable(result)
                                 .map(realmMapperHolder.movieRealmMapper()::map)
+                                .cast(Movie.class)
                                 .toList()
                                 .blockingGet();
 
