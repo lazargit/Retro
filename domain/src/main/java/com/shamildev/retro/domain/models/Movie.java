@@ -19,7 +19,7 @@ import io.reactivex.annotations.Nullable;
 @AutoValue
 public abstract class Movie  implements DomainObject ,DomainObjectStorable, Serializable {
 
-    @Nullable
+
     public abstract Long id();
     public abstract String title();
 
@@ -40,10 +40,10 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
 
 
 
-
+    @Nullable
     public abstract String originalTitle();
 
-
+    @Nullable
     public abstract String originalLanguage();
 
 
@@ -90,6 +90,11 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     @Nullable
     public abstract List<Genre> genres();
 
+    @Nullable
+    public abstract Images images();
+
+    @Nullable
+    public abstract List<Cast> casts();
 
 
     @Nullable
@@ -99,6 +104,56 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     public static Builder builder() {
 
         return new AutoValue_Movie.Builder();
+    }
+
+
+    public  Movie setImages(Images images) {
+        Builder builder = getBuilder();
+        builder.images(images);
+        return builder.build();
+    }
+
+    private Builder getBuilder() {
+
+        return builder()
+                .id(id())
+                .title(title())
+                .posterPath(posterPath())
+                .adult(adult())
+                .overview(overview())
+                .releaseDate(releaseDate())
+                .genreIds(genreIds())
+                .originalTitle(originalTitle())
+                .originalLanguage(originalLanguage())
+                .backdropPath(backdropPath())
+                .popularity(popularity())
+                .voteCount(voteCount())
+                .video(video())
+                .voteAverage(voteAverage())
+                .budget(budget())
+                .revenue(revenue())
+                .runtime(runtime())
+                .status(status())
+                .tagline(tagline())
+                .homepage(homepage())
+                .imdbId(imdbId())
+                .productionCompanies(productionCompanies())
+                .productionCountries(productionCountries())
+                .spokenLanguages(spokenLanguages())
+                .genres(genres())
+                .images(images())
+                .lastUpdate(lastUpdate());
+    }
+
+
+
+
+
+
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 
 
@@ -154,13 +209,12 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
 
         public abstract Builder genres(List<Genre> genres);
 
+        public abstract Builder images(Images images);
+
+        public abstract Builder casts(List<Cast> casts);
+
         public abstract Builder lastUpdate(Long lastUpdate);
 
         public abstract Movie build();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }

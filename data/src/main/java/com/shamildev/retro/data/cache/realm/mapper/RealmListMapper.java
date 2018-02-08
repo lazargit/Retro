@@ -24,6 +24,7 @@ import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Movie;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,11 +54,11 @@ final class RealmListMapper {
     }
 
 
-    public static List mapToList(RealmList<Integer> list) {
+    public static <V extends Number> List<V> mapToList(RealmList<V> list) {
 
 
-        List<Integer> vList = new ArrayList<>();
-        for (Integer id : list) {
+        List<V> vList = new ArrayList<>();
+        for (V id : list) {
             vList.add(id);
         }
         return vList;

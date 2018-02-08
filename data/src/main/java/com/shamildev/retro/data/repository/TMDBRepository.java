@@ -23,9 +23,11 @@ import com.shamildev.retro.data.config.DataConfig;
 
 import com.shamildev.retro.data.entity.mapper.EntityMapperHolder;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
 import com.shamildev.retro.data.net.TMDBServices;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.repository.RemoteRepository;
@@ -50,7 +52,7 @@ import timber.log.Timber;
  * An implementation of {@link RemoteRepository}.
  */
 @Reusable
-final class TMDBRepository implements RemoteRepository{
+public final class TMDBRepository implements RemoteRepository{
 
 
     private final TMDBServices tmdbServices;
@@ -167,14 +169,29 @@ final class TMDBRepository implements RemoteRepository{
     }
 
 
-    @Override
-    public Flowable<Movie> fetchMovie(int id ) {
 
-        return tmdbServices.fetchMovie(String.valueOf(id),dataConfig.authClientSecret(), dataConfig.language(), null).toFlowable()
+    @Override
+    public Flowable<Movie> fetchMovie(int movieId, String appendToResponse) {
+
+        return tmdbServices.fetchMovie(String.valueOf(movieId),dataConfig.authClientSecret(), dataConfig.language(), appendToResponse).toFlowable()
                 .map(movie -> {
                     Timber.d("fetchMovie", movie);
 
                     return entityMapperHolder.movieDetailsEntityMapper().map(movie);
+                });
+
+    }
+
+
+    @Override
+    public Flowable<Images> fetchImages(int movieId) {
+
+        return tmdbServices.fetchImages(dataConfig.authClientSecret())
+                .toFlowable()
+                .map(imagesResponse -> {
+                    Timber.d("fetchImages", imagesResponse.getId());
+
+                    return entityMapperHolder.imagesResponseEntityMapper().map(imagesResponse);
                 });
 
     }

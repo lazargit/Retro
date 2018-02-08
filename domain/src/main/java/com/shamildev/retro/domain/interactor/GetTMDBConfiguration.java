@@ -66,7 +66,7 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
 
         return   fetchConfigurationFromCache()
 
-                .switchIfEmpty(lookupStockSymbol())
+                .switchIfEmpty(fetchConfigurationFromNet())
                 .map(configuration -> {
 
                     if(DateUtil.isCacheTimeExpired(configuration, cacheTime).blockingSingle()){

@@ -59,6 +59,38 @@ public abstract class DataConfig {
 
     public abstract String country();
 
+    public DataConfig setBaseUrl(String arg) {
+        Builder builder = getBuilder();
+        builder.baseUrl(arg);
+        return builder.build();
+    }
+    public  DataConfig setLanguage(String arg) {
+        Builder builder = getBuilder();
+        builder.language(arg);
+        return builder.build();
+    }
+
+    private Builder getBuilder() {
+        return builder()
+                    .baseUrl(this.baseUrl())
+                    .authGrantType(this.authGrantType())
+                    .authClientId(this.authClientId())
+                    .authClientSecret(this.authClientSecret())
+                    .cacheRootDir(this.cacheRootDir())
+                    .cacheDir(this.cacheDir())
+                    .cacheMaxSizeMb(this.cacheMaxSizeMb())
+                    .offlineCacheTimeDays(this.offlineCacheTimeDays())
+                    .networkCacheTimeSeconds(this.networkCacheTimeSeconds())
+                    .debug(this.debug())
+                    .language(this.language())
+                    .country(this.country());
+    }
+
+
+    public DataConfig() {
+    }
+
+
 
     /**
      * Builder used to create instances of {@link DataConfig}

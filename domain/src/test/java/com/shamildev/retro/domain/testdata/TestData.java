@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.util.Constants;
 import com.shamildev.retro.domain.util.DateUtil;
 import com.shamildev.retro.domain.utils.JsonParsingRule;
@@ -307,6 +308,69 @@ public  class TestData {
                 }).blockingSingle();
 
         return Flowable.just(configuration);
+    }
+
+
+    public static Flowable<Images> REPO_IMAGES_DATA(ClassLoader classLoader){
+        InputStream inputStream = classLoader.getResourceAsStream("ImagesResponseTestData.json");
+        String s = StreamJsonFile.stream(inputStream);
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = jsonParser.parse(s).getAsJsonObject();
+
+
+        Configuration configuration = Observable.just(jsonObject)
+                .map(jsonObject1 -> {
+
+
+                    JsonArray change_keys = jsonObject1.get("change_keys").getAsJsonArray();
+                    JsonArray logoSizes = jsonObject1.get("images").getAsJsonObject().get("logo_sizes").getAsJsonArray();
+                    JsonArray posterSizes = jsonObject1.get("images").getAsJsonObject().get("poster_sizes").getAsJsonArray();
+                    JsonArray backdropSizes = jsonObject1.get("images").getAsJsonObject().get("backdrop_sizes").getAsJsonArray();
+                    JsonArray profileSizes = jsonObject1.get("images").getAsJsonObject().get("profile_sizes").getAsJsonArray();
+                    JsonArray stillSizes = jsonObject1.get("images").getAsJsonObject().get("still_sizes").getAsJsonArray();
+
+
+
+
+                    List<String> list_change_keys = new ArrayList<>();
+                    change_keys.forEach(jsonElement -> list_change_keys.add(jsonElement.getAsString()));
+
+                    List<String> list_logoSizes = new ArrayList<>();
+                    logoSizes.forEach(jsonElement -> list_logoSizes.add(jsonElement.getAsString()));
+
+                    List<String> list_posterSizes = new ArrayList<>();
+                    posterSizes.forEach(jsonElement -> list_posterSizes.add(jsonElement.getAsString()));
+
+                    List<String> list_backdropSizes = new ArrayList<>();
+                    backdropSizes.forEach(jsonElement -> list_backdropSizes.add(jsonElement.getAsString()));
+
+                    List<String> list_profileSizes = new ArrayList<>();
+                    profileSizes.forEach(jsonElement -> list_profileSizes.add(jsonElement.getAsString()));
+
+                    List<String> list_stillSizes = new ArrayList<>();
+                    stillSizes.forEach(jsonElement -> list_stillSizes.add(jsonElement.getAsString()));
+
+
+
+
+
+
+                    return Configuration.builder()
+                            .changeKeys(list_change_keys)
+                            .baseUrl(jsonObject1.get("images").getAsJsonObject().get("base_url").getAsString())
+                            .secureBaseUrl(jsonObject1.get("images").getAsJsonObject().get("secure_base_url").getAsString())
+                            .logoSizes(list_logoSizes)
+                            .posterSizes(list_posterSizes)
+                            .backdropSizes(list_backdropSizes)
+                            .profileSizes(list_profileSizes)
+                            .stillSizes(list_stillSizes)
+                            .lastUpdate(0L)
+                            .build();
+
+
+                }).blockingSingle();
+
+        return Flowable.empty();
     }
 
 

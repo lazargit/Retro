@@ -3,16 +3,31 @@ package com.shamildev.retro.ui.details;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.ui.common.BaseActivity;
@@ -27,6 +42,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Shamil Lazar on 01.02.2018.
  */
@@ -34,49 +53,35 @@ import java.util.List;
 public class DetailsActivity extends BaseActivitySupport {
 
 
-    private static final String INTENT_EXTRA_PARAM_MOVIE_ID = "com.shamildev.retro.INTENT_PARAM_MOVIE_ID";
-    private static final String INTENT_EXTRA_PARAM_TITLE = "com.shamildev.retro.INTENT_PARAM_TITLE";
-    private static final String INTENT_EXTRA_PARAM_VOTEAVERAGE = "com.shamildev.retro.INTENT_PARAM_VOTEAVERAGE";
-    private static final String INTENT_EXTRA_PARAM_POSTERPATH = "com.shamildev.retro.INTENT_PARAM_POSTERPATH";
-    private static final String INSTANCE_STATE_PARAM_OVERVIEW = "com.shamildev.retro.INTENT_PARAM_OVERVIEW";
-    private static final String INSTANCE_STATE_PARAM_GENREIDS = "com.shamildev.retro.INTENT_PARAM_GENREIDS";
 
+    private static final String INTENT_EXTRA_PARAM_MOVIE = "com.shamildev.retro.INTENT_PARAM_MOVIE";
+
+
+
+    @BindView(R.id.textView_details_title_header)
+    TextView titleHeader;
+
+    @BindView(R.id.textView_details_overview)
+    TextView overview;
+
+
+    @BindView(R.id.flexible_example_toolbar)
+    Toolbar toolBar;
+
+    @BindView(R.id.image_details_header)
+    ImageView imageHeader;
 
 
 
     private Long movieId = 0L;
+    private ImageView image_header;
+    private Unbinder butterKnifeUnbinder;
 
     public static Intent getCallingIntent(Context context, Movie movie) {
         Intent intent = new Intent(context, DetailsActivity.class);
 
+        intent.putExtra(INTENT_EXTRA_PARAM_MOVIE, movie);
 
-
-
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
-        try {
-
-            out = new ObjectOutputStream(bos);
-            out.writeObject(movie);
-            out.flush();
-            byte[] yourBytes = bos.toByteArray();
-            intent.putExtra(INTENT_EXTRA_PARAM_MOVIE_ID, yourBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-                try {
-                    bos.close();
-                } catch (IOException ex) {
-                    // ignore close exception
-                }
-        }
-
-//        intent.putExtra(INTENT_EXTRA_PARAM_TITLE, movie.title());
-//        intent.putExtra(INTENT_EXTRA_PARAM_VOTEAVERAGE, movie.voteAverage());
-//        intent.putExtra(INTENT_EXTRA_PARAM_POSTERPATH, movie.posterPath());
-//        intent.putExtra(INSTANCE_STATE_PARAM_OVERVIEW, movie.overview());
-//        intent.putExtra(INTENT_EXTRA_PARAM_MOVIE_ID,movie.genreIds());
 
         return intent;
     }
@@ -88,18 +93,22 @@ public class DetailsActivity extends BaseActivitySupport {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_details);
-        initializeActivity(savedInstanceState);
+
+        butterKnifeUnbinder = ButterKnife.bind(this);
+
 
        // addFragment(R.id.fragmentContainer,new DetailsFragment());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.flexible_example_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+
+
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
             }
         });
 
-
+        initializeActivity(savedInstanceState);
     }
 
 
@@ -107,6 +116,19 @@ public class DetailsActivity extends BaseActivitySupport {
      * Initializes this activity.
      */
     private void initializeActivity(Bundle savedInstanceState) {
+
+        Movie model = (Movie) getIntent().getSerializableExtra(INTENT_EXTRA_PARAM_MOVIE);
+        Log.e("TAG",model.posterPath()+" # ");
+
+        if(model.posterPath()!= null) {
+
+            Glide.with(this)
+                    .load("https://image.tmdb.org/t/p/w500/"+model.posterPath())
+                    .into(imageHeader);
+        }
+
+        titleHeader.setText(model.title());
+        overview.setText(model.overview());
 
     }
 

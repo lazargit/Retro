@@ -1,8 +1,20 @@
-package com.shamildev.retro.data.entity.tmdb;
+package com.shamildev.retro.data.entity.tmdb.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.shamildev.retro.data.entity.Entity;
+import com.shamildev.retro.data.entity.tmdb.CreditsEntity;
+import com.shamildev.retro.data.entity.tmdb.GenreEntity;
+import com.shamildev.retro.data.entity.tmdb.ImagesEntity;
+import com.shamildev.retro.data.entity.tmdb.KeywordsEntity;
+import com.shamildev.retro.data.entity.tmdb.ProductionCompanyEntity;
+import com.shamildev.retro.data.entity.tmdb.ProductionCountryEntity;
+
+import com.shamildev.retro.data.entity.tmdb.Recommendations;
+import com.shamildev.retro.data.entity.tmdb.SimilarMovies;
+import com.shamildev.retro.data.entity.tmdb.SpokenLanguageEntity;
+import com.shamildev.retro.data.entity.tmdb.Trailers;
+import com.shamildev.retro.data.entity.tmdb.VideosEntity;
 
 
 import java.io.Serializable;
@@ -12,7 +24,7 @@ import java.util.List;
  * Created by Schamil Mischijew on 10.12.2017.
  */
 
-public class MovieDetailsResponseEntity implements Serializable , Entity
+public class MovieResponse implements Serializable , Entity
 {
 
     @SerializedName("adult")
@@ -384,7 +396,7 @@ public class MovieDetailsResponseEntity implements Serializable , Entity
 
     @Override
     public String toString() {
-        return "MovieDetailsResponseEntity{" +
+        return "MovieResponse{" +
                 "adult=" + adult +
                 ", backdropPath='" + backdropPath + '\'' +
                 ", budget=" + budget +

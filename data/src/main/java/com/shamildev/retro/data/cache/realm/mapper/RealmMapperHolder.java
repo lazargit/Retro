@@ -17,28 +17,17 @@
 package com.shamildev.retro.data.cache.realm.mapper;
 
 
-import com.shamildev.retro.data.cache.realm.models.ConfigurationRealm;
 import com.shamildev.retro.data.cache.realm.models.GenreRealm;
 import com.shamildev.retro.data.cache.realm.models.MovieRealm;
 import com.shamildev.retro.data.cache.realm.models.TMDbConfigurationRealm;
 import com.shamildev.retro.data.entity.mapper.EntityMapper;
-import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
-import com.shamildev.retro.data.entity.tmdb.GenreEntity;
-import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
-import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
-import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
-import com.shamildev.retro.domain.models.MovieWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.Reusable;
-import io.realm.RealmList;
 
 /**
  * Holds instances of {@link EntityMapper}s.

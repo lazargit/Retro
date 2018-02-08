@@ -17,13 +17,18 @@
 package com.shamildev.retro.data.entity.mapper;
 
 
-import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.BackdropEntity;
+import com.shamildev.retro.data.entity.tmdb.PosterEntity;
+import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
+import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.GenreEntity;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.ImageModel;
+import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 
@@ -43,7 +48,7 @@ public abstract class EntityMapperModule {
 
     @Binds
     @Reusable
-    abstract EntityMapper<MovieDetailsResponseEntity, Movie>  movieDetailsEntityMapper(MovieDetailsEntityMapper movieDetailsEntityMapper);
+    abstract EntityMapper<MovieResponse, Movie>  movieDetailsEntityMapper(MovieDetailsEntityMapper movieDetailsEntityMapper);
 
     @Binds
     @Reusable
@@ -55,7 +60,19 @@ public abstract class EntityMapperModule {
 
     @Binds
     @Reusable
-    abstract EntityMapper<GenreEntity, Genre>  genrenEntityMapper(GenreEntityMapper genreEntityMapper);
+    abstract EntityMapper<GenreEntity, Genre>  genreEntityMapper(GenreEntityMapper genreEntityMapper);
 
+
+    @Binds
+    @Reusable
+    abstract EntityMapper<ImagesResponse, Images>  imagesResponseEntityMapper(ImagesResponseEntityMapper imagesResponseEntityMapper);
+
+    @Binds
+    @Reusable
+    abstract EntityMapper<PosterEntity, ImageModel>  posterEntityMapper(PosterEntityMapper posterEntityMapper);
+
+    @Binds
+    @Reusable
+    abstract EntityMapper<BackdropEntity, ImageModel>  backdropEntityMapper(BackdropEntityMapper backdropEntityMapper);
 
 }

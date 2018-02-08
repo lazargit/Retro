@@ -2,6 +2,7 @@ package com.shamildev.retro.data.entity.tmdb;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.shamildev.retro.data.entity.Entity;
 
 import java.io.Serializable;
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
  * Created by Schamil Mischijew on 10.12.2017.
  */
 
-public class BackdropEntity implements Serializable
+public class BackdropEntity implements Entity, Serializable
 {
 
     @SerializedName("aspect_ratio")

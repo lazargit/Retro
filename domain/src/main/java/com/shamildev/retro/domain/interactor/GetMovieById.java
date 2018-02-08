@@ -18,6 +18,7 @@ package com.shamildev.retro.domain.interactor;
 
 
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 
 import javax.inject.Inject;
@@ -28,7 +29,7 @@ import io.reactivex.Flowable;
 /**
  * Use case for getting a businesses with a given id.
  */
-public final class GetMovieById implements UseCaseFlowable<Integer,Movie> {
+public final class GetMovieById implements UseCaseFlowable<ParamsBasic,Movie> {
 
     private final RemoteRepository repository;
 
@@ -38,10 +39,53 @@ public final class GetMovieById implements UseCaseFlowable<Integer,Movie> {
     }
 
     @Override
-    public Flowable<Movie> execute(Integer movieId) {
+    public Flowable<Movie> execute(ParamsBasic params) {
+        int movieId = ((Params) params).movieId;
+        String append_to_response = ((Params) params).append_to_response;
+
+        return this.repository.fetchMovie(movieId,append_to_response);
+
+    }
 
 
-        return this.repository.fetchMovie(movieId);
+
+
+    public static final class Params implements ParamsBasic {
+
+        private Params() {
+
+        }
+
+        private int movieId = 0;
+        private String language;
+        private String append_to_response;
+
+
+        private Params(int movieId) {
+            this.movieId = movieId;
+        }
+        private Params(int movieId,String append_to_response ) {
+            this.movieId = movieId;
+            this.append_to_response = append_to_response;
+        }
+        private Params(int movieId,String language,String append_to_response ) {
+            this.movieId = movieId;
+            this.language = language;
+            this.append_to_response = append_to_response;
+        }
+
+
+        public static Params with(int movieId) {
+            return new Params(movieId);
+        }
+        public static Params with(int movieId, String append_to_response) {
+            return new Params(movieId,append_to_response);
+        }
+        public static Params with(int movieId, String language, String append_to_response) {
+            return new Params(movieId,language,append_to_response);
+        }
+
 
     }
 }
+

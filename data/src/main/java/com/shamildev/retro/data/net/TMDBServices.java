@@ -8,7 +8,9 @@ package com.shamildev.retro.data.net;
 
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.GenresResponseEntity;
-import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.response.CreditsResponse;
+import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
+import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 
 import io.reactivex.Single;
@@ -71,13 +73,28 @@ public interface TMDBServices {
     //https://api.themoviedb.org/3/movie/284052?api_key=XXX
     //&append_to_response=videos%2Cimages%2Ctrailers%2Csimilar_movies%2Crelease_dates%2Cchanges%2Ccredits%2Creviews%2Ckeywords%2Clists%2Ctranslations%2Crecommendations
     @GET("3/movie/{movie_id}")
-    Single<MovieDetailsResponseEntity> fetchMovie(
+    Single<MovieResponse> fetchMovie(
             @Path(MOVIE_ID) String movieId,
             @Query(API_KEY) String apikey,
             @Query(LANGUAGE) String language,
             @Query(APPEND_TO_RESPONSE) String appendToResponse
 
     );
+
+    //https://api.themoviedb.org/3/movie/155/images?api_key=XXX
+    @GET("3/movie/{movie_id}/images")
+    Single<ImagesResponse> fetchImages(
+            @Query(API_KEY) String apikey
+
+    );
+
+    //https://api.themoviedb.org/3/movie/155/credits?api_key=XXX
+    @GET("3/movie/{movie_id}/credits")
+    Single<CreditsResponse> fetchCredits(
+            @Query(API_KEY) String apikey
+
+    );
+
 
 
     //https://api.themoviedb.org/3/movie/238/recommendations?api_key=XXX&language=de-DE&page=1
@@ -135,6 +152,8 @@ public interface TMDBServices {
             @Query(LANGUAGE) String language,
             @Query(REGION) String region
     );
+
+
 
 
 

@@ -1,27 +1,40 @@
 package com.shamildev.retro.data;
 
+import android.media.Image;
+
+import com.shamildev.retro.data.config.DataConfig;
 import com.shamildev.retro.data.entity.Entity;
 import com.shamildev.retro.data.entity.mapper.EntityListMapper;
 import com.shamildev.retro.data.entity.mapper.EntityMapper;
 import com.shamildev.retro.data.entity.mapper.EntityMapperHolder;
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.PosterEntity;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.Result;
+import com.shamildev.retro.data.entity.tmdb.response.CreditsResponse;
+import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
+import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.net.DataServiceFactory;
 import com.shamildev.retro.data.net.TMDBServices;
 import com.shamildev.retro.data.net.error.ErrorInterceptor;
 import com.shamildev.retro.data.net.error.TMDBError;
+import com.shamildev.retro.data.repository.TMDBRepository;
+import com.shamildev.retro.data.repository.TMDBRepository_Factory;
 import com.shamildev.retro.data.utils.JsonFileResource;
 import com.shamildev.retro.data.utils.JsonParsingRule;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.models.ImageModel;
+import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 
 
 import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.Constants;
 
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +47,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
@@ -60,13 +80,24 @@ public class TMDBRestAdapterTest {
     private static final String COUNTRY_DE = "DE";
     private static final String COUNTRY_US= "US";
 
+    private static final String TESTMOVIE_ID= "155";
+    private static final String TESTMOVIE_TITLE= "The Dark Knight";
+    private static final String TESTMOVIE_TAGLINE= "Why So Serious?";
+
     //MWS is what we'll use to test the REST Adapter
     private MockWebServer server;
 
     @Mock
     private EntityMapper<ResponseEntity, MovieWrapper> movieWrapperEntityMapper;
 
+    @Mock
+    private DataConfig dataConfig;
+
     private TMDBServices adapter;
+
+
+    @InjectMocks
+    private TMDBRepository repository;
 
     @InjectMocks
     private DataServiceFactory dataServiceFactory;
@@ -80,6 +111,7 @@ public class TMDBRestAdapterTest {
 
     @Rule
     public JsonParsingRule jsonParsingRule = new JsonParsingRule(Constants.GSON);
+
 
     /**
      * Using MockWebServer
@@ -189,11 +221,25 @@ public class TMDBRestAdapterTest {
                 .setResponseCode(200)
                 .setBody(jsonParsingRule.getValue().toString()));
 
-        adapter.fetchMovie("155","1234","de_DE","")
+        TestObserver<MovieResponse> test = adapter.fetchMovie(TESTMOVIE_ID, API_KEY, LANGUAGE_DE, "")
                 .test()
                 .assertSubscribed()
                 .assertComplete()
                 .assertNoErrors();
+
+
+
+
+
+        test.assertValue(movieResponse -> (movieResponse != null));
+        test.assertValue(movieResponse -> Objects.equals(movieResponse.getId(), Long.parseLong(TESTMOVIE_ID)));
+        test.assertValue(movieResponse -> Objects.equals(movieResponse.getTitle(), TESTMOVIE_TITLE));
+        test.assertValue(movieResponse -> movieResponse.getGenres().size()>0);
+        test.assertValue(movieResponse -> (Objects.equals(movieResponse.getGenres().get(0).getId(),18)
+                                           &&  Objects.equals(movieResponse.getGenres().get(0).getName(),"Drama")));
+        test.assertValue(movieResponse -> Objects.equals(movieResponse.getTagline(), TESTMOVIE_TAGLINE));
+
+
 
     }
 
@@ -306,6 +352,147 @@ public class TMDBRestAdapterTest {
       //  ;
 
     }
+
+
+
+
+
+
+
+    @Test
+    @JsonFileResource(fileName = "ImagesResponse.json", clazz = String.class)
+    public void on_FetchImages_Successful() throws Exception {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonParsingRule.getValue().toString()));
+
+        ImagesResponse imagesResponseTestData;
+        TestObserver<ImagesResponse> test = adapter.fetchImages(API_KEY)
+
+                .test()
+                .assertComplete()
+                .assertNoErrors();
+
+
+
+
+        ImagesResponse imagesResponse1 = test.values().get(0);
+
+        for (PosterEntity  posterEntity:imagesResponse1.getPosters()) {
+            ImageModel imageModel = ImageModel.builder()
+                    .aspectRatio(posterEntity.getAspectRatio())
+                    .filePath(posterEntity.getFilePath())
+                    .voteAverage(posterEntity.getVoteAverage())
+                    .voteCount(posterEntity.getVoteCount())
+                    .iso6391(posterEntity.getIso6391())
+                    .height(posterEntity.getHeight())
+                    .width(posterEntity.getWidth())
+                    .build();
+            Mockito.when(entityMapperHolder.posterEntityMapper().map(posterEntity))
+                    .thenReturn(imageModel);
+
+
+        }
+
+
+
+        test.assertValue(imagesResponse -> (imagesResponse != null));
+
+        test.assertValue(imagesResponse -> Objects.equals(imagesResponse.getId(), Integer.parseInt(TESTMOVIE_ID)));
+        test.assertValue(imagesResponse -> (imagesResponse.getBackdrops().size() > 0));
+        test.assertValue(imagesResponse -> (imagesResponse.getPosters().size() > 0));
+        test.assertValue(imagesResponse -> (imagesResponse.getBackdrops().get(0).getFilePath().equals("/hqkIcbrOHL86UncnHIsHVcVmzue.jpg")));
+        test.assertValue(imagesResponse -> (imagesResponse.getPosters().get(0).getFilePath().equals("/1hRoyzDtpgMU7Dz4JF22RANzQO7.jpg")));
+        test.assertValue(imagesResponse -> (imagesResponse.getPosters().get(0).getIso6391().equals("en")));
+
+
+
+
+        List<ImageModel> imageModels = Observable.just(imagesResponse1.getPosters())
+                .map(posterEntities -> Flowable.fromIterable(posterEntities)
+                        .map(posterEntities1 -> entityMapperHolder.posterEntityMapper().map(posterEntities1))
+                        .toList()
+                        .blockingGet())
+                .blockingSingle();
+        System.out.println(imagesResponse1.getPosters().size()+"<>>>>>>>>>>>>>>>>>>>>>>>" + imageModels.size());
+
+        Images build = Images.builder()
+                .id(155)
+                .posters(imageModels)
+                .backdrops(imageModels)
+                .build();
+
+        DataConfig build1 = DataConfig.builder()
+                .language(LANGUAGE_DE)
+                .authClientId(API_KEY)
+                .baseUrl("XXX")
+                .authGrantType("")
+                .authClientSecret("")
+                .cacheRootDir("")
+                .cacheMaxSizeMb(1)
+                .cacheDir("")
+                .offlineCacheTimeDays(1)
+                .networkCacheTimeSeconds(10)
+                .debug(true)
+                .country("de")
+                .build();
+
+
+        System.out.println("qqqqq< " + build1.baseUrl());
+        build1 = build1.setBaseUrl("test");
+        System.out.println("qqqqq> " + build1.baseUrl());
+        build1 = build1.setLanguage(LANGUAGE_US);
+        System.out.println("qqqqq> " + build1.language());
+
+//        Mockito.when( dataConfig.authClientSecret())
+//                .thenReturn(API_KEY);
+
+
+
+//        repository.fetchImages(Integer.valueOf(TESTMOVIE_ID))
+//                .test();
+
+
+
+
+
+
+    }
+
+    public void onSuccess(ImagesResponse imagesResponse) {
+
+    }
+
+
+
+    @Test
+    @JsonFileResource(fileName = "CreditsResponse.json", clazz = String.class)
+    public void on_FetchCredits_Successful() throws Exception {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonParsingRule.getValue().toString()));
+
+        TestObserver<CreditsResponse> test = adapter.fetchCredits(API_KEY)
+                .test()
+                .assertComplete()
+                .assertNoErrors();
+
+        test.assertValue(creditsResponse -> (creditsResponse != null));
+        test.assertValue(creditsResponse -> Objects.equals(creditsResponse.getId(), Integer.parseInt(TESTMOVIE_ID)));
+        test.assertValue(creditsResponse -> (creditsResponse.getCast().size() > 0));
+        test.assertValue(creditsResponse -> (creditsResponse.getCrew().size() > 0));
+        test.assertValue(creditsResponse -> Objects.equals( creditsResponse.getCast().get(0).getName(),"Christian Bale")) ;
+        test.assertValue(creditsResponse -> Objects.equals(creditsResponse.getCast().get(0).getCastId(),35));
+
+        test.assertValue(creditsResponse -> Objects.equals( creditsResponse.getCrew().get(0).getName(),"Christopher Nolan")) ;
+        test.assertValue(creditsResponse -> Objects.equals(creditsResponse.getCrew().get(0).getJob(),"Director"));
+
+    }
+
+
+
 
 
     @Test

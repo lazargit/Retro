@@ -20,13 +20,18 @@ package com.shamildev.retro.data.entity.mapper;
 
 
 
-import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.BackdropEntity;
+import com.shamildev.retro.data.entity.tmdb.PosterEntity;
+import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
+import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.GenreEntity;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.ImageModel;
+import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 
@@ -42,7 +47,14 @@ import dagger.Reusable;
 public  class EntityMapperHolder {
 
     private final EntityMapper<Result, Movie> movieEntityMapper;
-    private final EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper;
+    private final EntityMapper<MovieResponse, Movie> movieDetailsEntityMapper;
+    private final EntityMapper<ImagesResponse, Images> imagesResponseEntityMapper;
+
+    private final EntityMapper<PosterEntity,ImageModel > posterEntityMapper;
+
+
+
+    @Inject EntityMapper<BackdropEntity,ImageModel > backdropEntityMapper;
 
     private final EntityMapper<ResponseEntity, MovieWrapper> movieWrapperEntityMapper;
     private final EntityMapper<ConfigurationResponseEntity, Configuration> configurationEntityMapper;
@@ -51,16 +63,23 @@ public  class EntityMapperHolder {
 
     @Inject
     EntityMapperHolder( EntityMapper<Result, Movie> movieEntityMapper,
-                        EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper,
+                        EntityMapper<MovieResponse, Movie> movieDetailsEntityMapper,
                         EntityMapper<ResponseEntity, MovieWrapper> movieWrapperEntityMapper,
                         EntityMapper<ConfigurationResponseEntity, Configuration> configurationEntityMapper,
-                        EntityMapper<GenreEntity, Genre> genreEntityMapper) {
+                        EntityMapper<GenreEntity, Genre> genreEntityMapper,
+                        EntityMapper<ImagesResponse, Images> imagesResponseEntityMapper,
+                        EntityMapper<PosterEntity,ImageModel > posterEntityMapper
+                         ) {
 
         this.movieEntityMapper = movieEntityMapper;
         this.movieDetailsEntityMapper = movieDetailsEntityMapper;
         this.movieWrapperEntityMapper = movieWrapperEntityMapper;
         this.configurationEntityMapper = configurationEntityMapper;
         this.genreEntityMapper = genreEntityMapper;
+        this.imagesResponseEntityMapper = imagesResponseEntityMapper;
+        this.posterEntityMapper = posterEntityMapper;
+
+
 
     }
 
@@ -68,7 +87,7 @@ public  class EntityMapperHolder {
         return movieEntityMapper;
     }
 
-    public EntityMapper<MovieDetailsResponseEntity, Movie> movieDetailsEntityMapper() {
+    public EntityMapper<MovieResponse, Movie> movieDetailsEntityMapper() {
         return movieDetailsEntityMapper;
     }
 
@@ -85,5 +104,16 @@ public  class EntityMapperHolder {
         return genreEntityMapper;
     }
 
+    public EntityMapper<ImagesResponse, Images> imagesResponseEntityMapper() {
+        return imagesResponseEntityMapper;
+    }
+
+    public EntityMapper<PosterEntity, ImageModel> posterEntityMapper() {
+        return posterEntityMapper;
+    }
+
+    public EntityMapper<BackdropEntity, ImageModel> backdropEntityMapper() {
+        return backdropEntityMapper;
+    }
 
 }

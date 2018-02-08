@@ -46,7 +46,6 @@ public class ConfigModule extends BaseConfigModule {
         return BASE_CONFIG_BUILDER
                 .debug(BuildConfig.DEBUG)
                 .authClientSecret(BuildConfig.MOVIE_DB_API_TOKEN)
-
                 .language( Locale.getDefault().toString().replace('_','-'))
                 .country(Locale.getDefault().getCountry())
                 .build();

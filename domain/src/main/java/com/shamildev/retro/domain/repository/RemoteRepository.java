@@ -2,6 +2,7 @@ package com.shamildev.retro.domain.repository;
 
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.util.Constants;
@@ -23,7 +24,10 @@ public interface RemoteRepository {
 
     Observable<MovieWrapper> getTestService();
 
-    Flowable<Movie> fetchMovie(@NonNull int movieId);
+    Flowable<Movie> fetchMovie(@NonNull int movieId, String appendToResponse);
+
+    Flowable<Images> fetchImages(@NonNull int movieId);
+
 
     Flowable<MovieWrapper> fetchRecommendations(@NonNull int movieId, int page);
 

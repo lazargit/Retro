@@ -10,7 +10,7 @@ import com.shamildev.retro.domain.bootstrap.Bootstrap;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
-import com.shamildev.retro.domain.interactor.GetMovieWithId;
+
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
@@ -50,7 +50,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 
         private final UseCaseHandler useCaseHandler;
-        private final GetMovieWithId getMovieWithId;
+
         private final GetTMDBConfiguration getTMDBConfiguration;
         private final GetGenre getGenre;
         private final GetUpcomingMovies getUpcomingMovies;
@@ -61,7 +61,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
         SplashPresenterImpl(SplashView view,
                             NetworkManager networkManager,
                             UseCaseHandler useCaseHandler,
-                            GetMovieWithId getMovieWithId,
+
                             GetTMDBConfiguration getTMDBConfiguration,
                             GetGenre getGenre,
                             GetUpcomingMovies getUpcomingMovies,
@@ -74,7 +74,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
             this.useCaseHandler = useCaseHandler;
 
-            this.getMovieWithId = getMovieWithId;
+
             this.getTMDBConfiguration = getTMDBConfiguration;
             this.getGenre = getGenre;
             this.getUpcomingMovies = getUpcomingMovies;
@@ -126,32 +126,32 @@ import io.reactivex.subscribers.DisposableSubscriber;
             }
 
             if(id == R.id.button_save){
-
-                useCaseHandler.execute(getMovieWithId, new DisposableObserver<MovieWrapper>() {
-                    @Override
-                    public void onNext(MovieWrapper response) {
-                        Log.d("useCaseHandler",">>>>>"+response.toString());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if(e.getCause() instanceof TMDBError){
-                            TMDBError error = (TMDBError) e.getCause();
-                            Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
-
-                        }
-                        Log.d("onError","<<<<<"+e);
-                        //   TMDBError error = (TMDBError) e;
-                        //  Log.d("onError",">>>>>"+error.getMessage());
-
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+//
+//                useCaseHandler.execute(getMovieById, new DisposableObserver<MovieWrapper>() {
+//                    @Override
+//                    public void onNext(MovieWrapper response) {
+//                        Log.d("useCaseHandler",">>>>>"+response.toString());
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        if(e.getCause() instanceof TMDBError){
+//                            TMDBError error = (TMDBError) e.getCause();
+//                            Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
+//
+//                        }
+//                        Log.d("onError","<<<<<"+e);
+//                        //   TMDBError error = (TMDBError) e;
+//                        //  Log.d("onError",">>>>>"+error.getMessage());
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
 
             }
 
@@ -201,42 +201,42 @@ import io.reactivex.subscribers.DisposableSubscriber;
                             }
                         });
             }
-            if(id == R.id.button_fetch_movie){
-                useCaseHandler.execute(getMovieById,155, new DisposableSubscriber<Movie>() {
-                    @Override
-                    public void onNext(Movie movie) {
-                        Log.d("useCaseHandler","getMovieById"+movie+">>>");
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        Log.d("useCaseHandler","getMovieById onError"+t.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("useCaseHandler","getMovieById onComplete");
-                    }
-                });
-            }
-            if(id == R.id.button_fetch_movie2){
-                useCaseHandler.execute(getMovieById,354912, new DisposableSubscriber<Movie>() {
-                    @Override
-                    public void onNext(Movie movie) {
-                        Log.d("useCaseHandler","getMovieById"+movie+">>>");
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        Log.d("useCaseHandler","getMovieById onError"+t.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("useCaseHandler","getMovieById onComplete");
-                    }
-                });
-            }
+//            if(id == R.id.button_fetch_movie){
+//                useCaseHandler.execute(getMovieById,155, new DisposableSubscriber<Movie>() {
+//                    @Override
+//                    public void onNext(Movie movie) {
+//                        Log.d("useCaseHandler","getMovieById"+movie+">>>");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable t) {
+//                        Log.d("useCaseHandler","getMovieById onError"+t.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d("useCaseHandler","getMovieById onComplete");
+//                    }
+//                });
+//            }
+//            if(id == R.id.button_fetch_movie2){
+//                useCaseHandler.execute(getMovieById,354912, new DisposableSubscriber<Movie>() {
+//                    @Override
+//                    public void onNext(Movie movie) {
+//                        Log.d("useCaseHandler","getMovieById"+movie+">>>");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable t) {
+//                        Log.d("useCaseHandler","getMovieById onError"+t.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        Log.d("useCaseHandler","getMovieById onComplete");
+//                    }
+//                });
+//            }
 
 
 //     this.remoteRepository.getTestService()

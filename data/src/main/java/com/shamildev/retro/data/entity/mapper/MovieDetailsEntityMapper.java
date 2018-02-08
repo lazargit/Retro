@@ -17,7 +17,7 @@
 package com.shamildev.retro.data.entity.mapper;
 
 import com.shamildev.retro.data.entity.tmdb.GenreEntity;
-import com.shamildev.retro.data.entity.tmdb.MovieDetailsResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
@@ -32,7 +32,7 @@ import dagger.Reusable;
  * Maps {@link Result} to {@link Movie} .
  */
 @Reusable
-final class MovieDetailsEntityMapper implements EntityMapper<MovieDetailsResponseEntity, Movie> {
+final class MovieDetailsEntityMapper implements EntityMapper<MovieResponse, Movie> {
 
 
     private final EntityListMapper entityListMapper;
@@ -47,7 +47,7 @@ final class MovieDetailsEntityMapper implements EntityMapper<MovieDetailsRespons
     }
 
     @Override
-    public Movie map(MovieDetailsResponseEntity entity) {
+    public Movie map(MovieResponse entity) {
         List<GenreEntity> genres = entity.getGenres();
 
         List<Genre> genres1 = entityListMapper.mapToV(genreEntityMapper, entity.getGenres());
@@ -104,7 +104,7 @@ final class MovieDetailsEntityMapper implements EntityMapper<MovieDetailsRespons
     }
 
     @Override
-    public MovieDetailsResponseEntity map(Movie entity) {
+    public MovieResponse map(Movie entity) {
 
         return null;
 

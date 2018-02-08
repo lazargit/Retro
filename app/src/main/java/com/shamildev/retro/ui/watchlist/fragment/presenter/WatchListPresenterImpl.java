@@ -12,7 +12,7 @@ import com.shamildev.retro.domain.bootstrap.BootstrapImpl;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
-import com.shamildev.retro.domain.interactor.GetMovieWithId;
+
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
