@@ -29,7 +29,12 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shamildev.retro.R;
+import com.shamildev.retro.data.net.error.TMDBError;
+import com.shamildev.retro.domain.executor.UseCaseHandler;
+import com.shamildev.retro.domain.interactor.GetMovieById;
+import com.shamildev.retro.domain.interactor.GetMyWatchList;
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.params.AppendToResponse;
 import com.shamildev.retro.ui.common.BaseActivity;
 import com.shamildev.retro.ui.common.BaseActivitySupport;
 import com.shamildev.retro.ui.details.fragment.view.DetailsFragment;
@@ -42,9 +47,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by Shamil Lazar on 01.02.2018.
@@ -72,6 +80,10 @@ public class DetailsActivity extends BaseActivitySupport {
     ImageView imageHeader;
 
 
+    @Inject
+    UseCaseHandler useCaseHandler;
+    @Inject
+    GetMovieById getMovieById;
 
     private Long movieId = 0L;
     private ImageView image_header;
@@ -97,7 +109,7 @@ public class DetailsActivity extends BaseActivitySupport {
         butterKnifeUnbinder = ButterKnife.bind(this);
 
 
-       // addFragment(R.id.fragmentContainer,new DetailsFragment());
+
 
 
 
@@ -120,18 +132,54 @@ public class DetailsActivity extends BaseActivitySupport {
         Movie model = (Movie) getIntent().getSerializableExtra(INTENT_EXTRA_PARAM_MOVIE);
         Log.e("TAG",model.posterPath()+" # ");
 
-        if(model.posterPath()!= null) {
-
-            Glide.with(this)
-                    .load("https://image.tmdb.org/t/p/w500/"+model.posterPath())
-                    .into(imageHeader);
-        }
+        addFragment(R.id.fragmentContainer,DetailsFragment.forMovie(model));
 
         titleHeader.setText(model.title());
         overview.setText(model.overview());
+        Long id = model.id();
+
+        String build = new AppendToResponse.Builder().withImages().withCredits().withTrailers().build();
+
+        GetMovieById.Params params = GetMovieById.Params.with(id, "de", build);
+
+        useCaseHandler.execute(getMovieById, params, new DisposableSubscriber<Movie>() {
+            @Override
+            public void onNext(Movie movie) {
+
+
+                Log.d("onNext", "Movie "+movie.credits().id());
+                Log.d("onNext", "Movie "+movie.credits().casts().get(0).person().name());
+               // Log.d("onNext", "Movie "+movie.images().posters().get(1).filePath());
+               // Log.d("onNext", "Movie "+movie.images().posters().get(2).filePath());
+               // Log.d("onNext", "Movie "+movie.images().id()+" movie: "+movie.title()+" id: "+movie.id());
+               // setImageHeader(movie.images().backdrops().get(1).filePath());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                if (t.getCause() instanceof TMDBError) {
+                    TMDBError error = (TMDBError) t.getCause();
+                    Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
+
+                }
+                Log.d("onError>>>>", t.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("onComplete", ">>");
+            }
+        });
+
 
     }
 
+
+    public void setImageHeader(String filePath){
+        Glide.with(this)
+                .load("https://image.tmdb.org/t/p/w500/"+filePath)
+                .into(imageHeader);
+    }
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {

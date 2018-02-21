@@ -16,19 +16,6 @@
 
 package com.shamildev.retro.data.entity;
 
-/**
- * Type of all entities.
- * <p>
- * <b>DEFAULT VALUES</b>
- * None of the getter methods defined here return null. If an attribute is missing or null, the
- * value returned as defaulted to their non-null counterparts:
- * <ul>
- * <li>String -> ""</li>
- * <li>Collection -> empty collection</li>
- * <li>CustomClass -> non-null CustomClass</li>
- * <li>Primitives -> default values. E.G. int -> 0</li>
- * </ul>
- * This done to prevent null or optional checks for consumers.
- */
+
 public interface Entity {
 }

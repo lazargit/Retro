@@ -11,18 +11,14 @@ import java.util.ArrayList;
  * Created by Schamil Mischijew on 10.12.2017.
  */
 
-public  class AppendToResponse {
+public  class AppendToResponse implements ParamsBasic {
 
 
-    String query;
+    public AppendToResponse(Builder builder) {
 
-    public String getQuery() {
-        return query;
+
     }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
 
     public static class Builder
     {
@@ -35,7 +31,7 @@ public  class AppendToResponse {
            stringBuilder = new ArrayList<>();
 
         }
-        public AppendToResponse.Builder withImages() {
+        public Builder withImages() {
             stringBuilder.add(Constants.APPEND_TO_RESPONSE.IMAGES.toString());
             return this;
         }

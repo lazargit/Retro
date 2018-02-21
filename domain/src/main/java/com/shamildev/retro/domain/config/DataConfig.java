@@ -14,24 +14,32 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data.config;
+package com.shamildev.retro.domain.config;
 
 import com.google.auto.value.AutoValue;
-import com.shamildev.retro.data.scope.ApplicationScope;
+import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.Genre;
+
+import java.util.List;
 
 import javax.inject.Singleton;
+
+import io.reactivex.annotations.Nullable;
+
 
 /**
  * Contains configuration values used throughout the data module.
  */
 @AutoValue
-@ApplicationScope
 public abstract class DataConfig {
 
     /**
      * @return a new {@link Builder}
      */
     public static Builder builder() {
+
+
+
         return new AutoValue_DataConfig.Builder();
     }
 
@@ -59,6 +67,11 @@ public abstract class DataConfig {
 
     public abstract String country();
 
+    @Nullable
+    public abstract Configuration configurations();
+    @Nullable
+    public abstract List<Genre> genres();
+
     public DataConfig setBaseUrl(String arg) {
         Builder builder = getBuilder();
         builder.baseUrl(arg);
@@ -69,6 +82,19 @@ public abstract class DataConfig {
         builder.language(arg);
         return builder.build();
     }
+
+    public DataConfig addConfiguration(Configuration configuration) {
+        Builder builder = getBuilder();
+        builder.configurations(configuration);
+        return builder.build();
+    }
+    public  DataConfig addGenres(List<Genre> genres) {
+        Builder builder = getBuilder();
+        builder.genres(genres);
+        return builder.build();
+    }
+
+
 
     private Builder getBuilder() {
         return builder()
@@ -83,19 +109,37 @@ public abstract class DataConfig {
                     .networkCacheTimeSeconds(this.networkCacheTimeSeconds())
                     .debug(this.debug())
                     .language(this.language())
-                    .country(this.country());
+                    .country(this.country())
+                    .configurations(this.configurations())
+                    .genres(this.genres());
+    }
+
+    public static DataConfig create(String baseUrl, String authGrantType, String authClientId, String authClientSecret, String cacheRootDir, String cacheDir, int cacheMaxSizeMb, int offlineCacheTimeDays, int networkCacheTimeSeconds, boolean debug, String language, String country, Configuration configurations, List<Genre> genres) {
+        return builder()
+                .baseUrl(baseUrl)
+                .authGrantType(authGrantType)
+                .authClientId(authClientId)
+                .authClientSecret(authClientSecret)
+                .cacheRootDir(cacheRootDir)
+                .cacheDir(cacheDir)
+                .cacheMaxSizeMb(cacheMaxSizeMb)
+                .offlineCacheTimeDays(offlineCacheTimeDays)
+                .networkCacheTimeSeconds(networkCacheTimeSeconds)
+                .debug(debug)
+                .language(language)
+                .country(country)
+                .configurations(configurations)
+                .genres(genres)
+                .build();
     }
 
 
     public DataConfig() {
     }
 
-
-
     /**
      * Builder used to create instances of {@link DataConfig}
      */
-
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -123,8 +167,18 @@ public abstract class DataConfig {
 
         public abstract Builder country(String country);
 
+        public abstract Builder configurations(Configuration configurations);
+
+        public abstract Builder genres(List<Genre> genres);
+
         public abstract DataConfig build();
     }
+
+
+
+
+
+
 
 
 

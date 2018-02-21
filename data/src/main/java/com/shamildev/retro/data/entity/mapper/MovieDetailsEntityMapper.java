@@ -16,7 +16,9 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
+import com.shamildev.retro.data.entity.mapper.error.MappingError;
 import com.shamildev.retro.data.entity.tmdb.GenreEntity;
+import com.shamildev.retro.data.entity.tmdb.ImagesEntity;
 import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.domain.models.Genre;
@@ -39,18 +41,27 @@ final class MovieDetailsEntityMapper implements EntityMapper<MovieResponse, Movi
 
     private final GenreEntityMapper genreEntityMapper;
 
+    private final ImagesResponseEntityMapper imagesResponseEntityMapper;
+
+
+
     @Inject
-    MovieDetailsEntityMapper(GenreEntityMapper genreEntityMapper,EntityListMapper entityListMapper) {
+    MovieDetailsEntityMapper(GenreEntityMapper genreEntityMapper,
+                             EntityListMapper entityListMapper,
+                             ImagesResponseEntityMapper imagesResponseEntityMapper) {
 
     this.genreEntityMapper = genreEntityMapper;
     this.entityListMapper = entityListMapper;
+    this.imagesResponseEntityMapper = imagesResponseEntityMapper;
     }
 
     @Override
-    public Movie map(MovieResponse entity) {
+    public Movie map(MovieResponse entity) throws MappingError {
         List<GenreEntity> genres = entity.getGenres();
 
-        List<Genre> genres1 = entityListMapper.mapToV(genreEntityMapper, entity.getGenres());
+
+
+
 
 
         return Movie.builder()

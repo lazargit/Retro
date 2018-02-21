@@ -1,7 +1,7 @@
 package com.shamildev.retro.domain.models;
 
 /**
- * Created by Schamil Mischijew on 04.11.2017.
+ * Created by Schamil Lazar on 04.11.2017.
  */
 
 public class Type {

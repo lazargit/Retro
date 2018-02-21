@@ -88,9 +88,26 @@ dependencies {
     implementation project(':data')
 
 
+    implementation                    presentationDependencies.androidSupport.recyclerView
+    implementation                    presentationDependencies.androidSupport.supportCompat
+    implementation                    presentationDependencies.androidSupport.coreUi
+    implementation                    presentationDependencies.androidSupport.appCompat
+    implementation                    presentationDependencies.androidSupport.designSupport
+    implementation                    presentationDependencies.androidSupport.cardView
+    implementation                    presentationDependencies.androidSupport.constrainlayout
+    annotationProcessor               presentationDependencies.autoValue.autoValue
+    annotationProcessor               presentationDependencies.javaxAnnotation
+
+
+
     //RX
     compile                    presentationDependencies.rx.rxJava
     compile                    presentationDependencies.rx.rxAndroid
+    compile                    presentationDependencies.rx.rxBinding
+    compile                    presentationDependencies.rx.rxBindingsupport
+    compile                    presentationDependencies.rx.rxBindingappcompat
+
+
 
     implementation 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
@@ -108,18 +125,10 @@ dependencies {
 
 
 
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
 
 
-    implementation                    presentationDependencies.androidSupport.recyclerView
-    implementation                    presentationDependencies.androidSupport.supportCompat
-    implementation                    presentationDependencies.androidSupport.coreUi
-    implementation                    presentationDependencies.androidSupport.appCompat
-    implementation                    presentationDependencies.androidSupport.designSupport
-    implementation                    presentationDependencies.androidSupport.cardView
-    implementation                    presentationDependencies.androidSupport.constrainlayout
-    annotationProcessor               presentationDependencies.autoValue.autoValue
-    annotationProcessor               presentationDependencies.javaxAnnotation
 
     //   implementation                    presentationDependencies.image.glide
   // annotationProcessor               presentationDependencies.image.glide

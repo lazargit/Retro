@@ -18,15 +18,7 @@
 
 package com.shamildev.retro.data.net.error;
 
-import android.util.Log;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.shamildev.retro.data.entity.ErrorEntity;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -34,19 +26,8 @@ import javax.inject.Inject;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
-import retrofit2.converter.moshi.MoshiConverterFactory;
 
-/**
- *
- * Interceptors allow us to grab Requests and Responses between Layers of Implementation. In simpler
- * terms:
- * - Checks Requests prior to being sent over the Network
- * - Checks Responses prior to when our GitHubRestAdapter calls back to the Repository.
- *
- * Among other useful things (see OkHttp Docs for more info), we can perform some global error
- * handling operations. Errors will still be propogated to onErrorReturn() in the Repository.
- * Created by R_KAY on 10/29/2017.
- */
+
 
 public class ErrorInterceptor implements Interceptor {
 
@@ -69,9 +50,9 @@ public class ErrorInterceptor implements Interceptor {
 
         if (!response.isSuccessful()) {
 
-            String rawJson = response.body().string();
 
-            throw TMDBError.getTMDBError(response.code(),rawJson);
+
+            throw TMDBError.getTMDBError(response.code(),response.body().string());
 
         }
 

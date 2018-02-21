@@ -18,15 +18,7 @@
 
 package com.shamildev.retro.data.net.error;
 
-import android.util.Log;
 
-import com.google.gson.Gson;
-import com.shamildev.retro.data.entity.ErrorEntity;
-import com.squareup.moshi.Json;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;

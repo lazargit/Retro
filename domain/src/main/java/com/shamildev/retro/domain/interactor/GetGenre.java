@@ -16,6 +16,7 @@
 
 package com.shamildev.retro.domain.interactor;
 
+import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.CacheRepository;
@@ -29,6 +30,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -40,6 +42,8 @@ public final class GetGenre implements UseCaseFlowable<ParamsBasic,List<Genre>> 
     private final RemoteRepository repository;
     private final CacheRepository cache;
 
+    @Inject
+    AppConfig appConfig;
 
     @Inject
     GetGenre(RemoteRepository repository,
@@ -76,7 +80,11 @@ public final class GetGenre implements UseCaseFlowable<ParamsBasic,List<Genre>> 
                                 .blockingLast()
                                 .toList()
                                 .blockingGet()
-                );
+                )
+                .map(genres -> {
+                    appConfig.setGenres(genres);
+                    return genres;
+                });
 
     }
 

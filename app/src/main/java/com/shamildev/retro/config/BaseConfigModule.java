@@ -17,7 +17,7 @@
 package com.shamildev.retro.config;
 
 
-import com.shamildev.retro.data.config.DataConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 
 /**
  * Provides an abstract config module for other config modules to extend.

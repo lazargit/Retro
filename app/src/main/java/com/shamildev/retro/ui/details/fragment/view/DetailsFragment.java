@@ -1,5 +1,6 @@
 package com.shamildev.retro.ui.details.fragment.view;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.shamildev.retro.R;
+import com.shamildev.retro.domain.executor.UseCaseHandler;
+import com.shamildev.retro.domain.interactor.GetMovieById;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.ui.common.view.BaseDialogFragment;
 import com.shamildev.retro.ui.common.view.BaseViewDialogFragment;
@@ -27,6 +30,7 @@ import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
 import com.shamildev.retro.util.DeviceUtils;
 import com.shamildev.retro.util.EndlessRecyclerViewScrollListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +51,7 @@ import timber.log.Timber;
 public final class DetailsFragment extends android.support.v4.app.Fragment implements DetailsView {
 
 
-    private static final String PARAM_MOVIE_ID = "param_movie_id";
+    private static final String PARAM_MOVIE = "param_movie";
 
 
 
@@ -56,15 +60,20 @@ public final class DetailsFragment extends android.support.v4.app.Fragment imple
     private Unbinder butterKnifeUnbinder;
 
 
+
+
+
     public DetailsFragment() {
             Timber.d("Details-Fragment");
+
     }
 
 
-    public static DetailsFragment forMovie(Long movieId) {
+
+    public static DetailsFragment forMovie(Movie movie) {
         final DetailsFragment detailsFragment = new DetailsFragment();
         final Bundle arguments = new Bundle();
-        arguments.putLong(PARAM_MOVIE_ID, movieId);
+        arguments.putSerializable(PARAM_MOVIE, movie);
         detailsFragment.setArguments(arguments);
         return detailsFragment;
     }
@@ -76,10 +85,11 @@ public final class DetailsFragment extends android.support.v4.app.Fragment imple
     /**
      * Get current movie id from fragments arguments.
      */
-    private int currentMovieId() {
+    private Movie currentMovieId() {
         final Bundle arguments = getArguments();
         Preconditions.checkNotNull(arguments, "Fragment arguments cannot be null");
-        return arguments.getInt(PARAM_MOVIE_ID);
+        Movie movie = (Movie) arguments.getSerializable(PARAM_MOVIE);
+        return movie;
     }
 
 
@@ -90,6 +100,8 @@ public final class DetailsFragment extends android.support.v4.app.Fragment imple
         final View fragmentView = inflater.inflate(R.layout.fragment_details, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
 
+
+        Movie movie = currentMovieId();
 
 
         return fragmentView;

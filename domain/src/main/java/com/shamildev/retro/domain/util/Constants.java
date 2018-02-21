@@ -39,6 +39,9 @@ public abstract class Constants {
 
     public static final Gson GSON;
 
+    public static final String INCLUDE_IMAGE_LANGUAGE_VALUE = "en,xx,null";
+
+
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);

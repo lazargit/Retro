@@ -1,0 +1,151 @@
+{
+  "backdrop_path": "/nGsNruW3W27V6r4gkyc3iiEGsKR.jpg",
+  "created_by": [
+    {
+      "id": 160172,
+      "name": "Chuck Lorre",
+      "gender": 2,
+      "profile_path": "/btpYlMV71sjQXrV142I9kogEINI.jpg"
+    },
+    {
+      "id": 163528,
+      "name": "Bill Prady",
+      "gender": 0,
+      "profile_path": "/duXUvo8JtivQR0BHiXHGQwoNYB4.jpg"
+    }
+  ],
+  "episode_run_time": [
+    22
+  ],
+  "first_air_date": "2007-09-24",
+  "genres": [
+    {
+      "id": 35,
+      "name": "Komödie"
+    }
+  ],
+  "homepage": "http://www.cbs.com/shows/big_bang_theory/",
+  "id": 1418,
+  "in_production": true,
+  "languages": [
+    "en"
+  ],
+  "last_air_date": "2018-03-02",
+  "name": "The Big Bang Theory",
+  "networks": [
+    {
+      "id": 16,
+      "name": "CBS"
+    }
+  ],
+  "number_of_episodes": 259,
+  "number_of_seasons": 11,
+  "origin_country": [
+    "US"
+  ],
+  "original_language": "en",
+  "original_name": "The Big Bang Theory",
+  "overview": "Leonard und Sheldon sind brillante Physiker, die meist zusammen mit ihren Kumpels Howard und Rajesh in ihrem gemeinsamen Apartment abhängen und - natürlich nach einem festgelegten Plan - ihre Videogames pflegen. Einzig und allein Penny, die neue Nachbarin, schafft es hin und wieder, für Abwechslung zu sorgen. Sie hat zwar keine Ahnung von Physik, doch kennt sie die Welt da draußen - etwas, was den Physikern vollkommen fremd zu sein scheint...",
+  "popularity": 198.192965,
+  "poster_path": "/ooBGRQBdbGzBxAVfExiO8r7kloA.jpg",
+  "production_companies": [
+    {
+      "name": "Warner Bros. Television",
+      "id": 1957
+    },
+    {
+      "name": "Chuck Lorre Productions",
+      "id": 35504
+    }
+  ],
+  "seasons": [
+    {
+      "air_date": null,
+      "episode_count": 12,
+      "id": 3732,
+      "poster_path": "/cULNyA0aNTtA94NaXSscPSBNSzG.jpg",
+      "season_number": 0
+    },
+    {
+      "air_date": "2007-09-24",
+      "episode_count": 17,
+      "id": 3738,
+      "poster_path": "/zqAL2rav7Tg8uwDtLurqZVN3mtr.jpg",
+      "season_number": 1
+    },
+    {
+      "air_date": "2008-09-22",
+      "episode_count": 23,
+      "id": 3733,
+      "poster_path": "/2NBwUBZ4clwj6qO9fBinfxiB0dR.jpg",
+      "season_number": 2
+    },
+    {
+      "air_date": "2009-09-21",
+      "episode_count": 23,
+      "id": 3734,
+      "poster_path": "/j64iUb52W2IYE9qV9pLi5tFq8IE.jpg",
+      "season_number": 3
+    },
+    {
+      "air_date": "2010-09-23",
+      "episode_count": 24,
+      "id": 3735,
+      "poster_path": "/hM2TYCmOVXop1xhLA1Mbqyg60ze.jpg",
+      "season_number": 4
+    },
+    {
+      "air_date": "2011-09-22",
+      "episode_count": 24,
+      "id": 3736,
+      "poster_path": "/l08Z8ihAsTRPEuOehbwk4axg3cu.jpg",
+      "season_number": 5
+    },
+    {
+      "air_date": "2012-09-27",
+      "episode_count": 24,
+      "id": 3737,
+      "poster_path": "/2Rsb94mlt4OHhiO2UWatDOhnBqv.jpg",
+      "season_number": 6
+    },
+    {
+      "air_date": "2013-09-25",
+      "episode_count": 24,
+      "id": 3739,
+      "poster_path": "/j1FU0qKHx1F8FVBmK5DBOTrhsAr.jpg",
+      "season_number": 7
+    },
+    {
+      "air_date": "2014-09-22",
+      "episode_count": 24,
+      "id": 62016,
+      "poster_path": "/71669CxKEeyqtItFH6mFHKxPh3y.jpg",
+      "season_number": 8
+    },
+    {
+      "air_date": "2015-09-21",
+      "episode_count": 24,
+      "id": 70493,
+      "poster_path": "/eKDvR1vYLCE08K1h0KUfHNliD8T.jpg",
+      "season_number": 9
+    },
+    {
+      "air_date": "2016-09-19",
+      "episode_count": 24,
+      "id": 80035,
+      "poster_path": "/dz2Mq1bpjBFiTOJbomCEP59kqJV.jpg",
+      "season_number": 10
+    },
+    {
+      "air_date": "2017-09-25",
+      "episode_count": 16,
+      "id": 91000,
+      "poster_path": "/zubwQ0aZ7tQxQ6nttMwnxhzrEDt.jpg",
+      "season_number": 11
+    }
+  ],
+  "status": "Returning Series",
+  "type": "Scripted",
+  "vote_average": 6.9,
+  "vote_count": 2576
+}

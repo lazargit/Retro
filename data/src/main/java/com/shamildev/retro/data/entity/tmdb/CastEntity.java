@@ -27,7 +27,7 @@ public class CastEntity implements Serializable , Entity
     private Integer gender;
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Long id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -71,11 +71,11 @@ public class CastEntity implements Serializable , Entity
         this.gender = gender;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

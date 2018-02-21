@@ -55,18 +55,19 @@ public class BootstrapImpl {
         System.out.println("startBootstrap");
 
         if(useCases.size()>0){
-            Pair<UseCaseFlowable, ParamsBasic> useCaseParamsBasicPair = useCases.get(0);
-            System.out.println(useCaseParamsBasicPair.key+"execute "+useCaseParamsBasicPair.value);
-            useCaseHandler.execute(useCaseParamsBasicPair.key, useCaseParamsBasicPair.value, new DisposableSubscriber<Object>() {
+
+
+            useCaseHandler.execute(useCases.get(0).key, useCases.get(0).value, new DisposableSubscriber<Object>() {
                 @Override
                 public void onNext(Object o) {
 
+                    System.out.println("Bootstrap#UseCase#OnNext"+ o.getClass().getSimpleName());
 
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                   onBootstrap.onBootstrapError(t);
+                    onBootstrap.onBootstrapError(t);
                     cleartBootstrap();
                 }
 
@@ -74,9 +75,9 @@ public class BootstrapImpl {
 
                 @Override
                 public void onComplete() {
-                    onBootstrap.onBootstrapNext(useCaseParamsBasicPair.key.getClass());
-                     useCases.remove(useCaseParamsBasicPair);
-                    executeUseCases();
+                     onBootstrap.onBootstrapNext(useCases.get(0).key.getClass());
+                     useCases.remove(useCases.get(0));
+                     executeUseCases();
 
                 }
             });

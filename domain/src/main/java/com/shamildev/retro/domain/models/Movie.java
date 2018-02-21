@@ -10,6 +10,7 @@ import com.shamildev.retro.domain.DomainObjectStorable;
 import java.io.Serializable;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.annotations.Nullable;
 
 /**
@@ -27,7 +28,8 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     @Nullable
     public abstract String posterPath();
 
-    public abstract boolean adult();
+    @Nullable
+    public abstract Boolean adult();
 
     @Nullable
     public abstract String overview();
@@ -50,16 +52,16 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
 
     @Nullable
     public abstract String backdropPath();
-
-    public abstract float popularity();
+    @Nullable
+    public abstract Float popularity();
 
     @Nullable
     public abstract Integer voteCount();
+    @Nullable
+    public abstract Boolean video();
 
-    public abstract boolean video();
-
-
-    public abstract float voteAverage();
+    @Nullable
+    public abstract Float voteAverage();
 
 
 
@@ -94,6 +96,9 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     public abstract Images images();
 
     @Nullable
+    public abstract Credits credits();
+
+    @Nullable
     public abstract List<Cast> casts();
 
 
@@ -110,6 +115,12 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     public  Movie setImages(Images images) {
         Builder builder = getBuilder();
         builder.images(images);
+        return builder.build();
+    }
+
+    public  Movie setCredits(Credits credits) {
+        Builder builder = getBuilder();
+        builder.credits(credits);
         return builder.build();
     }
 
@@ -142,19 +153,74 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
                 .spokenLanguages(spokenLanguages())
                 .genres(genres())
                 .images(images())
+                .credits(credits())
                 .lastUpdate(lastUpdate());
     }
 
 
 
+//    "vote_average": 8.3,
+//            "vote_count": 11289,
+
+//            "video": false,
+//            "media_type": "movie",
+
+//            "popularity": 44.572965,
+//            "poster_path": "/k5w6XErKZn50S61JrztSYwUbg8K.jpg",
+//            "original_language": "en",
+//            "original_title": "Fight Club",
+//            "genre_ids": [
+//            18
+//            ],
+//            "backdrop_path": "/87hTDiay2N2qWyX4Ds7ybXi9h8I.jpg",
+//            "adult": false,
+//            "overview": "Ein Yuppie findet beim charismatischen Tyler Durden Unterschlupf, nachdem seine Wohnung in die Luft gejagt wird. Ein Gerangel zwischen den beiden entwickelt sich zu einer Schlägerei, die mit der Erkenntnis endet, dass man sich nach einer ordentlichen Portion Prügel einfach besser fühlt. Der \"Fight Club\" ist geboren. Immer mehr Männer versammeln sich, um sich zu schlagen - und gestärkt in den Alltag zu gehen. Wie ein Virus greift das Konzept um sich, doch für Tyler ist der Kampfverein nur die erste Stufe, um die USA in die Knie zu zwingen.",
+//            "release_date": "1999-10-15"
 
 
+
+
+    public static Movie create(Long id,
+                               String title,
+                               String posterPath,
+                               Boolean adult,
+                               String overview,
+                               String releaseDate,
+                               List<Integer> genreIds,
+                               String originalTitle,
+                               String originalLanguage,
+                               String backdropPath,
+                               Float popularity,
+                               Integer voteCount,
+                               Boolean video,
+                               Float voteAverage) {
+
+
+        return builder()
+                .id(id)
+                .title(title)
+                .posterPath(posterPath)
+                .backdropPath(backdropPath)
+                .adult(adult)
+                .overview(overview)
+                .releaseDate(releaseDate)
+                .genreIds(genreIds)
+                .originalTitle(originalTitle)
+                .originalLanguage(originalLanguage)
+                .popularity(popularity)
+                .voteCount(voteCount)
+                .video(video)
+                .voteAverage(voteAverage)
+                .build();
+    }
 
 
     @Override
     public String toString() {
         return super.toString();
     }
+
+
 
 
     @AutoValue.Builder
@@ -165,7 +231,7 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
 
         public abstract Builder posterPath(String posterPath);
 
-        public abstract Builder adult(boolean adult);
+        public abstract Builder adult(Boolean adult);
 
         public abstract Builder overview(String overview);
 
@@ -179,13 +245,13 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
 
         public abstract Builder backdropPath(String backdropPath);
 
-        public abstract Builder popularity(float popularity);
+        public abstract Builder popularity(Float popularity);
 
         public abstract Builder voteCount(Integer voteCount);
 
-        public abstract Builder video(boolean video);
+        public abstract Builder video(Boolean video);
 
-        public abstract Builder voteAverage(float voteAverage);
+        public abstract Builder voteAverage(Float voteAverage);
 
         public abstract Builder budget(Integer budget);
 
@@ -210,6 +276,8 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
         public abstract Builder genres(List<Genre> genres);
 
         public abstract Builder images(Images images);
+
+        public abstract Builder credits(Credits credits);
 
         public abstract Builder casts(List<Cast> casts);
 

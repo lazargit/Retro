@@ -1,13 +1,12 @@
 package com.shamildev.retro.config;
 
 import android.app.Application;
-import android.content.Context;
 import android.util.Log;
 
 
 import com.shamildev.retro.BuildConfig;
-import com.shamildev.retro.data.config.DataConfig;
-import com.shamildev.retro.di.scope.ApplicationScope;
+import com.shamildev.retro.domain.config.AppConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.util.Constants;
 
 import java.io.File;
@@ -30,6 +29,7 @@ public class ConfigModule extends BaseConfigModule {
 
 
     @Provides
+    @Singleton
     static DataConfig dataConfig(Application application) {
 
 //                Locale.getDefault().getLanguage()       ---> en
@@ -43,12 +43,20 @@ public class ConfigModule extends BaseConfigModule {
         Log.d("COUNTRY-CODE", " "+ Locale.getDefault().toString());
 
 
-        return BASE_CONFIG_BUILDER
+        return  BASE_CONFIG_BUILDER
                 .debug(BuildConfig.DEBUG)
                 .authClientSecret(BuildConfig.MOVIE_DB_API_TOKEN)
                 .language( Locale.getDefault().toString().replace('_','-'))
                 .country(Locale.getDefault().getCountry())
                 .build();
+    }
+
+
+
+    @Provides
+    @Singleton
+    static AppConfig appConfig() {
+        return new AppConfig("test");
     }
 
 

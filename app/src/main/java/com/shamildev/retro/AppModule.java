@@ -19,6 +19,8 @@ import com.shamildev.retro.domain.executor.PostExecutionThread;
 import com.shamildev.retro.net.NetworkManagerImpl;
 import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.details.DetailsActivityModule;
+import com.shamildev.retro.ui.home.HomeActivity;
+import com.shamildev.retro.ui.home.HomeActivityModule;
 import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.splash.SplashActivityModule;
 import com.shamildev.retro.data.DataModule;
@@ -106,5 +108,12 @@ public abstract class AppModule {
     @ContributesAndroidInjector(modules = DetailsActivityModule.class)
     abstract DetailsActivity detailsActivityInjector();
 
+    /**
+     * Provides the injector for the {@link HomeActivity}, which has access to the dependencies
+     * provided by this application instance (singleton scoped objects).
+     */
+    @PerActivity
+    @ContributesAndroidInjector(modules = HomeActivityModule.class)
+    abstract HomeActivity homeActivityInjector();
 
 }

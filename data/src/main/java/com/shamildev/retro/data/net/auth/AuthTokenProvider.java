@@ -18,7 +18,7 @@ package com.shamildev.retro.data.net.auth;
 
 
 
-import com.shamildev.retro.data.config.DataConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 
 import java.io.IOException;
 

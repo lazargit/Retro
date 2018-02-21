@@ -18,7 +18,7 @@ package com.shamildev.retro.data.net;
 
 
 
-import com.shamildev.retro.data.config.DataConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

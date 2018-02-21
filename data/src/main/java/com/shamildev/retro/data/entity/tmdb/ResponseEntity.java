@@ -27,6 +27,9 @@ public class ResponseEntity implements Serializable , Entity {
         private List<Result> results = null;
         private final static long serialVersionUID = 463478823370456371L;
 
+
+
+
     public Integer getPage() {
         return page;
     }
@@ -52,10 +55,12 @@ public class ResponseEntity implements Serializable , Entity {
     }
 
     public List<Result> getResults() {
+        System.out.println("<<<< "+results.size());
         return results;
     }
 
     public void setResults(List<Result> results) {
+        System.out.println(">>>>>>>>>>> "+results.size());
         this.results = results;
     }
 

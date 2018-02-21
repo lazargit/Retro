@@ -7,6 +7,8 @@ import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.util.Constants;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.Reusable;
@@ -42,20 +44,25 @@ final class ConfigurationRealmMapper implements RealmMapper<Configuration, TMDbC
         configurationRealm.setStillSizes(RealmListMapper.listToRealmList(model.stillSizes()));
         configurationRealm.setLast_update(model.lastUpdate());
 
+
         return configurationRealm;
     }
 
     @Override
     public Configuration map(TMDbConfigurationRealm entity) {
+
+        System.out.println("ConfigurationRealmMapper" +entity.getBackdropSizes());
+
+
         return Configuration.builder()
                 .baseUrl(entity.getBaseUrl())
                 .secureBaseUrl(entity.getSecureBaseUrl())
-                .backdropSizes(entity.getBackdropSizes())
-                .changeKeys(entity.getChangeKeys())
-                .logoSizes(entity.getLogoSizes())
-                .posterSizes(entity.getPosterSizes())
-                .profileSizes(entity.getProfileSizes())
-                .stillSizes(entity.getStillSizes())
+                .backdropSizes( RealmListMapper.mapToStringList(entity.getBackdropSizes()))
+                .changeKeys( RealmListMapper.mapToStringList(entity.getChangeKeys()))
+                .logoSizes( RealmListMapper.mapToStringList(entity.getLogoSizes()))
+                .posterSizes( RealmListMapper.mapToStringList(entity.getPosterSizes()))
+                .profileSizes( RealmListMapper.mapToStringList(entity.getProfileSizes()))
+                .stillSizes( RealmListMapper.mapToStringList(entity.getStillSizes()))
                 .lastUpdate(entity.getLast_update())
                 .build();
     }

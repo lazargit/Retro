@@ -4,6 +4,8 @@ import android.support.annotation.IdRes;
 import android.util.Log;
 
 import com.shamildev.retro.R;
+import com.shamildev.retro.domain.config.AppConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.data.net.NetworkManager;
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.domain.bootstrap.Bootstrap;
@@ -15,7 +17,6 @@ import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.models.Genre;
-import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.MovieWrapper;
@@ -29,7 +30,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
@@ -56,6 +56,10 @@ import io.reactivex.subscribers.DisposableSubscriber;
         private final GetUpcomingMovies getUpcomingMovies;
         private final GetMovieById getMovieById;
         private final BootstrapImpl bootstrap;
+        private final DataConfig dataConfig;
+
+        @Inject
+        AppConfig appConfig;
 
         @Inject
         SplashPresenterImpl(SplashView view,
@@ -66,7 +70,8 @@ import io.reactivex.subscribers.DisposableSubscriber;
                             GetGenre getGenre,
                             GetUpcomingMovies getUpcomingMovies,
                             GetMovieById getMovieById,
-                            BootstrapImpl bootstrap
+                            BootstrapImpl bootstrap,
+                            DataConfig dataConfig
 
                            ) {
             super(view);
@@ -84,6 +89,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
             this.networkManager.add(toString(), this::refreshData);
             this.bootstrap = bootstrap;
             this.bootstrap.setUp(this);
+            this.dataConfig = dataConfig;
 
 
         }
@@ -320,6 +326,20 @@ import io.reactivex.subscribers.DisposableSubscriber;
         @Override
         public void onBootstrapComplete() {
             view.makeToast("Bootstrap Complete");
+            System.out.println("DATACONFIG"+appConfig.getImageUrl());
+            appConfig.setImageUrl("override test");
+            System.out.println("DATACONFIG"+appConfig.getImageUrl());
+
+            if(appConfig.getConfigurations() != null){
+                System.out.println("DATACONFIGURATION"+appConfig.getConfigurations().baseUrl());
+            }
+            if(appConfig.getGenres() != null){
+                System.out.println("DATACONFIGENRES"+appConfig.getGenres().size()+" # "+appConfig.getGenres().get(0).name());
+            }
+            System.out.println("DATACONFIG"+dataConfig.baseUrl());
+            view.navigateToHome();
+
+
 
         }
 

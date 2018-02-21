@@ -19,6 +19,7 @@ package com.shamildev.retro.data.entity.mapper;
 import android.util.Log;
 
 
+import com.shamildev.retro.data.entity.mapper.error.MappingError;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.domain.models.MovieWrapper;
 
@@ -45,7 +46,7 @@ final class MovieWrapperEntityMapper implements EntityMapper<ResponseEntity, Mov
     }
 
     @Override
-    public MovieWrapper map(ResponseEntity entity) {
+    public MovieWrapper map(ResponseEntity entity) throws MappingError {
 
 
 

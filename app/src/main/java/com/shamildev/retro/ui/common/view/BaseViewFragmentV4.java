@@ -12,12 +12,14 @@ import com.shamildev.retro.ui.common.presenter.Presenter;
 
 import javax.inject.Inject;
 
+import dagger.android.support.DaggerFragment;
+
 /**
  * A {@link BaseFragment} that contains and invokes {@link Presenter} lifecycle invocations.
  *
  * @param <T> the type of the {@link Presenter}.
  */
-public abstract class BaseViewFragmentV4<T extends Presenter> extends BaseFragmentV4
+public abstract class BaseViewFragmentV4<T extends Presenter> extends DaggerFragment
         implements MVPView {
 
     @Inject

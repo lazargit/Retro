@@ -26,7 +26,7 @@ import butterknife.Unbinder;
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.DaggerFragment;
+import dagger.android.support.*;
 
 
 /**
@@ -41,7 +41,7 @@ import dagger.android.support.DaggerFragment;
  * <b>VIEW BINDING</b>
  * This fragment handles view bind and unbinding.
  */
-public abstract class BaseFragmentV4 extends DaggerFragment implements HasSupportFragmentInjector {
+public abstract class BaseFragmentV4 extends DaggerFragment implements dagger.android.support.HasSupportFragmentInjector {
 
     /**
      * A reference to the activity Context is injected and used instead of the getter method. This
@@ -75,6 +75,16 @@ public abstract class BaseFragmentV4 extends DaggerFragment implements HasSuppor
 
 
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            // Perform injection here before M, L (API 22) and below because onAttach(Context)
+            // is not yet available at L.
+            AndroidSupportInjection.inject(this);
+        }
+        super.onAttach(activity);
+    }
 
 
     @Override
@@ -82,7 +92,8 @@ public abstract class BaseFragmentV4 extends DaggerFragment implements HasSuppor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Perform injection here for M (API 23) due to deprecation of onAttach(Activity).
 
-            fragmentInjector().inject(this);
+            AndroidSupportInjection.inject(this);
+
 
         }
         super.onAttach(context);
@@ -134,10 +145,13 @@ public abstract class BaseFragmentV4 extends DaggerFragment implements HasSuppor
         super.onDestroyView();
     }
 
+
     @Override
-    public final AndroidInjector<DaggerFragment> fragmentInjector() {
-        return childFragmentInjector;
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return super.supportFragmentInjector();
     }
+
+
 
     protected final void addChildFragment(@IdRes int containerViewId, Fragment fragment) {
 

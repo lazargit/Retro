@@ -13,6 +13,7 @@ import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
 
+import com.shamildev.retro.domain.interactor.GetMultiSearch;
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
@@ -23,6 +24,7 @@ import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.util.Pair;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
@@ -56,6 +58,7 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
     private final GetUpcomingMovies getUpcomingMovies;
     private final GetTopRatedMovies getTopRatedMovies;
     private final GetNowPlayingMovies getNowPlayingMovies;
+    private final GetMultiSearch getMultiSearch;
 
 
 
@@ -65,13 +68,15 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
                            GetMyWatchList getMyWatchList ,
                            GetUpcomingMovies getUpcomingMovies,
                            GetTopRatedMovies getTopRatedMovies,
-                           GetNowPlayingMovies getNowPlayingMovies) {
+                           GetNowPlayingMovies getNowPlayingMovies,
+                           GetMultiSearch getMultiSearch) {
         super(view);
         this.useCaseHandler = useCaseHandler;
         this.getMyWatchList = getMyWatchList;
         this.getUpcomingMovies = getUpcomingMovies;
         this.getTopRatedMovies = getTopRatedMovies;
         this.getNowPlayingMovies = getNowPlayingMovies;
+        this.getMultiSearch = getMultiSearch;
 
     }
 
@@ -84,29 +89,49 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
 
             Log.d("getTMDBConfiguration", "getTMDBConfiguration");
 
-            useCaseHandler.execute(getMyWatchList, GetMyWatchList.Params.justVoid(), new DisposableSubscriber<List<Movie>>() {
-                @Override
-                public void onNext(List<Movie> movieList) {
 
-                    view.fillList(movieList);
-                    Log.d("onNext", "totalPages "+movieList.size());
+            useCaseHandler.execute(getMultiSearch, GetMultiSearch.Params.with("Maxi"), new DisposableSubscriber<ResultWrapper>() {
+                @Override
+                public void onNext(ResultWrapper resultWrapper) {
+                    Log.d("onNext", "results "+resultWrapper.totalResults());
+                    Log.d("onNext", "results "+resultWrapper.results().size());
+
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    if (t.getCause() instanceof TMDBError) {
-                        TMDBError error = (TMDBError) t.getCause();
-                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
-
-                    }
                     Log.d("onError>>>>", t.getClass().getName());
                 }
 
                 @Override
                 public void onComplete() {
-                    Log.d("onComplete", ">>");
+
                 }
             });
+
+//            useCaseHandler.execute(getMyWatchList, GetMyWatchList.Params.justVoid(), new DisposableSubscriber<List<Movie>>() {
+//                @Override
+//                public void onNext(List<Movie> movieList) {
+//
+//                    view.fillList(movieList);
+//                    Log.d("onNext", "totalPages "+movieList.size());
+//                }
+//
+//                @Override
+//                public void onError(Throwable t) {
+//                    if (t.getCause() instanceof TMDBError) {
+//                        TMDBError error = (TMDBError) t.getCause();
+//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
+//
+//                    }
+//                    Log.d("onError>>>>", t.getClass().getName());
+//                }
+//
+//                @Override
+//                public void onComplete() {
+//                    Log.d("onComplete", ">>");
+//                }
+//            });
 
 
 

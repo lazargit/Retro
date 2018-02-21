@@ -17,19 +17,19 @@
 package com.shamildev.retro.data.repository;
 
 
-import com.shamildev.retro.data.config.DataConfig;
-
+import com.shamildev.retro.domain.config.DataConfig;
 
 
 import com.shamildev.retro.data.entity.mapper.EntityMapperHolder;
-import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
-import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
 import com.shamildev.retro.data.net.TMDBServices;
 import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.Credits;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
+import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.Constants;
 
@@ -171,9 +171,9 @@ public final class TMDBRepository implements RemoteRepository{
 
 
     @Override
-    public Flowable<Movie> fetchMovie(int movieId, String appendToResponse) {
+    public Flowable<Movie> fetchMovie(Long movieId, String appendToResponse,String includeImageLanguage) {
 
-        return tmdbServices.fetchMovie(String.valueOf(movieId),dataConfig.authClientSecret(), dataConfig.language(), appendToResponse).toFlowable()
+        return tmdbServices.fetchMovie(String.valueOf(movieId),dataConfig.authClientSecret(), dataConfig.language(), appendToResponse,includeImageLanguage).toFlowable()
                 .map(movie -> {
                     Timber.d("fetchMovie", movie);
 
@@ -184,14 +184,28 @@ public final class TMDBRepository implements RemoteRepository{
 
 
     @Override
-    public Flowable<Images> fetchImages(int movieId) {
+    public Flowable<Images> fetchImages(Long movieId) {
 
-        return tmdbServices.fetchImages(dataConfig.authClientSecret())
+        return tmdbServices.fetchImages(String.valueOf(movieId),dataConfig.authClientSecret())
                 .toFlowable()
                 .map(imagesResponse -> {
                     Timber.d("fetchImages", imagesResponse.getId());
 
                     return entityMapperHolder.imagesResponseEntityMapper().map(imagesResponse);
+                });
+
+    }
+
+
+    @Override
+    public Flowable<Credits> fetchCredits(Long movieId) {
+
+        return tmdbServices.fetchCredits(String.valueOf(movieId),dataConfig.authClientSecret())
+                .toFlowable()
+                .map(creditsResponse ->  {
+                    Timber.d("fetchCredits", creditsResponse.getId());
+
+                    return entityMapperHolder.creditsResponseEntityMapper().map(creditsResponse);
                 });
 
     }
@@ -232,7 +246,7 @@ public final class TMDBRepository implements RemoteRepository{
     }
 
     @Override
-    public Flowable<MovieWrapper> fetchRecommendations(int movieId, int page) {
+    public Flowable<MovieWrapper> fetchRecommendations(Long movieId, int page) {
         return tmdbServices.fetchRecommendations(String.valueOf(movieId),dataConfig.authClientSecret(),dataConfig.language(),String.valueOf(page)).toFlowable()
                 .map(movieWrapperEntity -> {
                     Timber.d("fetchRecommendations", movieWrapperEntity);
@@ -242,7 +256,7 @@ public final class TMDBRepository implements RemoteRepository{
     }
 
     @Override
-    public Flowable<MovieWrapper> fetchSimilarMovies(int movieId, int page) {
+    public Flowable<MovieWrapper> fetchSimilarMovies(Long movieId, int page) {
         return tmdbServices.fetchSimilarMovies(String.valueOf(movieId),dataConfig.authClientSecret(),dataConfig.language(),String.valueOf(page)).toFlowable()
                 .map(movieWrapperEntity -> {
                     Timber.d("fetchSimilarMovies", movieWrapperEntity);
@@ -262,6 +276,35 @@ public final class TMDBRepository implements RemoteRepository{
 //            }
 //        });
 //    }
+
+    /*
+    *
+    *TVSHOWS
+    */
+    @Override
+    public Flowable<TVShow> fetchTVShow(Long id, String appendToResponse, String includeImageLanguage) {
+
+        return tmdbServices.fetchTVShow(String.valueOf(id),dataConfig.authClientSecret(), dataConfig.language(), appendToResponse,includeImageLanguage).toFlowable()
+                .map(tvshow -> {
+                    Timber.d("fetchTVShow", tvshow);
+
+                    return entityMapperHolder.tvshowEntityMapper().map(tvshow);
+                });
+
+    }
+
+
+    /*
+   *
+   *TSEARCH
+   */
+    @Override
+    public Flowable<ResultWrapper> fetchMultiSearch(String quary) {
+     return tmdbServices.fetchMultiSearch(dataConfig.authClientSecret(),dataConfig.language(),quary,"1","false",dataConfig.country()).toFlowable()
+               .map(responseEntity ->  entityMapperHolder.resultWrapperEntityMapper().map(responseEntity));
+    }
+
+
 
 
 

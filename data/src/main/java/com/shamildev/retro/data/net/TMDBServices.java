@@ -12,6 +12,7 @@ import com.shamildev.retro.data.entity.tmdb.response.CreditsResponse;
 import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
 import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.response.TVShowResponse;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
@@ -33,7 +34,7 @@ public interface TMDBServices {
 
 
 
-    public static  enum MEDIA_TYPE {
+    enum MEDIA_TYPE {
 
         MOVIE {
             public String toString() {
@@ -58,17 +59,26 @@ public interface TMDBServices {
 
 
 
-    public String API_KEY = "api_key";
+    String API_KEY = "api_key";
     String QUERY = "query";
     String LANGUAGE = "language";
     String REGION = "region";
     String PAGE = "page";
     String MOVIE_ID ="movie_id";
+    String TV_ID ="tv_id";
+
+
     String INCLUDE_ADULT = "include_adult";
     String PRIMARY_RELEASE_DATE_GTE = "primary_release_date.gte";
-    final String APPEND_TO_RESPONSE = "append_to_response";
-
-
+    String APPEND_TO_RESPONSE = "append_to_response";
+    String INCLUDE_IMAGE_LANGUAGE = "include_image_language";
+    //**************************************************************************************************************************//
+    /*
+    *
+    * MOVIE
+    *
+     */
+    //**************************************************************************************************************************//
 
     //https://api.themoviedb.org/3/movie/284052?api_key=XXX
     //&append_to_response=videos%2Cimages%2Ctrailers%2Csimilar_movies%2Crelease_dates%2Cchanges%2Ccredits%2Creviews%2Ckeywords%2Clists%2Ctranslations%2Crecommendations
@@ -77,13 +87,16 @@ public interface TMDBServices {
             @Path(MOVIE_ID) String movieId,
             @Query(API_KEY) String apikey,
             @Query(LANGUAGE) String language,
-            @Query(APPEND_TO_RESPONSE) String appendToResponse
+            @Query(APPEND_TO_RESPONSE) String appendToResponse,
+            @Query(INCLUDE_IMAGE_LANGUAGE) String includeImageLanguage
+
 
     );
 
     //https://api.themoviedb.org/3/movie/155/images?api_key=XXX
     @GET("3/movie/{movie_id}/images")
     Single<ImagesResponse> fetchImages(
+            @Path(MOVIE_ID) String movieId,
             @Query(API_KEY) String apikey
 
     );
@@ -91,13 +104,14 @@ public interface TMDBServices {
     //https://api.themoviedb.org/3/movie/155/credits?api_key=XXX
     @GET("3/movie/{movie_id}/credits")
     Single<CreditsResponse> fetchCredits(
+            @Path(MOVIE_ID) String movieId,
             @Query(API_KEY) String apikey
 
     );
 
 
 
-    //https://api.themoviedb.org/3/movie/238/recommendations?api_key=XXX&language=de-DE&page=1
+    //https://api.themoviedb.org/3/movie/155/recommendations?api_key=XXX&language=de-DE&page=1
     @GET("3/movie/{movie_id}/recommendations")
     Single<ResponseEntity> fetchRecommendations(
             @Path(MOVIE_ID) String movieId,
@@ -109,7 +123,7 @@ public interface TMDBServices {
     );
 
 
-    //https://api.themoviedb.org/3/movie/238/similar?api_key=XXX&language=de-DE&page=1
+    //https://api.themoviedb.org/3/movie/155/similar?api_key=XXX&language=de-DE&page=1
     @GET("3/movie/{movie_id}/similar")
     Single<ResponseEntity> fetchSimilarMovies(
             @Path(MOVIE_ID) String movieId,
@@ -151,6 +165,83 @@ public interface TMDBServices {
             @Query(PAGE) String page,
             @Query(LANGUAGE) String language,
             @Query(REGION) String region
+    );
+    //**************************************************************************************************************************//
+    /*
+    *
+    * TV
+    *
+    */
+    //**************************************************************************************************************************//
+    //https://api.themoviedb.org/3/tv/1418?api_key=XXX&language=de-DE
+    @GET("3/tv/{tv_id}")
+    Single<TVShowResponse> fetchTVShow(
+            @Path(TV_ID) String id,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(APPEND_TO_RESPONSE) String appendToResponse,
+            @Query(INCLUDE_IMAGE_LANGUAGE) String includeImageLanguage
+
+
+    );
+
+    //https://api.themoviedb.org/3/tv/1418/images?api_key=XX
+    @GET("3/tv/{tv_id}/images")
+    Single<ImagesResponse> fetchTVImages(
+            @Path(TV_ID) String id,
+            @Query(API_KEY) String apikey
+
+    );
+
+
+    //https://api.themoviedb.org/3/tv/1418/credits?api_key=XXX
+    @GET("3/tv/{tv_id}/credits")
+    Single<CreditsResponse> fetchTVCredits(
+            @Path(TV_ID) String id,
+            @Query(API_KEY) String apikey
+
+    );
+
+
+    //https://api.themoviedb.org/3/tv/1418/recommendations?api_key=XXX&language=de-DE&page=1
+    @GET("3/tv/{tv_id}/recommendations")
+    Single<ResponseEntity> fetchTVRecommendations(
+            @Path(TV_ID) String id,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(PAGE) String page
+
+
+    );
+
+
+    //https://api.themoviedb.org/3/tv/1418/similar?api_key=XXX&language=de-DE&page=1
+    @GET("3/tv/{tv_id}/similar")
+    Single<ResponseEntity> fetchSimilarTVShows(
+            @Path(TV_ID) String id,
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(PAGE) String page
+
+
+    );
+    //**************************************************************************************************************************//
+    /*
+    *SEARCH
+    *
+    */
+    //**************************************************************************************************************************//
+    //https://api.themoviedb.org/3/search/multi?api_key=XXX&language=de-DE&query=pitt&page=1&include_adult=false&region=de
+    @GET("3/search/multi")
+    Single<ResponseEntity> fetchMultiSearch(
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(QUERY) String quary,
+            @Query(PAGE) String page,
+            @Query(INCLUDE_ADULT) String adult,
+            @Query(REGION) String region
+
+
     );
 
 

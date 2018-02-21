@@ -1,12 +1,10 @@
 package com.shamildev.retro.data;
 
-import android.media.Image;
-
-import com.shamildev.retro.data.config.DataConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.data.entity.Entity;
-import com.shamildev.retro.data.entity.mapper.EntityListMapper;
 import com.shamildev.retro.data.entity.mapper.EntityMapper;
 import com.shamildev.retro.data.entity.mapper.EntityMapperHolder;
+import com.shamildev.retro.data.entity.mapper.error.MappingError;
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.PosterEntity;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
@@ -14,12 +12,12 @@ import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.data.entity.tmdb.response.CreditsResponse;
 import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
 import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
+import com.shamildev.retro.data.entity.tmdb.response.TVShowResponse;
 import com.shamildev.retro.data.net.DataServiceFactory;
 import com.shamildev.retro.data.net.TMDBServices;
 import com.shamildev.retro.data.net.error.ErrorInterceptor;
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.data.repository.TMDBRepository;
-import com.shamildev.retro.data.repository.TMDBRepository_Factory;
 import com.shamildev.retro.data.utils.JsonFileResource;
 import com.shamildev.retro.data.utils.JsonParsingRule;
 import com.shamildev.retro.domain.DomainObject;
@@ -29,12 +27,10 @@ import com.shamildev.retro.domain.models.Movie;
 
 
 import com.shamildev.retro.domain.models.MovieWrapper;
-import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.Constants;
 
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,9 +48,6 @@ import java.util.Objects;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Single;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockResponse;
@@ -62,8 +55,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.moshi.MoshiConverterFactory;
-import timber.log.Timber;
 
 /**
  * Created by R_KAY on 11/17/2017.
@@ -80,9 +71,11 @@ public class TMDBRestAdapterTest {
     private static final String COUNTRY_DE = "DE";
     private static final String COUNTRY_US= "US";
 
-    private static final String TESTMOVIE_ID= "155";
-    private static final String TESTMOVIE_TITLE= "The Dark Knight";
+    private static final String TESTMOVIE_ID= "155", TESTTVSHOW_ID="1418";
+
+    private static final String TESTMOVIE_TITLE= "The Dark Knight",TESTTVSHOW_TITLE= "The Big Bang Theory", TESTTVPERSON_NAME = "Chuck Lorre";
     private static final String TESTMOVIE_TAGLINE= "Why So Serious?";
+    private static final String TEST_SEARCH_QUARY = "Max";
 
     //MWS is what we'll use to test the REST Adapter
     private MockWebServer server;
@@ -221,7 +214,7 @@ public class TMDBRestAdapterTest {
                 .setResponseCode(200)
                 .setBody(jsonParsingRule.getValue().toString()));
 
-        TestObserver<MovieResponse> test = adapter.fetchMovie(TESTMOVIE_ID, API_KEY, LANGUAGE_DE, "")
+        TestObserver<MovieResponse> test = adapter.fetchMovie(TESTMOVIE_ID, API_KEY, LANGUAGE_DE, null,null)
                 .test()
                 .assertSubscribed()
                 .assertComplete()
@@ -244,6 +237,62 @@ public class TMDBRestAdapterTest {
     }
 
     @Test
+    @JsonFileResource(fileName = "MovieDetailsResponseWithImages.json", clazz = String.class)
+    public void on_FetchMovieWithImages_Successful() throws Exception {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonParsingRule.getValue().toString()));
+
+
+
+
+        MovieResponse result = adapter.fetchMovie(TESTMOVIE_ID, API_KEY, LANGUAGE_DE, null,null)
+                .blockingGet();
+
+        Movie build = Movie.builder()
+                .id(result.getId())
+                .title(result.getTitle())
+                .overview(result.getOverview())
+
+                .originalTitle(result.getTitle())
+                .originalLanguage(result.getOriginalLanguage())
+
+                .posterPath(result.getPosterPath())
+                .backdropPath(result.getBackdropPath())
+
+
+                .adult(result.getAdult())
+                .video(result.getVideo())
+
+
+                .releaseDate(result.getReleaseDate())
+
+
+                .popularity(result.getPopularity())
+                .voteAverage(result.getVoteAverage())
+                .voteCount(result.getVoteCount())
+
+                .build();
+
+
+
+
+
+
+
+
+        Mockito.when(entityMapperHolder.movieDetailsEntityMapper().map(result))
+                .thenReturn(build);
+
+        Movie movie = entityMapperHolder.movieDetailsEntityMapper().map(result);
+        System.out.println("movie " + movie.images());
+
+    }
+
+
+
+    @Test
     @JsonFileResource(fileName = "ErrorEntity.json", clazz = String.class)
     public void on_FetchMovie_Failed_ApiKey() throws Exception {
 
@@ -251,7 +300,7 @@ public class TMDBRestAdapterTest {
                 .setResponseCode(401)
                 .setBody(jsonParsingRule.getValue().toString()));
 
-        adapter.fetchMovie("155","XXX","de_DE","")
+        adapter.fetchMovie("155","XXX","de_DE",null,null)
                 .test()
                 .assertError(TMDBError.class);
 
@@ -368,7 +417,7 @@ public class TMDBRestAdapterTest {
                 .setBody(jsonParsingRule.getValue().toString()));
 
         ImagesResponse imagesResponseTestData;
-        TestObserver<ImagesResponse> test = adapter.fetchImages(API_KEY)
+        TestObserver<ImagesResponse> test = adapter.fetchImages(TESTMOVIE_ID,API_KEY)
 
                 .test()
                 .assertComplete()
@@ -417,8 +466,12 @@ public class TMDBRestAdapterTest {
                 .blockingSingle();
         System.out.println(imagesResponse1.getPosters().size()+"<>>>>>>>>>>>>>>>>>>>>>>>" + imageModels.size());
 
+
+
+
+
         Images build = Images.builder()
-                .id(155)
+                .id(Integer.valueOf(TESTMOVIE_ID))
                 .posters(imageModels)
                 .backdrops(imageModels)
                 .build();
@@ -474,7 +527,7 @@ public class TMDBRestAdapterTest {
                 .setResponseCode(200)
                 .setBody(jsonParsingRule.getValue().toString()));
 
-        TestObserver<CreditsResponse> test = adapter.fetchCredits(API_KEY)
+        TestObserver<CreditsResponse> test = adapter.fetchCredits(TESTMOVIE_ID,API_KEY)
                 .test()
                 .assertComplete()
                 .assertNoErrors();
@@ -551,13 +604,85 @@ public class TMDBRestAdapterTest {
 
 
     <K extends Entity, V extends DomainObject> List<V> mapToV(EntityMapper<K, V> entityMapper,
-                                                              List<K> kList) {
+                                                              List<K> kList) throws MappingError {
         List<V> vList = new ArrayList<>(kList.size());
         for (K k : kList) {
             vList.add(entityMapper.map(k));
         }
         return vList;
     }
+
+
+
+
+
+
+
+
+
+    @Test
+    @JsonFileResource(fileName = "TVDetailsResponse.json", clazz = String.class)
+    public void on_FetchTVShow_Successful() throws Exception {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonParsingRule.getValue().toString()));
+
+        TestObserver<TVShowResponse> test = adapter.fetchTVShow(TESTTVSHOW_ID, API_KEY, LANGUAGE_DE, null, null)
+                .test()
+                .assertSubscribed()
+                .assertComplete()
+                .assertNoErrors();
+
+
+        test.assertValue(response ->  (response != null));
+      //  System.out.println((test.values().get(0).getCreatedBy().get(0).getName())+">>>>>>>>>>>>>>>>>"+test.values().get(0).getNumberOfSeasons());
+        test.assertValue(response -> Objects.equals(response.getId(), Long.parseLong(TESTTVSHOW_ID)));
+        test.assertValue(response -> Objects.equals(response.getName(), TESTTVSHOW_TITLE));
+        test.assertValue(response -> response.getGenres().size()  > 0);
+        test.assertValue(response -> (response.getSeasons().size()-1) == response.getNumberOfSeasons());
+        test.assertValue(response ->  response.getCreatedBy().get(0).getName().equals(TESTTVPERSON_NAME));
+        test.assertValue(response -> (response.getEpisodeRunTime().get(0) ) == 22);
+
+
+
+
+    }
+
+
+    @Test
+    @JsonFileResource(fileName = "MultiSearchResponse.json", clazz = String.class)
+    public void on_FetchMultiSearch_Successful() throws Exception {
+
+        server.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(jsonParsingRule.getValue().toString()));
+
+        TestObserver<ResponseEntity> test = adapter.fetchMultiSearch(API_KEY, LANGUAGE_DE, TEST_SEARCH_QUARY, "1", "false", COUNTRY_DE)
+                .test()
+                .assertSubscribed()
+                .assertComplete()
+                .assertNoErrors();
+
+
+        test.assertValue(response ->  (response != null));
+         System.out.println((test.values().get(0).getResults().get(0).getMediaType())+">>>>>>>>>>>>>>>>>"+(test.values().get(0).getTotalPages()));
+//        test.assertValue(response -> Objects.equals(response.getId(), Long.parseLong(TESTTVSHOW_ID)));
+//        test.assertValue(response -> Objects.equals(response.getName(), TESTTVSHOW_TITLE));
+//        test.assertValue(response -> response.getGenres().size()  > 0);
+//        test.assertValue(response -> (response.getSeasons().size()-1) == response.getNumberOfSeasons());
+//        test.assertValue(response ->  response.getCreatedBy().get(0).getName().equals(TESTTVPERSON_NAME));
+//        test.assertValue(response -> (response.getEpisodeRunTime().get(0) ) == 22);
+
+
+
+
+    }
+
+
+
+
+
 
 
     @After

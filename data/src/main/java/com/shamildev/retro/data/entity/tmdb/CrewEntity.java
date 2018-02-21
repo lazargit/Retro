@@ -36,6 +36,10 @@ public class CrewEntity implements Serializable , Entity
     @Expose
     private Integer gender;
 
+    @SerializedName("id")
+    @Expose
+    private Long id;
+
     @SerializedName("job")
     @Expose
     private String job;
@@ -49,7 +53,13 @@ public class CrewEntity implements Serializable , Entity
     private String profilePath;
 
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCreditId() {
         return creditId;

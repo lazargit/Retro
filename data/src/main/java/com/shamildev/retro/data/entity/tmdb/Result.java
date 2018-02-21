@@ -29,7 +29,79 @@ public class Result implements Entity {
     overview	"Thor is imprisoned on the other side of the universe and finds himself in a race against time to get back to Asgard to stop Ragnarok, the destruction of his homeworld and the end of Asgardian civilization, at the hands of an all-powerful new threat, the ruthless Hela."
     release_date	"2017-10-25"
 */
-
+/*
+"popularity": 15.215624,
+      "media_type": "person",
+      "id": 287,
+      "profile_path": "/kU3B75TyRiCgE270EyZnHjfivoq.jpg",
+      "name": "Brad Pitt",
+      "known_for": [
+        {
+          "vote_average": 8.3,
+          "vote_count": 11289,
+          "id": 550,
+          "video": false,
+          "media_type": "movie",
+          "title": "Fight Club",
+          "popularity": 44.572965,
+          "poster_path": "/k5w6XErKZn50S61JrztSYwUbg8K.jpg",
+          "original_language": "en",
+          "original_title": "Fight Club",
+          "genre_ids": [
+            18
+          ],
+          "backdrop_path": "/87hTDiay2N2qWyX4Ds7ybXi9h8I.jpg",
+          "adult": false,
+          "overview": "Ein Yuppie findet beim charismatischen Tyler Durden Unterschlupf, nachdem seine Wohnung in die Luft gejagt wird. Ein Gerangel zwischen den beiden entwickelt sich zu einer Schlägerei, die mit der Erkenntnis endet, dass man sich nach einer ordentlichen Portion Prügel einfach besser fühlt. Der \"Fight Club\" ist geboren. Immer mehr Männer versammeln sich, um sich zu schlagen - und gestärkt in den Alltag zu gehen. Wie ein Virus greift das Konzept um sich, doch für Tyler ist der Kampfverein nur die erste Stufe, um die USA in die Knie zu zwingen.",
+          "release_date": "1999-10-15"
+        },
+        {
+          "vote_average": 8,
+          "vote_count": 7925,
+          "id": 16869,
+          "video": false,
+          "media_type": "movie",
+          "title": "Inglourious Basterds",
+          "popularity": 37.814361,
+          "poster_path": "/7hrfJGGkbgBO1Z7SDz3TdaB7idx.jpg",
+          "original_language": "en",
+          "original_title": "Inglourious Basterds",
+          "genre_ids": [
+            18,
+            28,
+            53,
+            10752
+          ],
+          "backdrop_path": "/7nF6B9yCEq1ZCT82sGJVtNxOcl5.jpg",
+          "adult": false,
+          "overview": "Im von Deutschland besetzten Frankreich muss Shosanna ansehen wie ihre Familie durch Oberst Hans Landa brutal ermordet wird. Sie kann entkommen und flieht nach Paris. Gemeinsam mit seinen 8 Männern, einer Elitetruppe aus jüdisch-amerikanischen Soldaten, will Offizier Aldo Raine systematische Vergeltungsschläge gegen Nazis durchführen. Sie werden in Frankreich abgesetzt, um dort unterzutauchen. Von den Deutschen als ‚Die Bastarde' gefürchtet versuchen sie den Führer des III. Reichs zu töten.",
+          "release_date": "2009-08-18"
+        },
+        {
+          "vote_average": 8.2,
+          "vote_count": 6850,
+          "id": 807,
+          "video": false,
+          "media_type": "movie",
+          "title": "Sieben",
+          "popularity": 32.316065,
+          "poster_path": "/fNuSBLoaWcCemNzZCsJVZ6MZgBc.jpg",
+          "original_language": "en",
+          "original_title": "Se7en",
+          "genre_ids": [
+            80,
+            9648,
+            53
+          ],
+          "backdrop_path": "/ba4CpvnaxvAgff2jHiaqJrVpZJ5.jpg",
+          "adult": false,
+          "overview": "Der besonnene Detective Summerset ist ein Kriminologe der “alten Schule”. Zusammen mit seinem neuen Kollegen, dem Heißsporn Mills, wird er auf den ungewöhnlichsten und erschreckendsten Fall seiner Laufbahn angesetzt. Ein unbekannter Serienkiller versucht scheinbar, die Stadt von allen Sünden zu befreien. Er tut dies, indem er auf bestialische Weise für jede der sieben Todsünden einen symbolischen Ritualmord begeht.",
+          "release_date": "1995-09-22"
+        }
+      ],
+      "adult": false
+    },
+ */
 
     @SerializedName("vote_average")
     @Expose
@@ -101,7 +173,12 @@ public class Result implements Entity {
     private List<String> originCountry = null;
     @SerializedName("profile_path")
     @Expose
-    private Object profilePath;
+    private String profilePath;
+
+    // Person Result
+    @SerializedName("known_for")
+    @Expose
+    private List<Result> knownFor = null;
 
 
 
@@ -258,15 +335,16 @@ public class Result implements Entity {
         this.originCountry = originCountry;
     }
 
-    public Object getProfilePath() {
+    public String getProfilePath() {
         return profilePath;
     }
 
-    public void setProfilePath(Object profilePath) {
+    public void setProfilePath(String profilePath) {
         this.profilePath = profilePath;
     }
 
 
-
-
+    public List<Result> getKnownFor() {
+        return knownFor;
+    }
 }

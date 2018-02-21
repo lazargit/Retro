@@ -11,7 +11,7 @@ public class EmptyDatasetException extends IOException {
     private final String message;
 
     public EmptyDatasetException(){
-        this.message = "No Repos listed for given Username";
+        this.message = "No Data";
     }
 
     @Override

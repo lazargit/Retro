@@ -44,35 +44,22 @@ final class MovieEntityMapper implements EntityMapper<Result, Movie> {
     @Override
     public Movie map(Result entity) {
 
+        Log.d("MovieEntityMapper", entity.getTitle());
+      return  Movie.create(entity.getId(),
+                     entity.getTitle(),
+                     entity.getPosterPath(),
+                     entity.getAdult(),
+                     entity.getOverview(),
+                     entity.getReleaseDate(),
+                     entity.getGenreIds(),
+                     entity.getOriginalTitle(),
+                     entity.getOriginalLanguage(),
+                     entity.getBackdropPath(),
+                     entity.getPopularity(),
+                     entity.getVoteCount(),
+                     entity.getVideo(),
+                     entity.getVoteAverage());
 
-        System.out.println("Mapper>>>>>"+entity.getTitle());
-        return Movie.builder()
-                .id(entity.getId())
-                .title(entity.getTitle())
-                .overview(entity.getOverview())
-
-                .originalTitle(entity.getOriginalTitle())
-                .originalLanguage(entity.getOriginalLanguage())
-
-                .posterPath(entity.getPosterPath())
-                .backdropPath(entity.getBackdropPath())
-
-                .genreIds(entity.getGenreIds())
-                .adult(entity.getAdult())
-                .video(entity.getVideo())
-
-
-
-
-
-                .releaseDate(entity.getReleaseDate())
-
-
-                .popularity(entity.getPopularity())
-                .voteAverage(entity.getVoteAverage())
-                .voteCount(entity.getVoteCount())
-
-                .build();
     }
 
     @Override

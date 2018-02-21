@@ -16,9 +16,11 @@
 
 package com.shamildev.retro.data.entity.mapper;
 
+import com.shamildev.retro.data.entity.tmdb.BackdropEntity;
 import com.shamildev.retro.data.entity.tmdb.PosterEntity;
 import com.shamildev.retro.data.entity.tmdb.Result;
 import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
+import com.shamildev.retro.domain.models.ImageModel;
 import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 
@@ -27,6 +29,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Reusable;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 /**
  * Maps {@link Result} to {@link Movie} .
@@ -35,10 +39,13 @@ import dagger.Reusable;
 final class ImagesResponseEntityMapper implements EntityMapper<ImagesResponse, Images> {
 
 
-
+    private final PosterEntityMapper posterEntityMapper;
+    private final BackdropEntityMapper backdropEntityMapper;
 
     @Inject
-    ImagesResponseEntityMapper() {
+    ImagesResponseEntityMapper(PosterEntityMapper posterEntityMapper,BackdropEntityMapper backdropEntity) {
+         this.posterEntityMapper = posterEntityMapper;
+         this.backdropEntityMapper = backdropEntity;
 
 
     }
@@ -46,7 +53,27 @@ final class ImagesResponseEntityMapper implements EntityMapper<ImagesResponse, I
     @Override
     public Images map(ImagesResponse imagesResponse) {
         List<PosterEntity> posters = imagesResponse.getPosters();
-        return null;
+
+        List<ImageModel> imageModels = Observable.just(imagesResponse.getPosters())
+                .map(posterEntities -> Flowable.fromIterable(posterEntities)
+                        .map(posterEntityMapper::map)
+                        .toList()
+                        .blockingGet())
+                .blockingSingle();
+
+        List<ImageModel> imageModelBackdrops = Observable.just(imagesResponse.getBackdrops())
+                .map(posterEntities -> Flowable.fromIterable(posterEntities)
+                        .map(backdropEntityMapper::map)
+                        .toList()
+                        .blockingGet())
+                .blockingSingle();
+
+
+        return   Images.builder()
+                .id(imagesResponse.getId())
+                .posters(imageModels)
+                .backdrops(imageModelBackdrops)
+                .build();
     }
 
     @Override

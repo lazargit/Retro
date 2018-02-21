@@ -10,4 +10,6 @@ public interface SplashView extends MVPView {
 
     void showSomething(String something);
 
+    void navigateToHome();
+
 }

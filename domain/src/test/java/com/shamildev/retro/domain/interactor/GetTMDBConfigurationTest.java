@@ -2,6 +2,7 @@ package com.shamildev.retro.domain.interactor;
 
 
 import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.params.Product;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.testdata.TestData;
@@ -170,7 +171,6 @@ public class GetTMDBConfigurationTest {
     @Test
     public void test_rx() throws Exception {
         Flowable<Configuration> configurationFlowableRepoData = TestData.REPO_TMDB_CONFIGURATION_DATA(classLoader);
-
 
 
 

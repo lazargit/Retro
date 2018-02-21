@@ -18,7 +18,10 @@ package com.shamildev.retro.data.entity.mapper;
 
 
 import com.shamildev.retro.data.entity.Entity;
+import com.shamildev.retro.data.entity.mapper.error.MappingError;
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.models.ResultWrapper;
 
 /**
  * Maps entity K to V and vice versa.
@@ -28,7 +31,9 @@ import com.shamildev.retro.domain.DomainObject;
  */
 public interface EntityMapper<K extends Entity, V extends DomainObject> {
 
-    V map(K k);
+    V map(K k) throws MappingError;
+
+
 
     K map(V v);
 }

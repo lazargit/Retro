@@ -20,14 +20,12 @@ package com.shamildev.retro.data.net;
 
 import android.util.Log;
 
-import com.shamildev.retro.data.config.DataConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.data.net.auth.AuthRequestInterceptor;
 import com.shamildev.retro.data.net.error.ErrorInterceptor;
-import com.shamildev.retro.data.scope.ApplicationScope;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import dagger.Lazy;
 import okhttp3.Cache;
@@ -141,13 +139,8 @@ public final class DataServiceFactory {
 
 
     private HttpLoggingInterceptor httpLoggingInterceptor(){
-       return new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Timber.i(message);
-
-            }
-        }).setLevel(HttpLoggingInterceptor.Level.BASIC);
+       return new HttpLoggingInterceptor(message -> Timber.i(message))
+               .setLevel(HttpLoggingInterceptor.Level.BASIC);
 
     }
 }

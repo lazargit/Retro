@@ -19,6 +19,7 @@ package com.shamildev.retro.data.entity.mapper;
 
 
 import com.shamildev.retro.data.entity.Entity;
+import com.shamildev.retro.data.entity.mapper.error.MappingError;
 import com.shamildev.retro.domain.DomainObject;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public final class EntityListMapper {
     }
 
     <K extends Entity, V extends DomainObject> List<V> mapToV(EntityMapper<K, V> entityMapper,
-                                                              List<K> kList) {
+                                                              List<K> kList) throws MappingError {
         List<V> vList = new ArrayList<>(kList.size());
         for (K k : kList) {
             vList.add(entityMapper.map(k));

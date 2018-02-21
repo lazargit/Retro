@@ -16,6 +16,8 @@
 
 package com.shamildev.retro.domain.interactor;
 
+import com.shamildev.retro.domain.config.AppConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.CacheRepository;
@@ -29,6 +31,7 @@ import javax.inject.Inject;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
@@ -39,11 +42,17 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
 
     private final RemoteRepository repository;
     private final CacheRepository cache;
+    private DataConfig dataConfig;
 
     @Inject
-    GetTMDBConfiguration(RemoteRepository repository,CacheRepository cache) {
+    AppConfig appConfig;
+
+
+    @Inject
+    GetTMDBConfiguration(RemoteRepository repository,CacheRepository cache,DataConfig dataConfig) {
         this.repository = repository;
         this.cache = cache;
+        this.dataConfig = dataConfig;
     }
 
 
@@ -62,8 +71,6 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
     public Flowable<Configuration> execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
 
-
-
         return   fetchConfigurationFromCache()
 
                 .switchIfEmpty(fetchConfigurationFromNet())
@@ -74,7 +81,14 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
                     }
                     return configuration;
                 })
-                .map(configuration -> fetchConfigurationFromCache().blockingSingle());
+
+
+                .map(configuration -> fetchConfigurationFromCache().blockingSingle())
+                .map(configuration -> {
+                    appConfig.setConfigurations(configuration);
+                    return configuration;
+                });
+
 
 
     }

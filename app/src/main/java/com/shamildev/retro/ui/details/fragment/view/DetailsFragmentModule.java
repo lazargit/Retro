@@ -40,7 +40,7 @@ public abstract class DetailsFragmentModule {
      * @return the fragment
      */
     @Binds
-    @Named(BaseFragmentModule.FRAGMENT)
+    @Named(BaseFragmentModule.FRAGMENT_V4)
     @PerFragment
     abstract Fragment fragment(DetailsFragment fragment);
 
