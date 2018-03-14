@@ -1,4 +1,4 @@
-package com.shamildev.retro.ui.home.fragment.presenter;
+package com.shamildev.retro.ui.widgets.Search.presenter;
 
 import android.support.annotation.IdRes;
 import android.util.Log;
@@ -12,13 +12,16 @@ import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.models.ResultWrapper;
+import com.shamildev.retro.domain.responsemodels.Response;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.fragment.view.HomeView;
 import com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter;
-import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
+import com.shamildev.retro.ui.widgets.Search.view.SearchResultView;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
@@ -30,7 +33,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
  * An implementation of {@link WatchListPresenter}.
  */
 @PerFragment
-final class HomePresenterImpl extends BasePresenter<HomeView> implements HomePresenter{
+final class SearchResultPresenterImpl extends BasePresenter<SearchResultView> implements SearchResultPresenter {
 
 
 
@@ -38,28 +41,16 @@ final class HomePresenterImpl extends BasePresenter<HomeView> implements HomePre
 
 
     private final UseCaseHandler useCaseHandler;
-    private final GetMyWatchList getMyWatchList;
-    private final GetUpcomingMovies getUpcomingMovies;
-    private final GetTopRatedMovies getTopRatedMovies;
-    private final GetNowPlayingMovies getNowPlayingMovies;
     private final GetMultiSearch getMultiSearch;
-
+    private String searchStr = "";
 
 
     @Inject
-    HomePresenterImpl(HomeView view,
-                      UseCaseHandler useCaseHandler,
-                      GetMyWatchList getMyWatchList ,
-                      GetUpcomingMovies getUpcomingMovies,
-                      GetTopRatedMovies getTopRatedMovies,
-                      GetNowPlayingMovies getNowPlayingMovies,
-                      GetMultiSearch getMultiSearch) {
+    SearchResultPresenterImpl(SearchResultView view,
+                              UseCaseHandler useCaseHandler,
+                              GetMultiSearch getMultiSearch) {
         super(view);
         this.useCaseHandler = useCaseHandler;
-        this.getMyWatchList = getMyWatchList;
-        this.getUpcomingMovies = getUpcomingMovies;
-        this.getTopRatedMovies = getTopRatedMovies;
-        this.getNowPlayingMovies = getNowPlayingMovies;
         this.getMultiSearch = getMultiSearch;
 
     }
@@ -175,7 +166,66 @@ final class HomePresenterImpl extends BasePresenter<HomeView> implements HomePre
         }
     }
 
+    @Override
+    public void onSearch(String str) {
+        searchStr = str;
 
+        loadFirstPage(str);
+    }
+
+    @Override
+    public void loadNextPage(int page) {
+        useCaseHandler.execute(   this.getMultiSearch, GetMultiSearch.Params.with(searchStr,page), new DisposableSubscriber<ResultWrapper>() {
+            @Override
+            public void onNext(ResultWrapper resultWrapper) {
+
+                Log.d("onNext>>>>","total results"+resultWrapper.totalResults());
+                view.addToList(resultWrapper.results());
+
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.d("onError>>>>", t.getClass().getName());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+    }
+
+
+    private void loadFirstPage(String s) {
+
+        Log.d("#############","--> "+Thread.currentThread()+" || dataFromMdbNetwork: ");
+
+        useCaseHandler.execute(   this.getMultiSearch, GetMultiSearch.Params.with(s,1), new DisposableSubscriber<ResultWrapper>() {
+            @Override
+            public void onNext(ResultWrapper resultWrapper) {
+
+                Log.d("onNext>>>>","total results"+resultWrapper.totalResults());
+                view.fillList(resultWrapper);
+
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.d("onError>>>>", t.getClass().getName());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+    }
 
 
 }

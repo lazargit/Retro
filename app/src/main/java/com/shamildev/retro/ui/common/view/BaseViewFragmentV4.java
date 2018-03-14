@@ -76,4 +76,5 @@ public abstract class BaseViewFragmentV4<T extends Presenter> extends DaggerFrag
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
+
 }

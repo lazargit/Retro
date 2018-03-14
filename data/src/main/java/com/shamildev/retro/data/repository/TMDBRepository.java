@@ -299,8 +299,8 @@ public final class TMDBRepository implements RemoteRepository{
    *TSEARCH
    */
     @Override
-    public Flowable<ResultWrapper> fetchMultiSearch(String quary) {
-     return tmdbServices.fetchMultiSearch(dataConfig.authClientSecret(),dataConfig.language(),quary,"1","false",dataConfig.country()).toFlowable()
+    public Flowable<ResultWrapper> fetchMultiSearch(String quary, int page) {
+     return tmdbServices.fetchMultiSearch(dataConfig.authClientSecret(),dataConfig.language(),quary,String.valueOf(page),"false",dataConfig.country()).toFlowable()
                .map(responseEntity ->  entityMapperHolder.resultWrapperEntityMapper().map(responseEntity));
     }
 

@@ -59,7 +59,7 @@ public interface RemoteRepository {
      *SEARCH
      */
    // <V extends DomainObject> Flowable<V> fetchMultiSearch(String quary);
-    Flowable<ResultWrapper> fetchMultiSearch(String quary);
+    Flowable<ResultWrapper> fetchMultiSearch(String quary,int page);
 
 
     // Single<ResponseMovieDetails> gethMovieWithId(@Nonnull Integer movieId, String language, String appendToResponse);

@@ -44,13 +44,14 @@ public final class GetMultiSearch implements UseCaseFlowable<ParamsBasic,ResultW
     @Override
     public Flowable<ResultWrapper> execute(ParamsBasic params) {
         String quary = ((Params) params).quary;
+        int page = ((Params) params).page;
 
 
 
 
 
 
-        return this.repository.fetchMultiSearch(quary);
+        return this.repository.fetchMultiSearch(quary,page);
 
     }
 
@@ -64,17 +65,19 @@ public final class GetMultiSearch implements UseCaseFlowable<ParamsBasic,ResultW
         }
 
         private String quary = "";
+        private int page = 1;
 
 
 
-        private Params(String quary) {
+        private Params(String quary, int page) {
             this.quary = quary;
+            this.page = page;
         }
 
 
 
-        public static Params with(String quary) {
-            return new Params(quary);
+        public static Params with(String quary,int page) {
+            return new Params(quary,page);
         }
 
 

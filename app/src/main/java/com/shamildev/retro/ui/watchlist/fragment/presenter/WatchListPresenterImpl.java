@@ -90,24 +90,7 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
             Log.d("getTMDBConfiguration", "getTMDBConfiguration");
 
 
-            useCaseHandler.execute(getMultiSearch, GetMultiSearch.Params.with("Maxi"), new DisposableSubscriber<ResultWrapper>() {
-                @Override
-                public void onNext(ResultWrapper resultWrapper) {
-                    Log.d("onNext", "results "+resultWrapper.totalResults());
-                    Log.d("onNext", "results "+resultWrapper.results().size());
 
-                }
-
-                @Override
-                public void onError(Throwable t) {
-                    Log.d("onError>>>>", t.getClass().getName());
-                }
-
-                @Override
-                public void onComplete() {
-
-                }
-            });
 
 //            useCaseHandler.execute(getMyWatchList, GetMyWatchList.Params.justVoid(), new DisposableSubscriber<List<Movie>>() {
 //                @Override

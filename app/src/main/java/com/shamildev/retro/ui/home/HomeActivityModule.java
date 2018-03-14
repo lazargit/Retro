@@ -8,6 +8,8 @@ import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.BaseActivityModule;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragmentModule;
+import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
+import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragmentModule;
 
 
 import dagger.Binds;
@@ -30,6 +32,11 @@ public abstract class HomeActivityModule {
     @PerFragment
     @ContributesAndroidInjector(modules = HomeFragmentModule.class)
     abstract HomeFragment homeFragmentInjector();
+
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = SearchResultFragmentModule.class)
+    abstract SearchResultFragment searchResultFragmentInjector();
 
     /**
      * As per the contract specified in {@link BaseActivityModule}; "This must be included in all
