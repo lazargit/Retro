@@ -5,15 +5,19 @@ package com.shamildev.retro.ui.home.fragment.presenter;
  */
 
 import android.support.annotation.IdRes;
+import android.support.v4.app.FragmentManager;
 
 import com.shamildev.retro.ui.common.presenter.Presenter;
+
+import java.io.Serializable;
 
 /**
  * A {@link Presenter} that does some work and shows the results.
  */
 public interface HomePresenter extends Presenter {
 
-    void onDoSomething(@IdRes int id);
+
+    void init(Serializable arguments, FragmentManager mViewPagerAdapter);
 
 
 }

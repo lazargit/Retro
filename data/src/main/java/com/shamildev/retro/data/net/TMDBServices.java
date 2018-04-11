@@ -184,6 +184,14 @@ public interface TMDBServices {
 
 
     );
+    //https://api.themoviedb.org/3/tv/on_the_air?api_key=XXX&language=de-DE&page=1
+    @GET("3/tv/on_the_air")
+    Single<ResponseEntity> fetchTVonAir(
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(PAGE) String page
+    );
+
 
     //https://api.themoviedb.org/3/tv/1418/images?api_key=XX
     @GET("3/tv/{tv_id}/images")

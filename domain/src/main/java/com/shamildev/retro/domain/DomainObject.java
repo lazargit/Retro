@@ -17,6 +17,8 @@
 package com.shamildev.retro.domain;
 
 
+import com.shamildev.retro.domain.models.Movie;
+
 public interface DomainObject {
 
 

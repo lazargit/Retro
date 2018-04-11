@@ -3,6 +3,7 @@ package com.shamildev.retro.domain.models;
 import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
 
+import java.io.Serializable;
 import java.util.List;
 
 import io.reactivex.annotations.Nullable;
@@ -14,7 +15,7 @@ import io.reactivex.annotations.Nullable;
 
 
 @AutoValue
-public abstract class ResultWrapper implements DomainObject {
+public abstract class ResultWrapper implements DomainObject,Serializable {
 
     public abstract int page();
 

@@ -39,14 +39,15 @@ public interface RemoteRepository {
 
     Flowable<MovieWrapper> fetchSimilarMovies(@NonNull Long movieId, int page);
 
-    Flowable<MovieWrapper> fetchUpcomingMovies(int page);
+    Flowable<ResultWrapper> fetchUpcomingMovies(int page);
 
-    Flowable<MovieWrapper> fetchNowPlayingMovies(int page);
+    Flowable<ResultWrapper> fetchNowPlayingMovies(int page);
 
-    Flowable<MovieWrapper> fetchTopRatedMovies(int page);
+    Flowable<ResultWrapper> fetchTopRatedMovies(int page);
 
     //TVSHOW
     Flowable<TVShow> fetchTVShow(Long id, String appendToResponse, String includeImageLanguage);
+    Flowable<ResultWrapper> fetchNowPlayingTVShow(int page);
 
 
 

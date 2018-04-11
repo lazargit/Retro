@@ -1,25 +1,32 @@
 package com.shamildev.retro.ui.home.fragment.presenter;
 
+import android.os.Build;
 import android.support.annotation.IdRes;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.shamildev.retro.R;
 import com.shamildev.retro.di.scope.PerFragment;
+import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetMultiSearch;
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
+import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
+import com.shamildev.retro.ui.home.fragment.adapter.ViewPagerAdapter;
+import com.shamildev.retro.ui.home.fragment.view.HomePageFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomeView;
 import com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter;
-import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
+
+import java.io.Serializable;
+import java.util.HashMap;
 
 import javax.inject.Inject;
-
-import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by Shamil Lazar on 13.12.2017.
@@ -36,144 +43,67 @@ final class HomePresenterImpl extends BasePresenter<HomeView> implements HomePre
 
 
 
-
-    private final UseCaseHandler useCaseHandler;
-    private final GetMyWatchList getMyWatchList;
-    private final GetUpcomingMovies getUpcomingMovies;
-    private final GetTopRatedMovies getTopRatedMovies;
-    private final GetNowPlayingMovies getNowPlayingMovies;
-    private final GetMultiSearch getMultiSearch;
-
+    private ViewPagerAdapter mViewPagerAdapter;
 
 
     @Inject
-    HomePresenterImpl(HomeView view,
-                      UseCaseHandler useCaseHandler,
-                      GetMyWatchList getMyWatchList ,
-                      GetUpcomingMovies getUpcomingMovies,
-                      GetTopRatedMovies getTopRatedMovies,
-                      GetNowPlayingMovies getNowPlayingMovies,
-                      GetMultiSearch getMultiSearch) {
+    HomePresenterImpl(HomeView view
+                      ) {
         super(view);
-        this.useCaseHandler = useCaseHandler;
-        this.getMyWatchList = getMyWatchList;
-        this.getUpcomingMovies = getUpcomingMovies;
-        this.getTopRatedMovies = getTopRatedMovies;
-        this.getNowPlayingMovies = getNowPlayingMovies;
-        this.getMultiSearch = getMultiSearch;
+
 
     }
-
 
 
 
     @Override
-    public void onDoSomething(@IdRes int id) {
-        if (id == R.id.button_fetch_watchlist) {
-
-            Log.d("getTMDBConfiguration", "getTMDBConfiguration");
+    public void init(Serializable arguments, FragmentManager childFragmentManager) {
 
 
+        HashMap<String, ResultWrapper> map = (HashMap<String, ResultWrapper> )arguments;
 
 
-//            useCaseHandler.execute(getMyWatchList, GetMyWatchList.Params.justVoid(), new DisposableSubscriber<List<Movie>>() {
-//                @Override
-//                public void onNext(List<Movie> movieList) {
-//
-//                    view.fillList(movieList);
-//                    Log.d("onNext", "totalPages "+movieList.size());
-//                }
-//
-//                @Override
-//                public void onError(Throwable t) {
-//                    if (t.getCause() instanceof TMDBError) {
-//                        TMDBError error = (TMDBError) t.getCause();
-//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
-//
-//                    }
-//                    Log.d("onError>>>>", t.getClass().getName());
-//                }
-//
-//                @Override
-//                public void onComplete() {
-//                    Log.d("onComplete", ">>");
-//                }
-//            });
+        ResultWrapper resultWrapper = map.get(AppConfig.NOWPLAYINGTVKEY);
 
 
 
-//            useCaseHandler.execute(getNowPlayingMovies, GetNowPlayingMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
-//                @Override
-//                public void onNext(MovieWrapper movieWrapper) {
-//
-//                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
-//                }
-//
-//                @Override
-//                public void onError(Throwable t) {
-//                    if (t.getCause() instanceof TMDBError) {
-//                        TMDBError error = (TMDBError) t.getCause();
-//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
-//
-//                    }
-//                    Log.d("onError>>>>", t.getClass().getName());
-//                }
-//
-//                @Override
-//                public void onComplete() {
-//                    Log.d("onComplete", ">>");
-//                }
-//            });
-//
-//
-//            useCaseHandler.execute(getTopRatedMovies, GetTopRatedMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
-//                @Override
-//                public void onNext(MovieWrapper movieWrapper) {
-//
-//                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
-//                }
-//
-//                @Override
-//                public void onError(Throwable t) {
-//                    if (t.getCause() instanceof TMDBError) {
-//                        TMDBError error = (TMDBError) t.getCause();
-//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
-//
-//                    }
-//                    Log.d("onError>>>>", t.getClass().getName());
-//                }
-//
-//                @Override
-//                public void onComplete() {
-//                    Log.d("onComplete", ">>");
-//                }
-//            });
-//
-//
-//            useCaseHandler.execute(getUpcomingMovies, GetUpcomingMovies.Params.withPage(1), new DisposableSubscriber<MovieWrapper>() {
-//                @Override
-//                public void onNext(MovieWrapper movieWrapper) {
-//
-//                    Log.d("onNext", "totalPages "+movieWrapper.totalPages());
-//                }
-//
-//                @Override
-//                public void onError(Throwable t) {
-//                    if (t.getCause() instanceof TMDBError) {
-//                        TMDBError error = (TMDBError) t.getCause();
-//                        Log.d("onError", "<<<<< " + error.getResponseCode() + " : " + error.getMessage() + " : " + error.getStatusCode() + " : " + error.getSuccess());
-//
-//                    }
-//                    Log.d("onError>>>>", t.getClass().getName());
-//                }
-//
-//                @Override
-//                public void onComplete() {
-//                    Log.d("onComplete", ">>");
-//                }
-//            });
+        Log.d("getTMDBConfiguration", "getTMDBConfiguration"+map.size());
+
+
+
+        if(map.size()>0) {
+            mViewPagerAdapter = new ViewPagerAdapter(childFragmentManager);
+
+            if (map.get(AppConfig.NOWPLAYINGKEY) != null) {
+                mViewPagerAdapter.addFragment(HomePageFragment.withMovies(map, AppConfig.NOWPLAYINGKEY), "Kino");
+            }
+
+
+            if (map.get(AppConfig.NOWPLAYINGTVKEY) != null) {
+                mViewPagerAdapter.addFragment(HomePageFragment.withMovies(map, AppConfig.NOWPLAYINGTVKEY), "TV");
+            }
+
+            if (map.get(AppConfig.UPCOMMINGKEY) != null) {
+                mViewPagerAdapter.addFragment(HomePageFragment.withMovies(map, AppConfig.UPCOMMINGKEY), "Vorschau");
+            }
+            if (map.get(AppConfig.TOPRATEDKEY) != null) {
+                mViewPagerAdapter.addFragment(HomePageFragment.withMovies(map, AppConfig.TOPRATEDKEY), "Beliebt");
+            }
+
         }
+
+        //mViewPagerAdapter.addFragment(HomePageFragment.withMovies(map,AppConfig.UPCOMMINGKEY),"Bald im Kino");
+
+
+        view.initViewPager(mViewPagerAdapter);
+
+
     }
+
+
+
+
+
 
 
 

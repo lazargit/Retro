@@ -10,19 +10,36 @@
 
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:fitsSystemWindows="true">
         <include layout="@layout/toolbar_layout"></include>
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:layout_anchor="@id/app_bar_layout"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_anchorGravity="bottom">
+        </android.support.design.widget.TabLayout>
+
+
+
     </android.support.design.widget.AppBarLayout>
+
 
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        >
 
     </FrameLayout>
 

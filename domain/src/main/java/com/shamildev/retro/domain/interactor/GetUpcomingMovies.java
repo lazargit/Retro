@@ -19,6 +19,7 @@ package com.shamildev.retro.domain.interactor;
 
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
@@ -30,7 +31,7 @@ import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 
 
-public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
+public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,ResultWrapper> {
 
     private final RemoteRepository repository;
     private final CacheRepository cache;
@@ -42,26 +43,26 @@ public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,Movi
     }
 
     @Override
-    public Flowable<MovieWrapper> execute(ParamsBasic params) {
+    public Flowable<ResultWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
 
+         return  this.repository.fetchUpcomingMovies(page);
 
 
-
-        return  this.repository.fetchUpcomingMovies(page)
-                .flatMap(movieWrapper -> repository.fetchUpcomingMovies(2))
-                .flatMapCompletable(new Function<MovieWrapper, CompletableSource>() {
-                    @Override
-                    public CompletableSource apply(MovieWrapper movieWrapper) throws Exception {
-                      return Flowable.fromIterable(movieWrapper.results())
-                                .flatMapCompletable(new Function<Movie, CompletableSource>() {
-                                    @Override
-                                    public CompletableSource apply(Movie movie) throws Exception {
-                                        return cache.save(movie);
-                                    }
-                                });
-                    }
-                }).toFlowable();
+//        return  this.repository.fetchUpcomingMovies(page)
+//                .flatMap(movieWrapper -> repository.fetchUpcomingMovies(2))
+//                .flatMapCompletable(new Function<MovieWrapper, CompletableSource>() {
+//                    @Override
+//                    public CompletableSource apply(MovieWrapper movieWrapper) throws Exception {
+//                      return Flowable.fromIterable(movieWrapper.results())
+//                                .flatMapCompletable(new Function<Movie, CompletableSource>() {
+//                                    @Override
+//                                    public CompletableSource apply(Movie movie) throws Exception {
+//                                        return cache.save(movie);
+//                                    }
+//                                });
+//                    }
+//                }).toFlowable();
 
 
     }

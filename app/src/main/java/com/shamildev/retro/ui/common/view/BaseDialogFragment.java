@@ -5,13 +5,14 @@ package com.shamildev.retro.ui.common.view;
  */
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,6 +24,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DaggerDialogFragment;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasFragmentInjector;
+import dagger.android.support.DaggerAppCompatDialogFragment;
 
 /**
  * Abstract Fragment for all Fragments and child Fragments to extend. This contains some boilerplate
@@ -36,57 +38,21 @@ import dagger.android.HasFragmentInjector;
  * <b>VIEW BINDING</b>
  * This fragment handles view bind and unbinding.
  */
-public abstract class BaseDialogFragment extends DaggerDialogFragment implements HasFragmentInjector {
+public abstract class BaseDialogFragment extends DaggerAppCompatDialogFragment {
 
-    /**
-     * A reference to the activity Context is injected and used instead of the getter method. This
-     * enables ease of mocking and verification in tests (in case Activity needs testing).
-     * More importantly, the getter method (getContext()) is not available for API level below 23.
-     * We could use getActivity() though since that is available since API 11. However, exposing the
-     * Activity reference is less safe than just exposing the Context since a lot more can be done
-     * with the Activity reference.
-     * <p>
-     * For more details, see https://github.com/vestrel00/android-dagger-butterknife-mvp/pull/52
-     */
-    @Inject
-    protected Context activityContext;
 
-    /**
-     * A reference to the FragmentManager is injected and used instead of the getter method. This
-     * enables ease of mocking and verification in tests (in case Fragment needs testing).
-     * <p>
-     * For more details, see https://github.com/vestrel00/android-dagger-butterknife-mvp/pull/52
-     */
-    // Note that this should not be used within a child fragment.
+
+
     @Inject
-    @Named(BaseFragmentModule.CHILD_FRAGMENT_MANAGER)
+    @Named(BaseFragmentModule.CHILD_DIALOGFRAGMENT_MANAGER)
     protected FragmentManager childFragmentManager;
 
-    @Inject
-    DispatchingAndroidInjector<Fragment> childFragmentInjector;
+
 
     @Nullable
     private Unbinder viewUnbinder;
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            // Perform injection here before M, L (API 22) and below because onAttach(Context)
-            // is not yet available at L.
-            AndroidInjection.inject(this);
-        }
-        super.onAttach(activity);
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Perform injection here for M (API 23) due to deprecation of onAttach(Activity).
-            AndroidInjection.inject(this);
-        }
-        super.onAttach(context);
-    }
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -122,7 +88,7 @@ public abstract class BaseDialogFragment extends DaggerDialogFragment implements
          * no need to check if getView() returns null here because this lifecycle method only gets
          * called with a non-null View.
          */
-        viewUnbinder = ButterKnife.bind(this, getView());
+      //  viewUnbinder = ButterKnife.bind(this, getView());
     }
 
     @Override
@@ -134,12 +100,9 @@ public abstract class BaseDialogFragment extends DaggerDialogFragment implements
         super.onDestroyView();
     }
 
-    @Override
-    public final AndroidInjector<Fragment> fragmentInjector() {
-        return childFragmentInjector;
-    }
 
-    protected final void addChildFragment(@IdRes int containerViewId, Fragment fragment) {
+
+    protected final void addChildFragment(@IdRes int containerViewId, DialogFragment fragment) {
         childFragmentManager.beginTransaction()
                 .add(containerViewId, fragment)
                 .commit();

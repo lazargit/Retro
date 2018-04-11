@@ -55,12 +55,10 @@ public class ResponseEntity implements Serializable , Entity {
     }
 
     public List<Result> getResults() {
-        System.out.println("<<<< "+results.size());
         return results;
     }
 
     public void setResults(List<Result> results) {
-        System.out.println(">>>>>>>>>>> "+results.size());
         this.results = results;
     }
 

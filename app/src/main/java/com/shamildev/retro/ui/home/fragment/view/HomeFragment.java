@@ -1,42 +1,41 @@
 package com.shamildev.retro.ui.home.fragment.view;
 
 import android.app.Application;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.annotation.IdRes;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.shamildev.retro.R;
+import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.navigation.Navigator;
 
-import com.shamildev.retro.ui.common.view.BaseFragmentV4;
 import com.shamildev.retro.ui.common.view.BaseViewFragmentV4;
-import com.shamildev.retro.ui.details.fragment.view.DetailsFragment;
+import com.shamildev.retro.ui.home.HomeActivity;
+import com.shamildev.retro.ui.home.fragment.adapter.ViewPagerAdapter;
 import com.shamildev.retro.ui.home.fragment.presenter.HomePresenter;
-import com.shamildev.retro.ui.layout.PreCachingGridLayoutManager;
+import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragment;
 import com.shamildev.retro.ui.watchlist.adapter.WatchListRecycleViewAdapter;
-import com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter;
 import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
-import com.shamildev.retro.util.DeviceUtils;
 import com.shamildev.retro.util.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
-import dagger.android.support.DaggerFragment;
-import dagger.internal.Preconditions;
 import timber.log.Timber;
 
 /**
@@ -51,6 +50,8 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 
 
 
+    @Inject
+    AppConfig appConfig;
 
 
     @Inject
@@ -63,37 +64,44 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
     @Inject
     Navigator navigator;
 
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+
+
+
+
     ArrayList<Movie> movieArrayList = new ArrayList<>();
     private WatchListRecycleViewAdapter watchListRecycleViewAdapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     private Unbinder butterKnifeUnbinder;
+    private ViewPagerAdapter mViewPagerAdapter;
 
 
     public HomeFragment() {
 
             setRetainInstance(true);
-            Timber.d("WatchList-Fragment");
+            Timber.d("HomeFragment");
 
 
     }
 
-    public static HomeFragment withMovies(ArrayList<Movie> movies) {
+    public static HomeFragment with() {
         final HomeFragment homeFragment = new HomeFragment();
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(PARAM_MOVIE, movies);
-        homeFragment.setArguments(arguments);
         return homeFragment;
     }
 
-    /**
-     * Get current movie id from fragments arguments.
-     */
-    private ArrayList<Movie> currentMovies() {
-        final Bundle arguments = getArguments();
-        Preconditions.checkNotNull(arguments, "Fragment arguments cannot be null");
-        ArrayList<Movie> movies = (ArrayList<Movie>) arguments.getSerializable(PARAM_MOVIE);
-        return movies;
+    public static HomeFragment withMovies(HashMap<String,ResultWrapper> items, TabLayout tabLayout) {
+        final HomeFragment homeFragment = new HomeFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(PARAM_MOVIE, items);
+        homeFragment.setArguments(arguments);
+
+
+
+        return homeFragment;
     }
+
+
 
 
     @Override
@@ -102,9 +110,28 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 
         final View fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
-        currentMovies();
+        HomeActivity.tabs.setupWithViewPager(viewPager);
+        presenter.init(getArguments().getSerializable(PARAM_MOVIE),childFragmentManager);
+
+
+
         return fragmentView;
 
+    }
+
+
+    @Override
+    public void initViewPager(ViewPagerAdapter viewPagerAdapter) {
+        viewPager.setAdapter(viewPagerAdapter);
+
+
+
+
+    }
+
+    @Override
+    public void addPageFragment(String title, MovieWrapper movieWrapper) {
+     //   mViewPagerAdapter.addFragment(HomePageFragment.withMovies(movieWrapper),title);
 
 
     }

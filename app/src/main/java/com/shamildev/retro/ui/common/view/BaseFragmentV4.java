@@ -6,13 +6,14 @@ package com.shamildev.retro.ui.common.view;
 
 import android.app.Activity;
 
-import android.app.FragmentManager;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.shamildev.retro.R;
@@ -27,6 +28,7 @@ import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.*;
+import dagger.android.support.HasSupportFragmentInjector;
 
 
 /**
@@ -41,7 +43,7 @@ import dagger.android.support.*;
  * <b>VIEW BINDING</b>
  * This fragment handles view bind and unbinding.
  */
-public abstract class BaseFragmentV4 extends DaggerFragment implements dagger.android.support.HasSupportFragmentInjector {
+public abstract class BaseFragmentV4 extends Fragment implements HasSupportFragmentInjector{
 
     /**
      * A reference to the activity Context is injected and used instead of the getter method. This
@@ -64,11 +66,11 @@ public abstract class BaseFragmentV4 extends DaggerFragment implements dagger.an
      */
     // Note that this should not be used within a child fragment.
     @Inject
-    @Named(BaseFragmentModule.CHILD_FRAGMENT_MANAGER)
+    @Named(BaseFragmentModule.CHILD_FRAGMENT_V4_MANAGER)
     protected FragmentManager childFragmentManager;
 
     @Inject
-    DispatchingAndroidInjector<DaggerFragment> childFragmentInjector;
+    DispatchingAndroidInjector<Fragment> childFragmentInjector;
 
     @Nullable
     private Unbinder viewUnbinder;
@@ -148,13 +150,16 @@ public abstract class BaseFragmentV4 extends DaggerFragment implements dagger.an
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
-        return super.supportFragmentInjector();
+        return childFragmentInjector;
     }
 
 
 
     protected final void addChildFragment(@IdRes int containerViewId, Fragment fragment) {
+        childFragmentManager.beginTransaction()
 
+                .add(containerViewId,fragment)
+                .commit();
 
     }
 }

@@ -16,6 +16,7 @@
 
 package com.shamildev.retro.domain.interactor;
 
+import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
@@ -37,9 +38,9 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Use case for getting movies in my watchlist.
+ * Use case for getting movies from watchlist.
  */
-public final class GetMyWatchList implements UseCaseFlowable<ParamsBasic, List<Movie>> {
+public final class GetMyWatchList implements UseCaseFlowable<ParamsBasic, List<DomainObject>> {
 
 
     private final CacheRepository cache;
@@ -54,41 +55,10 @@ public final class GetMyWatchList implements UseCaseFlowable<ParamsBasic, List<M
 
 
     @Override
-    public Flowable<List<Movie>> execute(ParamsBasic params) {
-
-        // return cache.fetchWatchList().cast(Movie.class).toList().toFlowable();
-
-        Movie build = Movie.builder()
-                .id(1L)
-                .title("schamil")
-                .overview("nichts")
-                .adult(false)
-                .originalTitle("schamilo")
-                .originalLanguage("de")
-                .popularity(7.5F)
-                .video(false)
-                .voteAverage(7.7F)
-                .build();
+    public Flowable<List<DomainObject>> execute(ParamsBasic params) {
 
 
-        Movie build2 = Movie.builder()
-                .id(1L)
-                .title("katja")
-                .overview("nichts")
-                .adult(false)
-                .originalTitle("schamilo")
-                .originalLanguage("de")
-                .popularity(7.5F)
-                .video(false)
-                .voteAverage(7.7F)
-                .build();
-        ArrayList<Movie> list = new ArrayList<>();
-                         list.add(build);
-                         list.add(build2);
-
-
-        //  return Flowable.fromArray(list);
-      return cache.fetchWatchList();
+         return cache.fetchWatchList();
 
 
     }

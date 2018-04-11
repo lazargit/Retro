@@ -31,9 +31,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-/**
- * Creates concrete data services.
- */
+
 
 public final class MediaTypeFactory {
 
@@ -73,25 +71,6 @@ public final class MediaTypeFactory {
 
     }
 
-//    <V extends DomainObject> List<V> mapToV(EntityMapper<K, V> entityMapper,
-//                                                              List<K> kList) throws MappingError {
-//        List<V> vList = new ArrayList<>(kList.size());
-//        for (K k : kList) {
-//            vList.add(entityMapper.map(k));
-//        }
-//        return vList;
-//    }
-
-
-
-
-//    <T> T createWithAuth(Class<T> serviceClass,
-//                         AuthRequestInterceptor authRequestInterceptor) {
-//        // AuthRequestInterceptor has to be passed in as a parameter to avoid dependency cycle
-//        OkHttpClient.Builder okHttpClientBuilder = okHttpClientBuilder();
-//        okHttpClientBuilder.addInterceptor(authRequestInterceptor);
-//        return retrofit(okHttpClientBuilder).create(serviceClass);
-//    }
 
 
 }

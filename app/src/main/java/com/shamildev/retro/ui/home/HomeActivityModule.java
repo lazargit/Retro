@@ -3,11 +3,14 @@ package com.shamildev.retro.ui.home;
 
 import android.support.v7.app.AppCompatActivity;
 
+
 import com.shamildev.retro.di.scope.PerActivity;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.BaseActivityModule;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragmentModule;
+import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragment;
+import com.shamildev.retro.ui.home.slideshowfragment.modules.SlideShowDialogFragmentModule;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragmentModule;
 
@@ -35,8 +38,19 @@ public abstract class HomeActivityModule {
 
 
     @PerFragment
+    @ContributesAndroidInjector(modules = SlideShowDialogFragmentModule.class)
+    abstract SlideShowDialogFragment slideShowDialogFragment();
+
+
+
+
+    @PerFragment
     @ContributesAndroidInjector(modules = SearchResultFragmentModule.class)
     abstract SearchResultFragment searchResultFragmentInjector();
+
+
+
+
 
     /**
      * As per the contract specified in {@link BaseActivityModule}; "This must be included in all

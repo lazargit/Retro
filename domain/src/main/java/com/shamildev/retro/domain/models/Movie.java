@@ -21,6 +21,7 @@ import io.reactivex.annotations.Nullable;
 public abstract class Movie  implements DomainObject ,DomainObjectStorable, Serializable {
 
 
+
     public abstract Long id();
     public abstract String title();
 
@@ -102,6 +103,11 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     public abstract List<Cast> casts();
 
 
+
+    @Nullable
+    public abstract Boolean isInWatchList();
+
+
     @Nullable
     public abstract Long lastUpdate();
 
@@ -123,6 +129,14 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
         builder.credits(credits);
         return builder.build();
     }
+
+    public Movie setInWatchList(Boolean bool) {
+        Builder builder = getBuilder();
+        builder.isInWatchList(bool);
+        return builder.build();
+    }
+
+
 
     private Builder getBuilder() {
 
@@ -154,6 +168,8 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
                 .genres(genres())
                 .images(images())
                 .credits(credits())
+                .casts(casts())
+                .isInWatchList(isInWatchList())
                 .lastUpdate(lastUpdate());
     }
 
@@ -280,6 +296,10 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
         public abstract Builder credits(Credits credits);
 
         public abstract Builder casts(List<Cast> casts);
+
+        public abstract Builder isInWatchList(Boolean isInWatchList);
+
+
 
         public abstract Builder lastUpdate(Long lastUpdate);
 

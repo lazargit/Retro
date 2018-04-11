@@ -144,6 +144,12 @@ public abstract class TVShow implements DomainObject ,DomainObjectStorable, Seri
     public abstract Images images();
     @Nullable
     public abstract Credits credits();
+
+
+    @Nullable
+    public abstract Boolean isInWatchList();
+
+
     @Nullable
     public abstract Long lastUpdate();
 
@@ -159,6 +165,13 @@ public abstract class TVShow implements DomainObject ,DomainObjectStorable, Seri
         return builder.build();
     }
 
+
+
+    public TVShow setInWatchList(Boolean bool) {
+        TVShow.Builder builder = getBuilder();
+        builder.isInWatchList(bool);
+        return builder.build();
+    }
 
 
 public static TVShow create(Long id, String name, String originalName, String overview, String posterPath, String backdropPath, String originalLanguage, Float popularity, Integer voteCount, Float voteAverage, String firstAirDate, List<String> originCountry,  List<Integer> genreIds) {
@@ -212,6 +225,7 @@ public static TVShow create(Long id, String name, String originalName, String ov
                 .seasons(seasons())
                 .images(images())
                 .credits(credits())
+                .isInWatchList(isInWatchList())
                 .lastUpdate(lastUpdate());
     }
 
@@ -288,6 +302,8 @@ public static TVShow create(Long id, String name, String originalName, String ov
         public abstract Builder images(Images images);
 
         public abstract Builder credits(Credits credits);
+
+        public abstract Builder isInWatchList(Boolean isInWatchList);
 
         public abstract Builder lastUpdate(Long lastUpdate);
 

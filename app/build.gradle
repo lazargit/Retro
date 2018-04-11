@@ -129,6 +129,8 @@ dependencies {
 
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'ca.barrenechea.header-decor:header-decor:0.2.8'
+    implementation 'com.nineoldandroids:library:2.4.0'
 
 
 
@@ -143,4 +145,5 @@ dependencies {
     //Development
     // compile developmentDependencies.leakCanary
     compile developmentDependencies.timber
+    compile 'org.jetbrains:annotations:15.0'
 }

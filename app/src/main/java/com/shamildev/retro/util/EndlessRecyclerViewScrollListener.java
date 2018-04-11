@@ -19,8 +19,14 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     private int previousTotalItemCount = 0;
     // True if we are still waiting for the last set of data to load.
     private boolean loading = true;
+
+
+
     // Sets the starting page index
     private int startingPageIndex = 0;
+    public void setStartPage(int startPage) {
+        this.currentPage = startPage;
+    }
 
     RecyclerView.LayoutManager mLayoutManager;
 
@@ -28,8 +34,11 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         this.mLayoutManager = layoutManager;
     }
 
+
+
     public EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
+
         visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
     }
 

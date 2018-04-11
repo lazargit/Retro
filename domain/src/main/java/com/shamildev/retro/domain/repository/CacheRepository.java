@@ -21,8 +21,8 @@ public interface CacheRepository {
 
     void saveObj(DomainObject object);
 
-    Completable save(Movie movie);
-    Flowable<List<Movie>> fetchWatchList();
+    Completable saveItemWatchList(DomainObject item);
+    Flowable<List<DomainObject>> fetchWatchList();
 
 
 

@@ -66,11 +66,9 @@ final class ResultEntityMapper implements EntityMapper<ResponseEntity, ResultWra
     public  ResultWrapper map(ResponseEntity entity) throws MappingError {
 
 
-        Log.d("ResultEntityMapper", "results "+entity.getResults().size());
-
-
         List<DomainObject> list= new ArrayList<>();
         for (Result item : entity.getResults()){
+
            list.add(MediaTypeFactory.create(item,movieEntityMapper,tvShowEntityMapper,personResultEntityMapper ));
         }
 
@@ -82,7 +80,7 @@ final class ResultEntityMapper implements EntityMapper<ResponseEntity, ResultWra
               //  Log.d("##**",TVShow.class.getName());
             }
             if(domainObject instanceof Person){
-                Log.d("##**",Person.class.getName());
+                Log.e("##**",Person.class.getName());
                 Person person = (Person) domainObject;
                 if(person.knownFor().size()>0){
                     Log.d("bekannt aus ",":");

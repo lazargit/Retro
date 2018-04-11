@@ -3,6 +3,7 @@ package com.shamildev.retro.ui.splash.fragment.view;
 import android.app.Application;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,16 @@ import android.view.ViewGroup;
 
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.navigation.Navigator;
 import com.shamildev.retro.ui.common.view.BaseViewFragment;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -58,10 +63,13 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
         //someText.setText(something);
     }
 
+
     @Override
-    public void navigateToHome() {
-        navigator.navigateToHome(application,new ArrayList<>());
+    public void navigateToHome(HashMap<String, ResultWrapper> map) {
+        navigator.navigateToHome(application,map);
     }
+
+
 
 
     @OnClick(R.id.button_save)

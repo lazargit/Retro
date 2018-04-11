@@ -17,6 +17,7 @@
 package com.shamildev.retro.data.repository;
 
 
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.domain.config.DataConfig;
 
 
@@ -212,37 +213,61 @@ public final class TMDBRepository implements RemoteRepository{
 
 
     @Override
-    public Flowable<MovieWrapper> fetchUpcomingMovies(int page) {
+    public Flowable<ResultWrapper> fetchUpcomingMovies(int page) {
 
-        return tmdbServices.fetchUpcomingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country()).toFlowable()
-                .map(movieWrapperEntity -> {
-                    Timber.d("fetchUpcomingMovies", movieWrapperEntity);
+        return tmdbServices.fetchUpcomingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country())
+                .toFlowable()
+                .map(responseEntity1 -> {
+                            Flowable.fromIterable(responseEntity1.getResults())
+                                    .map(result -> {
+                                        result.setMediaType(Constants.MEDIA_TYPE.MOVIE.toString());
+                                        return result;
 
-                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
-                });
+                                    }).subscribe();
 
-    }
+                    return responseEntity1;
 
-    @Override
-    public Flowable<MovieWrapper> fetchNowPlayingMovies(int page) {
-
-        return tmdbServices.fetchNowPlayingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country()).toFlowable()
-                .map(movieWrapperEntity -> {
-                    Timber.d("fetchNowPlayingMovies", movieWrapperEntity);
-
-                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
-                });
+                })
+                .map(movieWrapperEntity -> entityMapperHolder.resultWrapperEntityMapper().map(movieWrapperEntity));
 
     }
 
     @Override
-    public Flowable<MovieWrapper> fetchTopRatedMovies(int page) {
-         return tmdbServices.fetchTopRatedMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country()).toFlowable()
-                .map(movieWrapperEntity -> {
-                    Timber.d("fetchTopRatedMovies", movieWrapperEntity);
+    public Flowable<ResultWrapper> fetchNowPlayingMovies(int page) {
 
-                    return entityMapperHolder.movieWrapperEntityMapper().map(movieWrapperEntity);
-                });
+        return tmdbServices.fetchNowPlayingMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country())
+                .toFlowable()
+                .map(responseEntity1 -> {
+                    Flowable.fromIterable(responseEntity1.getResults())
+                            .map(result -> {
+                                result.setMediaType(Constants.MEDIA_TYPE.MOVIE.toString());
+                                return result;
+
+                            }).subscribe();
+
+                    return responseEntity1;
+
+                })
+                .map(movieWrapperEntity -> entityMapperHolder.resultWrapperEntityMapper().map(movieWrapperEntity));
+
+    }
+
+    @Override
+    public Flowable<ResultWrapper> fetchTopRatedMovies(int page) {
+         return tmdbServices.fetchTopRatedMovies(dataConfig.authClientSecret(), String.valueOf(page), dataConfig.language(),dataConfig.country())
+                 .toFlowable()
+                 .map(responseEntity1 -> {
+                     Flowable.fromIterable(responseEntity1.getResults())
+                             .map(result -> {
+                                 result.setMediaType(Constants.MEDIA_TYPE.MOVIE.toString());
+                                 return result;
+
+                             }).subscribe();
+
+                     return responseEntity1;
+
+                 })
+                .map(movieWrapperEntity -> entityMapperHolder.resultWrapperEntityMapper().map(movieWrapperEntity));
     }
 
     @Override
@@ -294,13 +319,35 @@ public final class TMDBRepository implements RemoteRepository{
     }
 
 
+    @Override
+    public Flowable<ResultWrapper> fetchNowPlayingTVShow(int page) {
+
+        return tmdbServices.fetchTVonAir(dataConfig.authClientSecret(), dataConfig.language(), String.valueOf(page))
+                .toFlowable()
+                .map(responseEntity1 -> {
+                    Flowable.fromIterable(responseEntity1.getResults())
+                            .map(result -> {
+                                result.setMediaType(Constants.MEDIA_TYPE.TV.toString());
+                                return result;
+
+                            }).subscribe();
+
+                    return responseEntity1;
+
+                })
+                .map(responseEntity -> entityMapperHolder.resultWrapperEntityMapper().map(responseEntity));
+
+
+    }
+
     /*
-   *
-   *TSEARCH
-   */
+       *
+       *TSEARCH
+       */
     @Override
     public Flowable<ResultWrapper> fetchMultiSearch(String quary, int page) {
      return tmdbServices.fetchMultiSearch(dataConfig.authClientSecret(),dataConfig.language(),quary,String.valueOf(page),"false",dataConfig.country()).toFlowable()
+
                .map(responseEntity ->  entityMapperHolder.resultWrapperEntityMapper().map(responseEntity));
     }
 

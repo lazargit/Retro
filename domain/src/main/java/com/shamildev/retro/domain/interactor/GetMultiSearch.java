@@ -45,12 +45,6 @@ public final class GetMultiSearch implements UseCaseFlowable<ParamsBasic,ResultW
     public Flowable<ResultWrapper> execute(ParamsBasic params) {
         String quary = ((Params) params).quary;
         int page = ((Params) params).page;
-
-
-
-
-
-
         return this.repository.fetchMultiSearch(quary,page);
 
     }

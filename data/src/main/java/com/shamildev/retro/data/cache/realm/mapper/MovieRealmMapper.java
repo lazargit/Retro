@@ -1,22 +1,13 @@
 package com.shamildev.retro.data.cache.realm.mapper;
 
-import android.util.Log;
-
-import com.shamildev.retro.data.cache.realm.models.MovieRealm;
+import com.shamildev.retro.data.cache.realm.models.WatchListRealm;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.util.Constants;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import javax.inject.Inject;
 
 import dagger.Reusable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
 import io.realm.RealmList;
 
 /**
@@ -24,7 +15,7 @@ import io.realm.RealmList;
  */
 
 @Reusable
-final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
+final class  MovieRealmMapper implements RealmMapper<Movie, WatchListRealm> {
 
     @Inject
     RealmListMapper realmListMapper;
@@ -36,9 +27,9 @@ final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
 
 
     @Override
-    public MovieRealm map(Movie movie) {
+    public WatchListRealm map(Movie movie) {
 
-        MovieRealm movieRealm = new MovieRealm();
+        WatchListRealm movieRealm = new WatchListRealm();
                     movieRealm.setId(movie.id());
                     movieRealm.setMedia_type(Constants.MEDIA_TYPE.MOVIE.toString());
                     movieRealm.setPopularity(movie.popularity());
@@ -61,7 +52,7 @@ final class  MovieRealmMapper implements RealmMapper<Movie, MovieRealm> {
     }
 
     @Override
-    public Movie map(MovieRealm entity) {
+    public Movie map(WatchListRealm entity) {
 
 
 

@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Schamil Mischijew on 03.11.2017.
  */
 
-public class MovieRealm extends RealmObject {
+public class WatchListRealm extends RealmObject {
 
 
 
@@ -18,6 +18,7 @@ public class MovieRealm extends RealmObject {
         private String title;
         private String original_title;
         private String original_language;
+        private String original_country;
         private String poster_path;
         private String backdrop_path;
         private Boolean video;
@@ -29,7 +30,7 @@ public class MovieRealm extends RealmObject {
         private RealmList<Integer> genre_ids;
         private long last_update;
 
-        public MovieRealm() {
+        public WatchListRealm() {
 
 
 
@@ -156,6 +157,14 @@ public class MovieRealm extends RealmObject {
 
         public void setLast_update(long last_update) {
                 this.last_update = last_update;
+        }
+
+        public String getOriginal_country() {
+                return original_country;
+        }
+
+        public void setOriginal_country(String original_country) {
+                this.original_country = original_country;
         }
 }
 /*vote_count	6232

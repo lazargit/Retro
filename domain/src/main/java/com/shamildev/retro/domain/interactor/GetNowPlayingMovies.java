@@ -17,7 +17,9 @@
 package com.shamildev.retro.domain.interactor;
 
 
+import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
@@ -25,9 +27,10 @@ import com.shamildev.retro.domain.repository.RemoteRepository;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 
-public final class GetNowPlayingMovies implements UseCaseFlowable<ParamsBasic,MovieWrapper> {
+public final class GetNowPlayingMovies implements UseCaseFlowable<ParamsBasic,ResultWrapper> {
 
     private final RemoteRepository repository;
     private final CacheRepository cache;
@@ -39,13 +42,14 @@ public final class GetNowPlayingMovies implements UseCaseFlowable<ParamsBasic,Mo
     }
 
     @Override
-    public Flowable<MovieWrapper> execute(ParamsBasic params) {
+    public Flowable<ResultWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
+        return repository.fetchNowPlayingMovies(page)
+//                .flatMapCompletable(movieWrapper -> Flowable.fromIterable(movieWrapper.results())
+//                       .flatMapCompletable(movie -> cache.saveItemWatchList((Movie) movie))).toFlowable()
+                ;
 
-        return  this.repository.fetchNowPlayingMovies(page)
-                .flatMap(movieWrapper -> repository.fetchNowPlayingMovies(2))
-                .flatMapCompletable(movieWrapper -> Flowable.fromIterable(movieWrapper.results())
-                        .flatMapCompletable(movie -> cache.save(movie))).toFlowable();
+
 
 
     }

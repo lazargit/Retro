@@ -110,7 +110,7 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
 
     public void startSearchLoading() {
         adapter.clear();
-        adapter.addLoadingFooter();
+       // adapter.addLoadingFooter();
     }
     public void doSearch(String str){
 
@@ -188,7 +188,7 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
 
     @Override
     public void fillList(ResultWrapper results) {
-        adapter.removeLoadingFooter();
+    //    adapter.removeLoadingFooter();
         isLoading = false;
         adapter.addAll(results.results());
 
@@ -196,7 +196,7 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
 
     @Override
     public void addToList(List<DomainObject> result) {
-        adapter.removeLoadingFooter();
+      //   adapter.removeLoadingFooter();
         isLoading = false;
         adapter.addAll(result);
     }
@@ -293,28 +293,14 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
             protected void loadMoreItems() {
                 isLoading = true;
                 currentPage += 1;
-                Log.e("Pagination","loadMoreItems"+currentPage +"<="+ TOTAL_PAGES);
-                adapter.addLoadingFooter();
 
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (currentPage <= TOTAL_PAGES){
-                            isLoading = true;
-                            Log.e("Pagination","loadMoreItems"+currentPage +"<="+ TOTAL_PAGES);
-
-                            presenter.loadNextPage(currentPage);
-                        }else{
-                            isLastPage = true;
-                        }
-
-
-
-
-                        //  loadNextPage();
-                    }
-                }, 500);
+                if (currentPage <= TOTAL_PAGES){
+                    isLoading = true;
+                    presenter.loadNextPage(currentPage);
+                }else{
+                    isLastPage = true;
+                }
 
 
             }
@@ -336,36 +322,10 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
         });
 
 
-        // Set-up of recycler-view's native item swiping.
-        ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return makeMovementFlags(0, ItemTouchHelper.RIGHT);
-            }
 
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                        .setTitle("Item swiping is supported!")
-                        .setMessage("Recycler-view's native item swiping and the over-scrolling effect can co-exist! But, to get them to work WELL -- please apply the effect using the dedicated helper method!")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                adapter.notifyDataSetChanged();
-                            }
-                        })
-                        .create();
-                dialog.show();
-            }
-        };
 
         // Apply over-scroll in 'advanced form' - i.e. create an instance manually.
-        mVertOverScrollEffect = new VerticalOverScrollBounceEffectDecorator(new RecyclerViewOverScrollDecorAdapter(recyclerView, itemTouchHelperCallback));
+        mVertOverScrollEffect = new VerticalOverScrollBounceEffectDecorator(new RecyclerViewOverScrollDecorAdapter(recyclerView));
 
         // Over-scroll listeners are applied here via the mVertOverScrollEffect explicitly.
         mVertOverScrollEffect.setOverScrollUpdateListener(new IOverScrollUpdateListener() {

@@ -9,7 +9,4 @@ import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 
 public interface ParamsBasic {
 
-
-
-
 }

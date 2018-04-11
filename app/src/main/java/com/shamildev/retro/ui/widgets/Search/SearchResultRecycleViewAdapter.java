@@ -44,8 +44,8 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
     Glide glide;
     Context context;
     private boolean isLoadingAdded;
-    private final int LOADING = 5;
-    private final int ITEM_MOVIE = 0, ITEM_SHOW = 1, ITEM_PERSON = 2;
+
+    private final int ITEM_MOVIE = 0, ITEM_SHOW = 1, ITEM_PERSON = 2, ITEM_LOADER = 5;
 
 
     @Inject
@@ -67,7 +67,7 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
 
         RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
+        View v2 = inflater.inflate(R.layout.loading_icon, parent, false);
         switch (viewType) {
             case ITEM_MOVIE:
                 viewHolder = getViewHolder(parent, inflater);
@@ -78,8 +78,8 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
             case ITEM_PERSON:
                 viewHolder = getViewHolderPerson(parent, inflater);
                 break;
-            case LOADING:
-                View v2 = inflater.inflate(R.layout.loading_icon, parent, false);
+            case ITEM_LOADER:
+
                 viewHolder = new LoadingVH(v2);
                 break;
         }
@@ -205,7 +205,7 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
                 }
                 break;
 
-            case LOADING:
+            case ITEM_LOADER:
 //                Do nothing
                 break;
 
@@ -231,8 +231,8 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public int getItemViewType(int position) {
 
-        Log.e("Pagination","getItemViewType "+(domainObjects.size() - 1) +" <= "+ isLoadingAdded);
-        return (position == domainObjects.size() - 1 && isLoadingAdded) ? LOADING : getItemType(position);
+       // Log.e("Pagination","getItemViewType "+(domainObjects.size() - 1) +" <= "+ isLoadingAdded);
+        return getItemType(position);
     }
 
     public int getItemType(int position) {
@@ -246,7 +246,7 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
             return 2;
         }
 
-        return 3;
+        return 5;
 
     }
 
@@ -383,7 +383,7 @@ public class SearchResultRecycleViewAdapter extends RecyclerView.Adapter<Recycle
         int position = this.domainObjects.indexOf(r);
         if (position > -1) {
             this.domainObjects.remove(position);
-           notifyItemRemoved(position);
+            notifyItemRemoved(position);
 
         }
     }

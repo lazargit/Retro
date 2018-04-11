@@ -1,18 +1,11 @@
 package com.shamildev.retro.data.cache.realm.mapper;
 
-import com.shamildev.retro.data.cache.realm.models.ConfigurationRealm;
-import com.shamildev.retro.data.cache.realm.models.MovieRealm;
 import com.shamildev.retro.data.cache.realm.models.TMDbConfigurationRealm;
 import com.shamildev.retro.domain.models.Configuration;
-import com.shamildev.retro.domain.models.Movie;
-import com.shamildev.retro.domain.util.Constants;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.Reusable;
-import io.realm.RealmList;
 
 /**
  * Created by Shamil Lazar on 31.12.2017.

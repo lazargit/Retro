@@ -20,12 +20,12 @@ import android.util.Log;
 
 import com.shamildev.retro.data.cache.realm.mapper.RealmMapperHolder;
 import com.shamildev.retro.data.cache.realm.models.GenreRealm;
-import com.shamildev.retro.data.cache.realm.models.MovieRealm;
+import com.shamildev.retro.data.cache.realm.models.WatchListRealm;
 import com.shamildev.retro.data.cache.realm.models.TMDbConfigurationRealm;
-import com.shamildev.retro.data.entity.mapper.EntityMapperHolder;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.data.cache.realm.models.ConfigurationRealm;
 import com.shamildev.retro.domain.DomainObject;
@@ -35,21 +35,18 @@ import com.shamildev.retro.domain.util.DateUtil;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import dagger.Reusable;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
-import io.reactivex.CompletableEmitter;
-import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -105,18 +102,32 @@ final class RealmCacheRepository implements CacheRepository {
 
 
     @Override
-    public Completable save(Movie movie) {
-        Log.d("TAG", ">>>" + "save Movie"+movie);
-        MovieRealm realmObj = realmMapperHolder.movieRealmMapper().map(movie);
-                   realmObj.setLast_update(DateUtil.NOW());
+    public Completable saveItemWatchList(DomainObject item) {
+        Log.e("saveItemWatchList ", ">>>" + "save item in watchlist"+item);
+        WatchListRealm realmObj = null;
+        if(item instanceof Movie){
 
+            Movie movie = (Movie) item;
+            realmObj = realmMapperHolder.movieRealmMapper().map(movie);
+            realmObj.setLast_update(DateUtil.NOW());
+        }
+        if(item instanceof TVShow){
+
+            TVShow show = (TVShow) item;
+            realmObj = realmMapperHolder.tvshowRealmMapper().map(show);
+            realmObj.setLast_update(DateUtil.NOW());
+        }
+
+
+        final WatchListRealm finalRealmObj1 = realmObj;
         return Completable.create(e -> {
 
             try (Realm realm = realmProvider.get()) {
+
                 realm.executeTransaction(realm1 -> {
                     Log.d("TAG", ">>>" + realm1.toString());
 
-                    realm1.copyToRealmOrUpdate(realmObj);
+                    realm1.copyToRealmOrUpdate(finalRealmObj1);
                     e.onComplete();
                 });
             } //autoclose
@@ -125,7 +136,7 @@ final class RealmCacheRepository implements CacheRepository {
     }
 
     @Override
-    public Flowable<List<Movie>> fetchWatchList() {
+    public Flowable<List<DomainObject>> fetchWatchList() {
 
 
 
@@ -137,21 +148,35 @@ final class RealmCacheRepository implements CacheRepository {
             try (Realm realm = realmProvider.get()) {
                     realm.executeTransaction(realm1 -> {
 
-                    RealmResults<MovieRealm> result = realm1.where(MovieRealm.class)
+                    RealmResults<WatchListRealm> result = realm1.where(WatchListRealm.class)
                             .findAll();
 
                     if (result.size() == 0) {
                         e.onComplete();
                     }else {
 
-                        List<Movie> movieList = Observable
-                                .fromIterable(result)
-                                .map(realmMapperHolder.movieRealmMapper()::map)
-                                .cast(Movie.class)
+                        List<DomainObject> list = Observable.fromIterable(result)
+                                .map(movieRealm -> {
+
+                                    if (movieRealm.getMedia_type().equals(Constants.MEDIA_TYPE.TV.toString())) {
+                                        return realmMapperHolder.tvshowRealmMapper().map(movieRealm);
+                                    }
+                                        return realmMapperHolder.movieRealmMapper().map(movieRealm);
+
+
+                                })
+                                .cast(DomainObject.class)
                                 .toList()
                                 .blockingGet();
 
-                        e.onNext(movieList);
+//                        List<Movie> movieList = Observable
+//                                .fromIterable(result)
+//                                .map(realmMapperHolder.movieRealmMapper()::map)
+//                                .cast(Movie.class)
+//                                .toList()
+//                                .blockingGet();
+
+                        e.onNext(list);
                         e.onComplete();
                     }
 
@@ -378,7 +403,7 @@ final class RealmCacheRepository implements CacheRepository {
 //        Realm realm = this.realmProvider.get();
 //        realm.executeTransaction(transactionRealm -> {
 //
-//            MovieRealm movieRealm = transactionRealm..createObject(MovieRealm.class);
+//            WatchListRealm movieRealm = transactionRealm..createObject(WatchListRealm.class);
 //            movieRealm.
 //            weatherRealm.setTemp(weatherResponse.getMain().getTemp());
 //        });

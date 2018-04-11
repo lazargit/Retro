@@ -5,12 +5,15 @@ import android.content.Intent;
 
 import com.shamildev.retro.di.scope.ApplicationScope;
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.home.HomeActivity;
 import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.watchlist.WatchListActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,9 +41,9 @@ public final class Navigator {
             }
         }
 
-      public void navigateToHome(Context context, ArrayList<Movie> movies) {
+      public void navigateToHome(Context context, HashMap<String,ResultWrapper> map) {
         if (context != null) {
-            Intent intent = HomeActivity.getCallingIntent(context, movies);
+            Intent intent = HomeActivity.getCallingIntent(context, map);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }

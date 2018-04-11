@@ -4,33 +4,51 @@ import android.support.annotation.IdRes;
 import android.util.Log;
 
 import com.shamildev.retro.R;
+import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.data.net.NetworkManager;
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.domain.bootstrap.Bootstrap;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
+import com.shamildev.retro.domain.helper.DataReloading;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
 
+import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
+import com.shamildev.retro.domain.interactor.GetNowPlayingTVShows;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
+import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.models.Configuration;
+import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.models.Person;
+import com.shamildev.retro.domain.models.ResultWrapper;
+import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.util.Pair;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.domain.bootstrap.BootstrapImpl;
 import com.shamildev.retro.ui.splash.fragment.view.SplashView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableSource;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subscribers.DisposableSubscriber;
+import io.realm.Realm;
 
 /**
  * Created by Shamil Lazar on 13.12.2017.
@@ -54,12 +72,23 @@ import io.reactivex.subscribers.DisposableSubscriber;
         private final GetTMDBConfiguration getTMDBConfiguration;
         private final GetGenre getGenre;
         private final GetUpcomingMovies getUpcomingMovies;
+        private final GetTopRatedMovies getTopRatedMovies;
+        private final GetNowPlayingMovies getNowPlayingMovies;
+        private final GetNowPlayingTVShows getNowPlayingTVShows;
         private final GetMovieById getMovieById;
         private final BootstrapImpl bootstrap;
         private final DataConfig dataConfig;
 
+
+
         @Inject
         AppConfig appConfig;
+        @Inject
+        DataReloading dataReloading;
+        private ArrayList resultsNowPlaying ,resultsUpComming ;
+        private HashMap<String,ResultWrapper> map = new HashMap<>();
+
+
 
         @Inject
         SplashPresenterImpl(SplashView view,
@@ -69,6 +98,9 @@ import io.reactivex.subscribers.DisposableSubscriber;
                             GetTMDBConfiguration getTMDBConfiguration,
                             GetGenre getGenre,
                             GetUpcomingMovies getUpcomingMovies,
+                            GetNowPlayingMovies getNowPlayingMovies,
+                            GetTopRatedMovies getTopRatedMovies,
+                            GetNowPlayingTVShows getNowPlayingTVShows,
                             GetMovieById getMovieById,
                             BootstrapImpl bootstrap,
                             DataConfig dataConfig
@@ -83,6 +115,9 @@ import io.reactivex.subscribers.DisposableSubscriber;
             this.getTMDBConfiguration = getTMDBConfiguration;
             this.getGenre = getGenre;
             this.getUpcomingMovies = getUpcomingMovies;
+            this.getTopRatedMovies = getTopRatedMovies;
+            this.getNowPlayingMovies = getNowPlayingMovies;
+            this.getNowPlayingTVShows = getNowPlayingTVShows;
             this.getMovieById = getMovieById;
 
             this.networkManager = networkManager;
@@ -190,22 +225,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
             }
 
             if(id == R.id.button_fetch_upcoming_movies){
-                useCaseHandler.execute(getUpcomingMovies, new DisposableSubscriber<MovieWrapper>() {
-                            @Override
-                            public void onNext(MovieWrapper movieWrapper) {
-                                Log.d("useCaseHandler","getUpcomingMovies"+movieWrapper.results()+">>>"+movieWrapper.totalResults());
-                            }
 
-                            @Override
-                            public void onError(Throwable t) {
-                                Log.d("useCaseHandler","getUpcomingMovies onError"+t.getMessage());
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                Log.d("useCaseHandler","getUpcomingMovies onComplete");
-                            }
-                        });
             }
 //            if(id == R.id.button_fetch_movie){
 //                useCaseHandler.execute(getMovieById,155, new DisposableSubscriber<Movie>() {
@@ -327,7 +347,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
         public void onBootstrapComplete() {
             view.makeToast("Bootstrap Complete");
             System.out.println("DATACONFIG"+appConfig.getImageUrl());
-            appConfig.setImageUrl("override test");
+            //appConfig.setImageUrl("override test");
             System.out.println("DATACONFIG"+appConfig.getImageUrl());
 
             if(appConfig.getConfigurations() != null){
@@ -337,9 +357,283 @@ import io.reactivex.subscribers.DisposableSubscriber;
                 System.out.println("DATACONFIGENRES"+appConfig.getGenres().size()+" # "+appConfig.getGenres().get(0).name());
             }
             System.out.println("DATACONFIG"+dataConfig.baseUrl());
-            view.navigateToHome();
 
 
+            //loadFirstPage_NowPlaying();
+           // loadFirstPage_NowPlayingTVShows();
+            loadWatchList();
+
+
+
+
+
+        }
+
+        private void loadWatchList(){
+            dataReloading.loadMyWatchList();
+            loadFirstPage_NowPlayingTVShows();
+
+
+
+        }
+
+
+//        private ObservableSource<? extends DomainObject> isInWatchList(DomainObject item) {
+//            if(item instanceof Movie){
+//                Movie mov = (Movie) item;
+//                Movie movie1 = Observable.fromIterable(appConfig.getWatchList())
+//                        .cast(Movie.class)
+//                        .filter(movie -> (movie.id() == mov.id()))
+//                        .firstElement()
+//                        .blockingGet();
+//
+//
+//                return Observable.just( mov.setInWatchList(true));
+//
+//
+//            }
+//
+//            if(item instanceof TVShow){
+//                TVShow tvShow = (TVShow) item;
+//                TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
+//                        .cast(TVShow.class)
+//                        .filter(tv -> (tv.id() == tvShow.id()))
+//                        .firstElement()
+//                        .blockingGet();
+//
+//
+//                return Observable.just( tvShow.setInWatchList(true));
+//            }
+//
+//
+//            return  Observable.empty();
+//
+//        }
+
+        public List<DomainObject> prepareData(List<DomainObject> results){
+
+            if( results.get(0) instanceof Movie){
+                Observable.fromIterable(results)
+                        .cast(Movie.class)
+                        .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
+                        .distinct()
+
+                        .filter(movie -> (movie.posterPath() != null))
+
+
+                        .cast(DomainObject.class)
+                        .toList().blockingGet();
+            }
+            if( results.get(0) instanceof TVShow){
+
+                List<DomainObject> list = Observable.fromIterable(appConfig.getWatchList())
+
+
+                        .filter(tv -> (tv instanceof TVShow))
+
+
+                        .toList().blockingGet();
+                Log.e("prepareData",">: "+list);
+
+
+                return Observable.fromIterable(results)
+                        .cast(TVShow.class)
+                        .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
+                        .distinct()
+                        .filter(movie -> (movie.posterPath() != null))
+                        .map(tvShow -> {
+
+
+                            TVShow tvShow1 = Observable.fromIterable(list)
+                                    .cast(TVShow.class)
+
+                                    .filter(tv -> (tv.id().equals(tvShow.id())))
+                                    .firstElement()
+
+                                    .blockingGet();
+
+
+                            if(tvShow1!=null){
+                                System.out.println(tvShow.name()+"==="+tvShow1.name());
+                                return tvShow.setInWatchList(true);
+
+                            }
+
+
+                            return tvShow;
+                        })
+//                        .flatMapCompletable(this::isInWatchList)
+//                        .toObservable()
+
+//                                        .flatMapCompletable(cache::saveItemWatchList)
+//                                )
+//                .toFlowable()
+
+
+                        .cast(DomainObject.class)
+                        .toList().blockingGet();
+            }
+            if( results.get(0) instanceof Person){
+                return Observable.fromIterable(results)
+                        .cast(Person.class)
+                        .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
+                        .distinct()
+                        .cast(DomainObject.class)
+                        .toList().blockingGet();
+            }
+            return results;
+        }
+
+        private CompletableSource isInWatchList(DomainObject item) {
+            if(item instanceof TVShow){
+                TVShow tvShow = (TVShow) item;
+                TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
+                        .cast(TVShow.class)
+                        .filter(tv -> (tv.id() == tvShow.id()))
+                        .firstElement()
+                        .blockingGet();
+
+
+               // return  tvShow.setInWatchList(true);
+            }
+
+            return Completable.create(e -> {
+
+
+                        e.onComplete();
+
+
+            });
+
+
+        }
+
+        private void loadFirstPage_NowPlayingTVShows(){
+
+            useCaseHandler.execute(getNowPlayingTVShows, GetNowPlayingTVShows.Params.withPage(1),
+
+                    new DisposableSubscriber<ResultWrapper>() {
+                        @Override
+                        public void onNext(ResultWrapper movieWrapper) {
+                            System.out.println("onNext1  :"+movieWrapper.results().size());
+                            List<DomainObject> list = prepareData(movieWrapper.results());
+                            System.out.println("onNext2  :"+list.size());
+                            movieWrapper.results().clear();
+                            movieWrapper.results().addAll(list);
+                            //  resultsNowPlaying.addAll(movieWrapper.results());
+                             map.put(AppConfig.NOWPLAYINGTVKEY,movieWrapper);
+
+
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            System.out.println("onError"+t.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                          //  loadFirstPage_NowPlaying();
+                            System.out.println("onComplete loadFirstPage_NowPlaying");
+                        }
+                    }
+
+
+            );
+
+
+        }
+        private void loadFirstPage_NowPlaying(){
+            resultsNowPlaying = new ArrayList<>();
+            useCaseHandler.execute(getNowPlayingMovies, GetNowPlayingMovies.Params.withPage(1),
+
+                    new DisposableSubscriber<ResultWrapper>() {
+                        @Override
+                        public void onNext(ResultWrapper movieWrapper) {
+                            System.out.println("onNext"+movieWrapper.results().size());
+                           // resultsNowPlaying.addAll(movieWrapper.results());
+                           // map.put(AppConfig.NOWPLAYINGKEY,movieWrapper);
+                            map.put(AppConfig.NOWPLAYINGKEY,movieWrapper);
+
+
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            System.out.println("onError"+t.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        //    loadFirstPage_UpComming();
+                           // System.out.println("onComplete loadFirstPage_NowPlaying");
+                        }
+                    }
+
+
+            );
+
+        }
+        private void loadFirstPage_UpComming(){
+            resultsUpComming = new ArrayList<>();
+            useCaseHandler.execute(getUpcomingMovies, GetUpcomingMovies.Params.withPage(1),
+
+                    new DisposableSubscriber<ResultWrapper>() {
+                        @Override
+                        public void onNext(ResultWrapper movieWrapper) {
+                            System.out.println("onNext"+movieWrapper.results().size());
+
+                            map.put(AppConfig.UPCOMMINGKEY,movieWrapper);
+
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            System.out.println("onError"+t.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            loadFirstPage_TopRated();
+
+                        }
+                    }
+
+
+            );
+
+        }
+        private void loadFirstPage_TopRated(){
+            resultsUpComming = new ArrayList<>();
+            useCaseHandler.execute(getTopRatedMovies, GetTopRatedMovies.Params.withPage(1),
+
+                    new DisposableSubscriber<ResultWrapper>() {
+                        @Override
+                        public void onNext(ResultWrapper movieWrapper) {
+
+
+                            map.put(AppConfig.TOPRATEDKEY,movieWrapper);
+
+
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            System.out.println("onError"+t.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            view.navigateToHome(map);
+                        }
+                    }
+
+
+            );
 
         }
 

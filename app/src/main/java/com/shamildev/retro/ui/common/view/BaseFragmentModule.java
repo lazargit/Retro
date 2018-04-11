@@ -29,9 +29,11 @@ public class BaseFragmentModule {
      */
     public static final String FRAGMENT = "BaseFragmentModule.fragment";
     public static final String FRAGMENT_V4 = "BaseFragmentV4Module.fragment";
+    public static final String DIALOGFRAGMENT = "BaseFragmentModule.dialogfragment";
 
     static final String CHILD_FRAGMENT_MANAGER = "BaseFragmentModule.childFragmentManager";
     static final String CHILD_FRAGMENT_V4_MANAGER = "BaseFragmentV4Module.childFragmentManager";
+    static final String CHILD_DIALOGFRAGMENT_MANAGER = "BaseFragmentModule.childDialogFragmentManager";
 
     @Provides
     @Named(CHILD_FRAGMENT_MANAGER)
@@ -46,11 +48,24 @@ public class BaseFragmentModule {
     @Provides
     @Named(CHILD_FRAGMENT_V4_MANAGER)
     @PerFragment
-    static android.support.v4.app.FragmentManager childFragmentV4Manager(@Named(FRAGMENT_V4) DaggerFragment fragment) {
+    static android.support.v4.app.FragmentManager childFragmentV4Manager(@Named(FRAGMENT_V4) android.support.v4.app.Fragment fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return fragment.getChildFragmentManager();
         }
-        return fragment.getChildFragmentManager();
+        return fragment.getFragmentManager();
+
+    }
+
+
+    @Provides
+    @Named(CHILD_DIALOGFRAGMENT_MANAGER)
+    @PerFragment
+    static android.support.v4.app.FragmentManager childDialogFragmentManager(@Named(DIALOGFRAGMENT) android.support.v4.app.DialogFragment fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return fragment.getChildFragmentManager();
+        }
+        return fragment.getFragmentManager();
+
     }
 
 }
