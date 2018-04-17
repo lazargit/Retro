@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableSource;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
@@ -267,6 +269,9 @@ public class DataReloading {
     }
 
 
+
+
+
     public List<DomainObject> prepareData(List<DomainObject> results){
 
         if( results.get(0) instanceof Movie){
@@ -276,22 +281,39 @@ public class DataReloading {
                     .distinct()
 
                     .filter(movie -> (movie.posterPath() != null))
-                    .flatMap(this::isInWatchList)
+
 
                     .cast(DomainObject.class)
                     .toList().blockingGet();
         }
         if( results.get(0) instanceof TVShow){
+
+            List<DomainObject> list = Observable.fromIterable(appConfig.getWatchList())
+                    .filter(tv -> (tv instanceof TVShow))
+                    .toList().blockingGet();
+
             return Observable.fromIterable(results)
                     .cast(TVShow.class)
                     .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
                     .distinct()
                     .filter(movie -> (movie.posterPath() != null))
-                    .flatMap(this::isInWatchList)
-
+                    .flatMap(tvShow -> Observable.fromIterable(list)
+                            .cast(TVShow.class)
+                            .filter(tv -> (tv.id().equals(tvShow.id())))
+                            .firstElement()
+                            .map(tvShow2 -> tvShow.setInWatchList(true))
+                            .defaultIfEmpty(tvShow)
+                            .toObservable())
+                    .map(tvShow -> {
+                        System.out.println("##### "+tvShow.name()+" watch: "+tvShow.isInWatchList());
+                        return tvShow;
+                    })
                     .cast(DomainObject.class)
                     .toList().blockingGet();
         }
+
+
+
         if( results.get(0) instanceof Person){
             return Observable.fromIterable(results)
                     .cast(Person.class)
@@ -302,6 +324,33 @@ public class DataReloading {
         }
         return results;
     }
+
+//    private CompletableSource isInWatchList(DomainObject item) {
+//        if(item instanceof TVShow){
+//            List<DomainObject> list = Observable.fromIterable(appConfig.getWatchList())
+//                    .filter(tv -> (tv instanceof TVShow))
+//                    .toList().blockingGet();
+//            TVShow tvShow = (TVShow) item;
+//            TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
+//                    .cast(TVShow.class)
+//                    .filter(tv -> (tv.id() == tvShow.id()))
+//                    .firstElement()
+//                    .blockingGet();
+//
+//
+//            // return  tvShow.setInWatchList(true);
+//        }
+//
+//        return Completable.create(e -> {
+//
+//
+//            e.onComplete();
+//
+//
+//        });
+
+
+ //   }
 
 
 

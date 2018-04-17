@@ -18,6 +18,7 @@ package com.shamildev.retro.domain.interactor;
 
 
 
+import com.shamildev.retro.domain.helper.DataFilterHelper;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.params.ParamsBasic;
@@ -27,6 +28,7 @@ import com.shamildev.retro.domain.repository.RemoteRepository;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 
 
 public final class GetNowPlayingTVShows implements UseCaseFlowable<ParamsBasic,ResultWrapper> {
@@ -43,7 +45,13 @@ public final class GetNowPlayingTVShows implements UseCaseFlowable<ParamsBasic,R
     @Override
     public Flowable<ResultWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
+
         return repository.fetchNowPlayingTVShow(page)
+                .flatMap(resultWrapper -> DataFilterHelper.prepareData(resultWrapper,cache))
+
+
+
+
 //                                .flatMapCompletable(movieWrapper -> Flowable.fromIterable(movieWrapper.results())
 //                                        .flatMapCompletable(cache::saveItemWatchList)
 //                                )

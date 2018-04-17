@@ -4,6 +4,7 @@ import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -23,7 +24,7 @@ public class AppConfig {
     private Configuration configurations;
 
     private List<Genre> genres;
-    private List<DomainObject> watchList;
+    private List<DomainObject> watchList = new ArrayList<>();
 
     public static final String NOWPLAYINGKEY = "nowplaying";
     public static final String NOWPLAYINGTVKEY = "nowplayingtv";

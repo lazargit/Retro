@@ -161,7 +161,7 @@ final class HomePagePresenterImpl extends BasePresenter<HomePageView> implements
 
         if(movieWrapper.results().size()>0) {
             this.currentPage = movieWrapper.page();
-            List<DomainObject> list = DataFilterHelper.filterData(movieWrapper.results());
+            List<DomainObject> list = movieWrapper.results();
             movieList.addAll(list);
             Log.e("addMoreDataToList","# "+list.size());
             recyclerViewPagerAdapter.notifyDataSetChanged();

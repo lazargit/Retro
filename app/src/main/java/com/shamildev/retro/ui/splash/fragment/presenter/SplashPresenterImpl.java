@@ -47,6 +47,7 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.subscribers.DisposableSubscriber;
 import io.realm.Realm;
 
@@ -427,13 +428,9 @@ import io.realm.Realm;
             if( results.get(0) instanceof TVShow){
 
                 List<DomainObject> list = Observable.fromIterable(appConfig.getWatchList())
-
-
                         .filter(tv -> (tv instanceof TVShow))
-
-
                         .toList().blockingGet();
-                Log.e("prepareData",">: "+list);
+
 
 
                 return Observable.fromIterable(results)
@@ -441,38 +438,23 @@ import io.realm.Realm;
                         .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
                         .distinct()
                         .filter(movie -> (movie.posterPath() != null))
+                        .flatMap(tvShow -> Observable.fromIterable(list)
+                                 .cast(TVShow.class)
+                                 .filter(tv -> (tv.id().equals(tvShow.id())))
+                                 .firstElement()
+                                 .map(tvShow2 -> tvShow.setInWatchList(true))
+                                 .defaultIfEmpty(tvShow)
+                                 .toObservable())
                         .map(tvShow -> {
-
-
-                            TVShow tvShow1 = Observable.fromIterable(list)
-                                    .cast(TVShow.class)
-
-                                    .filter(tv -> (tv.id().equals(tvShow.id())))
-                                    .firstElement()
-
-                                    .blockingGet();
-
-
-                            if(tvShow1!=null){
-                                System.out.println(tvShow.name()+"==="+tvShow1.name());
-                                return tvShow.setInWatchList(true);
-
-                            }
-
-
-                            return tvShow;
+                            System.out.println("##### "+tvShow.name()+" watch: "+tvShow.isInWatchList());
+                        return tvShow;
                         })
-//                        .flatMapCompletable(this::isInWatchList)
-//                        .toObservable()
-
-//                                        .flatMapCompletable(cache::saveItemWatchList)
-//                                )
-//                .toFlowable()
-
-
                         .cast(DomainObject.class)
                         .toList().blockingGet();
             }
+
+
+
             if( results.get(0) instanceof Person){
                 return Observable.fromIterable(results)
                         .cast(Person.class)
@@ -516,10 +498,10 @@ import io.realm.Realm;
                         @Override
                         public void onNext(ResultWrapper movieWrapper) {
                             System.out.println("onNext1  :"+movieWrapper.results().size());
-                            List<DomainObject> list = prepareData(movieWrapper.results());
-                            System.out.println("onNext2  :"+list.size());
-                            movieWrapper.results().clear();
-                            movieWrapper.results().addAll(list);
+//                            List<DomainObject> list = prepareData(movieWrapper.results());
+//                            System.out.println("onNext2  :"+list.size());
+//                            movieWrapper.results().clear();
+//                            movieWrapper.results().addAll(list);
                             //  resultsNowPlaying.addAll(movieWrapper.results());
                              map.put(AppConfig.NOWPLAYINGTVKEY,movieWrapper);
 
