@@ -4,6 +4,7 @@ package com.shamildev.retro.domain.models;
 import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.DomainObjectStorable;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.bootstrap.Bootstrap;
 
 import java.io.Serializable;
@@ -82,7 +83,7 @@ import io.reactivex.annotations.Nullable;
     },
  */
 @AutoValue
-public abstract class TVShow implements DomainObject ,DomainObjectStorable, Serializable {
+public abstract class TVShow implements DomainObject, MediaItem, DomainObjectStorable, Serializable {
 
 
     public abstract Long id();
@@ -167,10 +168,10 @@ public abstract class TVShow implements DomainObject ,DomainObjectStorable, Seri
 
 
 
-    public TVShow setInWatchList(Boolean bool) {
-        TVShow.Builder builder = getBuilder();
-        builder.isInWatchList(bool);
-        return builder.build();
+    public MediaItem setInWatchList(Boolean bool) {
+
+       return getBuilder().isInWatchList(bool).build();
+
     }
 
 
@@ -309,4 +310,37 @@ public static TVShow create(Long id, String name, String originalName, String ov
 
         public abstract TVShow build();
     }
+
+    @Override
+    public final Long itemId() {
+        return id();
+    }
+
+    @Override
+    public final String itemTitle() {
+        return name();
+    }
+
+    @Override
+    public final String itemPosterPath() {
+        return posterPath();
+    }
+    @Override
+    public final Float itemPopularity() {
+        return popularity();
+    }
+
+    @Override
+    public final Boolean itemIsInWatchList() {
+        return isInWatchList();
+    }
+    @Override
+    public final MediaItem itemAddToWatchList() {
+        return setInWatchList(true);
+    }
+    @Override
+    public final MediaItem itemRemoveFromWatchList() {
+        return setInWatchList(false);
+    }
+
 }

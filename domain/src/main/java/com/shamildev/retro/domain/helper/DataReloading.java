@@ -12,7 +12,7 @@ import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.Person;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.models.TVShow;
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
+
 
 import java.util.List;
 
@@ -237,31 +237,31 @@ public class DataReloading {
     }
 
     private ObservableSource<? extends DomainObject> isInWatchList(DomainObject item) {
-        if(item instanceof Movie){
-            Movie mov = (Movie) item;
-            Movie movie1 = Observable.fromIterable(appConfig.getWatchList())
-                    .cast(Movie.class)
-                    .filter(movie -> (movie.id() == mov.id()))
-                    .firstElement()
-                    .blockingGet();
-
-
-            return Observable.just( mov.setInWatchList(true));
-
-
-        }
-
-        if(item instanceof TVShow){
-            TVShow tvShow = (TVShow) item;
-            TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
-                    .cast(TVShow.class)
-                    .filter(tv -> (tv.id() == tvShow.id()))
-                    .firstElement()
-                    .blockingGet();
-
-
-            return Observable.just( tvShow.setInWatchList(true));
-        }
+//        if(item instanceof Movie){
+//            Movie mov = (Movie) item;
+//            Movie movie1 = Observable.fromIterable(appConfig.getWatchList())
+//                    .cast(Movie.class)
+//                    .filter(movie -> (movie.id() == mov.id()))
+//                    .firstElement()
+//                    .blockingGet();
+//
+//
+//            return Observable.just( mov.setInWatchList(true));
+//
+//
+//        }
+//
+//        if(item instanceof TVShow){
+//            TVShow tvShow = (TVShow) item;
+//            TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
+//                    .cast(TVShow.class)
+//                    .filter(tv -> (tv.id() == tvShow.id()))
+//                    .firstElement()
+//                    .blockingGet();
+//
+//
+//            return Observable.just( tvShow.setInWatchList(true));
+//        }
 
 
       return  Observable.empty();
@@ -305,7 +305,7 @@ public class DataReloading {
                             .defaultIfEmpty(tvShow)
                             .toObservable())
                     .map(tvShow -> {
-                        System.out.println("##### "+tvShow.name()+" watch: "+tvShow.isInWatchList());
+                        System.out.println("##### "+tvShow.itemTitle()+" watch: "+tvShow.itemIsInWatchList());
                         return tvShow;
                     })
                     .cast(DomainObject.class)

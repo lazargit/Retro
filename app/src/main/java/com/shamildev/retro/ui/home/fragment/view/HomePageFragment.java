@@ -40,7 +40,7 @@ import timber.log.Timber;
 
  * A fragment implementation of {@link WatchListView}.
  */
-public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter> implements HomePageView,SlideShowDialogFragment.OnHeadlineSelectedListener {
+public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter> implements HomePageView, SlideShowDialogFragment.OnHeadlineSelectedListener {
 
     private static final String PARAM_MOVIE = "param_movie";
     private static final String PARAM_MOVIE_TAG = "param_movie_tag";

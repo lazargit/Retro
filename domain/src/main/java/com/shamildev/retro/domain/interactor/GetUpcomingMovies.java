@@ -17,18 +17,15 @@
 package com.shamildev.retro.domain.interactor;
 
 
-import com.shamildev.retro.domain.models.Movie;
-import com.shamildev.retro.domain.models.MovieWrapper;
+import com.shamildev.retro.domain.helper.ProcessData;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
+
 
 
 public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,ResultWrapper> {
@@ -46,7 +43,8 @@ public final class GetUpcomingMovies implements UseCaseFlowable<ParamsBasic,Resu
     public Flowable<ResultWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
 
-         return  this.repository.fetchUpcomingMovies(page);
+         return  this.repository.fetchUpcomingMovies(page)
+                   .flatMap(resultWrapper -> ProcessData.prepareResultWrapper(resultWrapper,cache.fetchWatchList().blockingLast()));
 
 
 //        return  this.repository.fetchUpcomingMovies(page)

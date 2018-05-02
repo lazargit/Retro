@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,9 +26,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.ui.home.fragment.adapter.RecyclerViewPagerAdapter;
+import com.shamildev.retro.ui.home.slideshowfragment.presenter.SlideShowPresenterImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +44,17 @@ public class SlideShowPageAdapter extends PagerAdapter {
 
 
     private final FragmentActivity activity;
+    private SlideShowPresenterImpl slideShowPresenter;
     private  RequestManager requestManager;
     private  LayoutInflater layoutInflater;
     private ArrayList<DomainObject> items;
+    private FloatingActionButton fabWatchlist;
 
-    public SlideShowPageAdapter(FragmentActivity activity) {
+    public SlideShowPageAdapter(FragmentActivity activity, List<DomainObject> mResults, SlideShowPresenterImpl slideShowPresenter) {
         this.activity = activity;
+        this.items = (ArrayList<DomainObject>) mResults;
+        this.requestManager = Glide.with( this.activity);
+        this.slideShowPresenter = slideShowPresenter;
 
     }
 
@@ -64,40 +72,58 @@ public class SlideShowPageAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-       // return super.instantiateItem(container, position);
+        // return super.instantiateItem(container, position);
 
         layoutInflater = (LayoutInflater) this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.image_fullscreen_preview, container, false);
 
         ImageView imageViewPreview = (ImageView) view.findViewById(R.id.image_preview);
         TextView txtViewTitle = (TextView) view.findViewById(R.id.txtView_title);
-        imageViewPreview.setOnClickListener(v -> {
-                        Log.e("SlideShowPageAdapter",">"+position);
+        fabWatchlist = (FloatingActionButton) view.findViewById(R.id.fab_watchlist);
+        fabWatchlist.setOnClickListener(v -> {
+            Log.e("FAB ", ">" + position);
+            MediaItem mediaItem = (MediaItem) this.items.get(position);
+                      mediaItem.itemAddToWatchList();
+                     // this.items.get(position) = mediaItem;
+            this.slideShowPresenter.addItemToWatchList(mediaItem);
         });
-        Log.e("instantiateItem",">"+items.get(position).getClass().getName());
+
+        imageViewPreview.setOnClickListener(v -> {
+            Log.e("SlideShowPageAdapter", ">" + position);
+        });
 
 
         String imagePath = null;
         String title = null;
-        if(items.get(position) instanceof Movie){
+        Boolean isInWatchList = false;
+        Boolean test = true;
+        if (items.get(position) instanceof Movie) {
             Movie movie = (Movie) items.get(position);
             imagePath = movie.posterPath();
             title = movie.title();
+            isInWatchList = movie.itemIsInWatchList();
+            Log.e("instantiateItem", ">" + movie.itemIsInWatchList());
             //popularity = movie.popularity();
         }
-        if(items.get(position) instanceof TVShow){
+        if (items.get(position) instanceof TVShow) {
             TVShow tvShow = (TVShow) items.get(position);
             imagePath = tvShow.posterPath();
             title = tvShow.name();
-           // popularity = tvShow.popularity();
+            isInWatchList = tvShow.itemIsInWatchList();
+            // popularity = tvShow.popularity();
 
         }
 
-        if(imagePath!=null) {
+        if (imagePath != null) {
             loadImage(imagePath, imageViewPreview);
         }
-        if(title!=null) {
+        if (title != null) {
             txtViewTitle.setText(title);
+        }
+        if (isInWatchList != null){
+            if (isInWatchList) {
+                fabWatchlist.setImageResource(R.drawable.ic_bookmark_black_24dp);
+            }
         }
 
 

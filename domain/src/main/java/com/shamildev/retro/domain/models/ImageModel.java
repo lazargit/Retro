@@ -46,6 +46,8 @@ public abstract class ImageModel implements DomainObject {
 
         public abstract Builder width(Integer width);
 
+
+
         public abstract ImageModel build();
     }
 

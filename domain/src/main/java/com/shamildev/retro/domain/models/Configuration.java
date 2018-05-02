@@ -67,7 +67,11 @@ public abstract class Configuration implements DomainObject, DomainObjectStorabl
 
         public abstract Builder lastUpdate(Long lastUpdate);
 
+
+
+
         public abstract Configuration build();
+
 
 
     }

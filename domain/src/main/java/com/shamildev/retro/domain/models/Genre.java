@@ -56,6 +56,8 @@ public abstract class Genre implements DomainObject,DomainObjectStorable,Seriali
 
         public abstract Builder lastUpdate(Long lastUpdate);
 
+
+
         public abstract Genre build();
     }
 }

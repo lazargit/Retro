@@ -1,15 +1,11 @@
 package com.shamildev.retro.ui.home.fragment.presenter;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
 import android.util.Log;
 
-import com.shamildev.retro.R;
-import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.di.scope.PerChildFragment;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
-import com.shamildev.retro.domain.helper.DataFilterHelper;
 import com.shamildev.retro.domain.helper.DataReloading;
 import com.shamildev.retro.domain.interactor.GetMultiSearch;
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
@@ -17,10 +13,7 @@ import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetNowPlayingTVShows;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
-import com.shamildev.retro.domain.models.Movie;
-import com.shamildev.retro.domain.models.Person;
 import com.shamildev.retro.domain.models.ResultWrapper;
-import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.fragment.adapter.RecyclerViewPagerAdapter;
 import com.shamildev.retro.ui.home.fragment.view.HomePageView;
@@ -30,9 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by Shamil Lazar on 13.12.2017.
@@ -156,14 +146,14 @@ final class HomePagePresenterImpl extends BasePresenter<HomePageView> implements
     private void addMoreDataToList(ResultWrapper movieWrapper){
 
        // List<DomainObject> list = prepareData(movieWrapper.results());
-       // DataFilterHelper.filterData(movieWrapper.results());
-        Log.e("addMoreDataToList","# "+movieWrapper.results().size());
+       // ProcessData.filterData(movieWrapper.results());
+        //Log.e("addMoreDataToList","# "+movieList);
 
         if(movieWrapper.results().size()>0) {
             this.currentPage = movieWrapper.page();
             List<DomainObject> list = movieWrapper.results();
             movieList.addAll(list);
-            Log.e("addMoreDataToList","# "+list.size());
+           // Log.e("addMoreDataToList","# "+list);
             recyclerViewPagerAdapter.notifyDataSetChanged();
         }
 

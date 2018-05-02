@@ -5,6 +5,7 @@ package com.shamildev.retro.domain.models;
 import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.DomainObjectStorable;
+import com.shamildev.retro.domain.MediaItem;
 
 
 import java.io.Serializable;
@@ -18,7 +19,7 @@ import io.reactivex.annotations.Nullable;
  */
 
 @AutoValue
-public abstract class Movie  implements DomainObject ,DomainObjectStorable, Serializable {
+public abstract class Movie  implements DomainObject,MediaItem, DomainObjectStorable, Serializable {
 
 
 
@@ -131,9 +132,7 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
     }
 
     public Movie setInWatchList(Boolean bool) {
-        Builder builder = getBuilder();
-        builder.isInWatchList(bool);
-        return builder.build();
+        return getBuilder().isInWatchList(bool).build();
     }
 
 
@@ -304,5 +303,38 @@ public abstract class Movie  implements DomainObject ,DomainObjectStorable, Seri
         public abstract Builder lastUpdate(Long lastUpdate);
 
         public abstract Movie build();
+    }
+
+
+    @Override
+    public final Long itemId() {
+        return id();
+    }
+
+    @Override
+    public final String itemTitle() {
+        return title();
+    }
+
+    @Override
+    public final String itemPosterPath() {
+        return posterPath();
+    }
+    @Override
+    public final Float itemPopularity() {
+        return popularity();
+    }
+
+    @Override
+    public final Boolean itemIsInWatchList() {
+        return isInWatchList();
+    }
+    @Override
+    public final MediaItem itemAddToWatchList() {
+        return setInWatchList(true);
+    }
+    @Override
+    public final MediaItem itemRemoveFromWatchList() {
+        return setInWatchList(false);
     }
 }

@@ -55,7 +55,7 @@ public abstract class Person implements DomainObject
                 '}';
     }
 
-    public static Person create(Long id, String name, Integer gender, String profilePath, Float popularity, List<DomainObject> knownFor) {
+    public static Person create( Long id, String name, Integer gender, String profilePath, Float popularity, List<DomainObject> knownFor) {
         return builder()
                 .id(id)
                 .name(name)
@@ -81,6 +81,12 @@ public abstract class Person implements DomainObject
 
         public abstract Builder knownFor(List<DomainObject> knownFor);
 
+
+
         public abstract Person build();
     }
+
+
+
+
 }

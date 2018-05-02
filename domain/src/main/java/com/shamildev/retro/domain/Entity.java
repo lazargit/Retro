@@ -24,6 +24,13 @@ public abstract class Entity implements DomainObject {
 
     public abstract String name();
 
+    public static Entity create( String id, String name) {
+        return builder()
+                .id(id)
+                .name(name)
+                .build();
+    }
+
     public static Builder builder() {
         return new AutoValue_Entity.Builder();
     }
@@ -35,6 +42,10 @@ public abstract class Entity implements DomainObject {
 
         public abstract Builder name(String name);
 
+
+
         public abstract Entity build();
+
     }
+
 }

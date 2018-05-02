@@ -44,7 +44,6 @@ final class MovieEntityMapper implements EntityMapper<Result, Movie> {
     @Override
     public Movie map(Result entity) {
 
-        Log.d("MovieEntityMapper", entity.getTitle());
       return  Movie.create(entity.getId(),
                      entity.getTitle(),
                      entity.getPosterPath(),

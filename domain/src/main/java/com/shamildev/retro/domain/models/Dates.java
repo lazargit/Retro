@@ -28,6 +28,8 @@ public abstract class Dates implements DomainObject {
 
         public abstract Builder minimum(String minimum);
 
+
+
         public abstract Dates build();
     }
 }

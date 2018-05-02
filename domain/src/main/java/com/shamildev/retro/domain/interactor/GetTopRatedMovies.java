@@ -17,6 +17,7 @@
 package com.shamildev.retro.domain.interactor;
 
 
+import com.shamildev.retro.domain.helper.ProcessData;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.models.ResultWrapper;
@@ -46,7 +47,8 @@ public final class GetTopRatedMovies implements UseCaseFlowable<ParamsBasic,Resu
     public Flowable<ResultWrapper> execute(ParamsBasic params) {
         int page = ((Params) params).page;
 
-        return  this.repository.fetchTopRatedMovies(page);
+        return  this.repository.fetchTopRatedMovies(page)
+                .flatMap(resultWrapper -> ProcessData.prepareResultWrapper(resultWrapper,cache.fetchWatchList().blockingLast()));
 
 
 //        return  this.repository.fetchTopRatedMovies(page)

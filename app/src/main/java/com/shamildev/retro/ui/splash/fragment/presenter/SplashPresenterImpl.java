@@ -379,116 +379,8 @@ import io.realm.Realm;
         }
 
 
-//        private ObservableSource<? extends DomainObject> isInWatchList(DomainObject item) {
-//            if(item instanceof Movie){
-//                Movie mov = (Movie) item;
-//                Movie movie1 = Observable.fromIterable(appConfig.getWatchList())
-//                        .cast(Movie.class)
-//                        .filter(movie -> (movie.id() == mov.id()))
-//                        .firstElement()
-//                        .blockingGet();
-//
-//
-//                return Observable.just( mov.setInWatchList(true));
-//
-//
-//            }
-//
-//            if(item instanceof TVShow){
-//                TVShow tvShow = (TVShow) item;
-//                TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
-//                        .cast(TVShow.class)
-//                        .filter(tv -> (tv.id() == tvShow.id()))
-//                        .firstElement()
-//                        .blockingGet();
-//
-//
-//                return Observable.just( tvShow.setInWatchList(true));
-//            }
-//
-//
-//            return  Observable.empty();
-//
-//        }
-
-        public List<DomainObject> prepareData(List<DomainObject> results){
-
-            if( results.get(0) instanceof Movie){
-                Observable.fromIterable(results)
-                        .cast(Movie.class)
-                        .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
-                        .distinct()
-
-                        .filter(movie -> (movie.posterPath() != null))
 
 
-                        .cast(DomainObject.class)
-                        .toList().blockingGet();
-            }
-            if( results.get(0) instanceof TVShow){
-
-                List<DomainObject> list = Observable.fromIterable(appConfig.getWatchList())
-                        .filter(tv -> (tv instanceof TVShow))
-                        .toList().blockingGet();
-
-
-
-                return Observable.fromIterable(results)
-                        .cast(TVShow.class)
-                        .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
-                        .distinct()
-                        .filter(movie -> (movie.posterPath() != null))
-                        .flatMap(tvShow -> Observable.fromIterable(list)
-                                 .cast(TVShow.class)
-                                 .filter(tv -> (tv.id().equals(tvShow.id())))
-                                 .firstElement()
-                                 .map(tvShow2 -> tvShow.setInWatchList(true))
-                                 .defaultIfEmpty(tvShow)
-                                 .toObservable())
-                        .map(tvShow -> {
-                            System.out.println("##### "+tvShow.name()+" watch: "+tvShow.isInWatchList());
-                        return tvShow;
-                        })
-                        .cast(DomainObject.class)
-                        .toList().blockingGet();
-            }
-
-
-
-            if( results.get(0) instanceof Person){
-                return Observable.fromIterable(results)
-                        .cast(Person.class)
-                        .sorted((o1, o2) -> Float.compare(o2.popularity(), o1.popularity()))
-                        .distinct()
-                        .cast(DomainObject.class)
-                        .toList().blockingGet();
-            }
-            return results;
-        }
-
-        private CompletableSource isInWatchList(DomainObject item) {
-            if(item instanceof TVShow){
-                TVShow tvShow = (TVShow) item;
-                TVShow tvShow1 = Observable.fromIterable(appConfig.getWatchList())
-                        .cast(TVShow.class)
-                        .filter(tv -> (tv.id() == tvShow.id()))
-                        .firstElement()
-                        .blockingGet();
-
-
-               // return  tvShow.setInWatchList(true);
-            }
-
-            return Completable.create(e -> {
-
-
-                        e.onComplete();
-
-
-            });
-
-
-        }
 
         private void loadFirstPage_NowPlayingTVShows(){
 
@@ -516,7 +408,7 @@ import io.realm.Realm;
 
                         @Override
                         public void onComplete() {
-                          //  loadFirstPage_NowPlaying();
+                           loadFirstPage_NowPlaying();
                             System.out.println("onComplete loadFirstPage_NowPlaying");
                         }
                     }
@@ -550,7 +442,7 @@ import io.realm.Realm;
                         @Override
                         public void onComplete() {
 
-                        //    loadFirstPage_UpComming();
+                          loadFirstPage_UpComming();
                            // System.out.println("onComplete loadFirstPage_NowPlaying");
                         }
                     }

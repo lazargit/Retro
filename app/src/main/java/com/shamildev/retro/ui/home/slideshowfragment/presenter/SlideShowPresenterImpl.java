@@ -7,6 +7,7 @@ import android.util.Pair;
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.helper.DataReloading;
@@ -16,6 +17,7 @@ import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetNowPlayingTVShows;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
+import com.shamildev.retro.domain.interactor.SaveToWatchList;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.slideshowfragment.adapter.SlideShowPageAdapter;
@@ -25,6 +27,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
@@ -51,6 +55,7 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
     private final GetNowPlayingMovies getNowPlayingMovies;
     private final GetNowPlayingTVShows getNowPlayingTVShows;
     private final GetMultiSearch getMultiSearch;
+    private final SaveToWatchList saveToWatchList;
     private final DataReloading dataReloading;
 
 
@@ -62,6 +67,7 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
                            GetTopRatedMovies getTopRatedMovies,
                            GetNowPlayingMovies getNowPlayingMovies,
                            GetNowPlayingTVShows getNowPlayingTVShows,
+                           SaveToWatchList saveToWatchList,
                            GetMultiSearch getMultiSearch,
                            DataReloading dataReloading) {
         super(view);
@@ -72,6 +78,7 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
         this.getNowPlayingMovies = getNowPlayingMovies;
         this.getNowPlayingTVShows = getNowPlayingTVShows;
         this.getMultiSearch = getMultiSearch;
+        this.saveToWatchList = saveToWatchList;
         this.dataReloading = dataReloading;
 
 
@@ -90,7 +97,7 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
         mPosition = bundleData.second;
         mTag = tag;
 
-        myViewPagerAdapter = new SlideShowPageAdapter(activity,mResults);
+        myViewPagerAdapter = new SlideShowPageAdapter(activity,mResults,this);
         view.initViewPager(myViewPagerAdapter,mPosition);
 
 
@@ -125,12 +132,40 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
     }
 
 
+
     private void addMoreDataToList(ResultWrapper movieWrapper){
 
         List<DomainObject> list = movieWrapper.results();
 
         mResults.addAll(list);
         myViewPagerAdapter.notifyDataSetChanged();
-        //recyclerViewPagerAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void addItemToWatchList(MediaItem item) {
+        DomainObject domainItem = (DomainObject) item;
+        saveToWatchList.execute(SaveToWatchList.Params.withItem(domainItem))
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                        view.makeToast(((MediaItem)domainItem).itemTitle()+" wurde zu deiner Watchlist hinzugefügt");
+                        MediaItem mediaItem = ((MediaItem) item).itemAddToWatchList();
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
     }
 }

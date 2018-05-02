@@ -18,12 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 
 
 import com.bumptech.glide.Glide;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.MediaItem;
+import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetMultiSearch;
 import com.shamildev.retro.domain.models.Movie;
@@ -40,15 +43,17 @@ import com.shamildev.retro.ui.widgets.Search.SearchViewWidget;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
 
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
 
 /**
  * Created by Schamil on 30.10.2017.
@@ -86,8 +91,8 @@ public class HomeActivity extends BaseActivitySupport {
     @Inject
     GetMultiSearch getMultiSearch;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolBar;
+//    @BindView(R.id.toolbar)
+//    Toolbar toolBar;
 
     @BindView(R.id.app_bar_layout)
     AppBarLayout appBarLayout;
@@ -95,6 +100,9 @@ public class HomeActivity extends BaseActivitySupport {
 
     @BindView(R.id.tabs)
     TabLayout tabLayout;
+
+    @BindView(R.id.img_header)
+    ImageView imageView_header;
 
 
 
@@ -126,7 +134,7 @@ public class HomeActivity extends BaseActivitySupport {
         setContentView(R.layout.activity_home);
         butterKnifeUnbinder = ButterKnife.bind(this);
         tabs = tabLayout;
-        setSupportActionBar(toolBar);
+       // setSupportActionBar(toolBar);
 
 
         initializeActivity(savedInstanceState);
@@ -141,15 +149,27 @@ public class HomeActivity extends BaseActivitySupport {
     private void initializeActivity(Bundle savedInstanceState) {
 
         if (savedInstanceState == null) {
+            @SuppressWarnings("unchecked")
             HashMap<String, ResultWrapper> hashMap = (HashMap<String,ResultWrapper>)  getIntent().getSerializableExtra(INTENT_EXTRA_PARAM_MOVIE1);
 
-        addFragment(R.id.fragmentContainer, HomeFragment.withMovies(hashMap,tabLayout));
+            addFragment(R.id.fragmentContainer, HomeFragment.withMovies(hashMap,tabLayout));
+            initImghHeader(hashMap);
         }
 
         Log.e("HomeActivity","onCreate");
 
 
 
+
+
+    }
+
+    private void initImghHeader(HashMap<String, ResultWrapper> hashMap) {
+        ResultWrapper resultWrapper = hashMap.get(AppConfig.NOWPLAYINGKEY);
+        List<Movie> movieList = Observable.fromIterable(resultWrapper.results())
+                .cast(Movie.class)
+                .filter(item -> item.backdropPath() != "")
+                .toList().blockingGet();
 
 
     }
@@ -194,7 +214,7 @@ public class HomeActivity extends BaseActivitySupport {
 
                                             @Override
                                             public void onStartSearchLoading() {
-                                                SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+                                                   SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
 
 
                                                     searchResultFragment.startSearchLoading();
@@ -229,7 +249,7 @@ public class HomeActivity extends BaseActivitySupport {
                                             public void onExpand(View view) {
                                                 Log.e("<ON EXPAND>","#"+view);
                                                 addFragment(R.id.fragmentContainer, SearchResultFragment.with(),R.anim.enter_from_right,R.anim.exit_to_right);
-                                               searchView.setUpSearchObservable();
+                                                searchView.setUpSearchObservable();
 
                                             }
                 });
@@ -249,7 +269,7 @@ public class HomeActivity extends BaseActivitySupport {
     private void toolbarSetElevation(float elevation) {
         // setElevation() only works on Lollipop
 
-            toolBar.setElevation(elevation);
+          //  toolBar.setElevation(elevation);
 
     }
 

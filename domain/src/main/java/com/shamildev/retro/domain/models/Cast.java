@@ -47,8 +47,11 @@ public abstract class Cast implements DomainObject
 
         public abstract Builder creditId(String creditId);
 
+
+
         public abstract Cast build();
     }
+
 
     @Override
     public String toString() {
