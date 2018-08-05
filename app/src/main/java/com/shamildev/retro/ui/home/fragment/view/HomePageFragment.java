@@ -2,10 +2,14 @@ package com.shamildev.retro.ui.home.fragment.view;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +28,12 @@ import com.shamildev.retro.ui.layout.PreCachingGridLayoutManager;
 import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
 import com.shamildev.retro.util.DeviceUtils;
 import com.shamildev.retro.util.EndlessRecyclerViewScrollListener;
+import com.shamildev.retro.retroimage.views.RetroImageView;
+
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,11 +50,8 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
 
     private static final String PARAM_MOVIE = "param_movie";
     private static final String PARAM_MOVIE_TAG = "param_movie_tag";
-
-
-
-
-
+    private static final String PARAM_LIST_POS= "param_list_pos";
+    public static final String TAG = HomePageFragment.class.getSimpleName();
 
 
     @BindView(R.id.recyclerViewPage)
@@ -72,14 +75,31 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
 
     }
 
-    public static HomePageFragment withMovies(HashMap<String, ResultWrapper> map, String tag) {
+
+    public static HomePageFragment instance() {
+        final HomePageFragment homeFragment = new HomePageFragment();
+        return homeFragment;
+    }
+
+
+    public static HomePageFragment with(ResultWrapper resultWrapper, String tag,int adapterPosition) {
         final HomePageFragment homeFragment = new HomePageFragment();
         final Bundle arguments = new Bundle();
-        arguments.putSerializable(PARAM_MOVIE, map);
+        arguments.putSerializable(PARAM_MOVIE, resultWrapper);
         arguments.putSerializable(PARAM_MOVIE_TAG, tag);
+        arguments.putSerializable(PARAM_LIST_POS, adapterPosition);
         homeFragment.setArguments(arguments);
         return homeFragment;
     }
+
+//    public static HomePageFragment with(HashMap<String, ResultWrapper> map, String tag) {
+//        final HomePageFragment homeFragment = new HomePageFragment();
+//        final Bundle arguments = new Bundle();
+//        arguments.putSerializable(PARAM_MOVIE, map);
+//        arguments.putSerializable(PARAM_MOVIE_TAG, tag);
+//        homeFragment.setArguments(arguments);
+//        return homeFragment;
+//    }
 
     /**
      * Get current movie id from fragments arguments.
@@ -88,11 +108,10 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
         final Bundle arguments = getArguments();
         Preconditions.checkNotNull(arguments, "Fragment arguments cannot be null");
         tag = (String) arguments.getSerializable(PARAM_MOVIE_TAG);
-        HashMap<String, ResultWrapper> map = (HashMap<String, ResultWrapper>) arguments.getSerializable(PARAM_MOVIE);
 
 
 
-        return map.get(tag);
+        return (ResultWrapper) arguments.getSerializable(PARAM_MOVIE);
 
 
     }
@@ -105,15 +124,16 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
         final View fragmentView = inflater.inflate(R.layout.fragment_page, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
 
-        initVerticalRecyclerView(mRecyclerView);
-        ResultWrapper movieWrapper = currentMovieWrapper();
-        Log.e("HOME",">>>>"+tag);
-         presenter.init(movieWrapper,getContext(),tag);
+      //  initVerticalRecyclerView(mRecyclerView);
+      //  ResultWrapper movieWrapper = currentMovieWrapper();
+     //   presenter.init(movieWrapper,getContext(),tag,this);
 
 
 
-        prepareTransitions(mRecyclerView);
-        postponeEnterTransition();
+        //prepareTransitions();
+       // postponeEnterTransition();
+
+
 
 
         return fragmentView;
@@ -122,7 +142,11 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
 
     }
 
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        scrollToPosition();
+    }
 
     @Override
     public void setAdapter(RecyclerViewPagerAdapter recyclerViewPagerAdapter) {
@@ -137,19 +161,43 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
         endlessRecyclerViewScrollListener.setStartPage(1);
         mRecyclerView.addOnScrollListener(endlessRecyclerViewScrollListener);
 
+       // prepareTransitions();
+       // postponeEnterTransition();
+
 
     }
 
 
     @Override
-    public void openSlideShow(ResultWrapper resultWrapper, int adapterPosition, String tag) {
+    public void openSlideShow(ResultWrapper resultWrapper, int adapterPosition, String tag, RetroImageView transitioningView, View view) {
 
-        Log.e("openSlideShow:","pages "+resultWrapper.totalPages()+" size:"+resultWrapper.results().size());
-        FragmentTransaction ft = childFragmentManager.beginTransaction();
-        SlideShowDialogFragment dialogFragment = SlideShowDialogFragment.withMovies(resultWrapper,adapterPosition);
-                                dialogFragment.addCallBack(this);
+        Log.e("openSlideShow:","pages "+resultWrapper.totalPages()+" size:"+resultWrapper.results().size()+"transitioningView "+transitioningView.getTransitionName());
 
-                                dialogFragment.show(ft, tag);
+        //Fragment parentFragment = getParentFragment();
+        ((TransitionSet)  getExitTransition()).excludeTarget(view, true);
+
+        getFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true) // Optimize for shared element transition
+                .addSharedElement(transitioningView, transitioningView.getTransitionName())
+                .replace(R.id.fragmentContainer, ImageViewPagerFragment.with(resultWrapper,adapterPosition), ImageViewPagerFragment.class
+                        .getSimpleName())
+                .addToBackStack(null)
+                .commit();
+
+
+
+//        FragmentTransaction ft = childFragmentManager.beginTransaction();
+//        SlideShowDialogFragment dialogFragment = SlideShowDialogFragment.withMovies(resultWrapper,adapterPosition);
+//                                dialogFragment.addCallBack(this);
+//
+//                                dialogFragment.show(ft, tag);
+
+
+
+
+
+
 
     }
 
@@ -158,30 +206,77 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
         Log.e("onArticleSelected:","pos "+position);
     }
 
-    private void prepareTransitions(RecyclerView mRecyclerView) {
-        setExitTransition(TransitionInflater.from(getContext())
-                .inflateTransition(R.transition.grid_exit_transition));
 
-        // A similar mapping is set at the ImagePagerFragment with a setEnterSharedElementCallback.
-//        setExitSharedElementCallback(
-//                new SharedElementCallback() {
-//                    @Override
-//                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-//                        // Locate the ViewHolder for the clicked position.
-//                        RecyclerView.ViewHolder selectedViewHolder = mRecyclerView
-//                                .findViewHolderForAdapterPosition(MainActivity.currentPosition);
-//                        if (selectedViewHolder == null || selectedViewHolder.itemView == null) {
-//                            return;
-//                        }
-//
-//                        // Map the first shared element name to the child ImageView.
-//                        sharedElements
-//                                .put(names.get(0), selectedViewHolder.itemView.findViewById(R.id.card_image));
-//                    }
-//                });
 
+    /**
+     * Scrolls the recycler view to show the last viewed item in the grid. This is important when
+     * navigating back from the grid.
+     */
+    private void scrollToPosition() {
+        mRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v,
+                                       int left,
+                                       int top,
+                                       int right,
+                                       int bottom,
+                                       int oldLeft,
+                                       int oldTop,
+                                       int oldRight,
+                                       int oldBottom) {
+                mRecyclerView.removeOnLayoutChangeListener(this);
+                final RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+                View viewAtPosition = layoutManager.findViewByPosition(0);
+                // Scroll to position if the view for the current position is null (not currently part of
+                // layout manager children), or it's not completely visible.
+                if (viewAtPosition == null || layoutManager
+                        .isViewPartiallyVisible(viewAtPosition, false, true)) {
+                    mRecyclerView.post(() -> layoutManager.scrollToPosition(5));
+                }
+            }
+        });
     }
 
+    /**
+     * Prepares the shared element transition to the pager fragment, as well as the other transitions
+     * that affect the flow.
+     */
+    private void prepareTransitions() {
+        setExitTransition(TransitionInflater.from(getContext())
+                .inflateTransition(R.transition.grid_exit_transition));
+        Log.e("SHARED>","setExitTransition");
+        // A similar mapping is set at the ImagePagerFragment with a setEnterSharedElementCallback.
+
+//        setExitSharedElementCallback(new SharedElementCallback() {
+//            @Override
+//            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+//                super.onMapSharedElements(names, sharedElements);
+//
+//                Log.e("SHARED>",">"+names.size());
+//            }
+//        });
+
+        setExitSharedElementCallback(
+                new SharedElementCallback() {
+                    @Override
+                    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+
+                        Log.e("SHARED>",">"+names.size());
+                        // Locate the ViewHolder for the clicked position.
+                        RecyclerView.ViewHolder selectedViewHolder = mRecyclerView
+                                .findViewHolderForAdapterPosition(0);
+                        Log.e("test",selectedViewHolder+"setExitSharedElementCallback"+selectedViewHolder.itemView);
+
+                        if (selectedViewHolder == null || selectedViewHolder.itemView == null) {
+                            return;
+                        }
+                        Log.e("SHARED>",selectedViewHolder.itemView.findViewById(R.id.imageViewRectItem).toString());
+                        // Map the first shared element name to the child ImageView.
+                        sharedElements
+                                .put(names.get(0), selectedViewHolder.itemView.findViewById(R.id.imageViewRectItem));
+                    }
+                });
+    }
 
     private void initVerticalRecyclerView(RecyclerView recyclerView) {
         LayoutInflater appInflater = LayoutInflater.from(getActivity().getApplicationContext());
@@ -206,7 +301,17 @@ public final class HomePageFragment extends BaseViewFragmentV4<HomePagePresenter
 
                         @Override
                         public void onItemClicked(View view, int adapterPosition) {
-                            presenter.onItemClick(adapterPosition);
+
+
+
+                            ((TransitionSet) getExitTransition()).excludeTarget(view, true);
+
+                             RetroImageView transitioningView = view.findViewById(R.id.imageViewRectItem);
+
+
+
+
+                            presenter.onItemClick(adapterPosition,transitioningView,view);
 
                         }
         }));

@@ -6,6 +6,7 @@ import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetNowPlayingTVShows;
+import com.shamildev.retro.domain.interactor.GetPopularPerson;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.models.Movie;
@@ -14,12 +15,15 @@ import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.domain.models.TVShow;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableSource;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
@@ -31,6 +35,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 public class DataReloading {
 
+    private final GetPopularPerson getPopularPerson;
     private UseCaseHandler useCaseHandler;
     private final GetUpcomingMovies getUpcomingMovies;
     private final GetTopRatedMovies getTopRatedMovies;
@@ -49,6 +54,12 @@ public class DataReloading {
         void onDataError(Throwable t);
 
     }
+    public interface LoadTopicsListener {
+
+        void onDataLoad();
+        void onDataError();
+
+    }
 
 
     @Inject
@@ -61,6 +72,7 @@ public class DataReloading {
                          GetTopRatedMovies getTopRatedMovies,
                          GetNowPlayingMovies getNowPlayingMovies,
                          GetNowPlayingTVShows getNowPlayingTVShows,
+                         GetPopularPerson getPopularPerson,
                          GetMyWatchList getMyWatchList) {
 
         this.useCaseHandler = useCaseHandler;
@@ -68,10 +80,61 @@ public class DataReloading {
         this.getTopRatedMovies = getTopRatedMovies;
         this.getNowPlayingMovies = getNowPlayingMovies;
         this.getNowPlayingTVShows = getNowPlayingTVShows;
+        this.getPopularPerson = getPopularPerson;
         this.getMyWatchList = getMyWatchList;
 
 
     }
+
+
+
+    public void loadTopics(ArrayList<String> mListTopic,HashMap<String, ResultWrapper> map, LoadTopicsListener loadTopicsListener) {
+
+            this.listener = new DataReloadingListener() {
+                @Override
+                public void onDataLoad(ResultWrapper resultWrapper) {
+                    map.put(mListTopic.get(0),resultWrapper);
+                    mListTopic.remove(0);
+                    if(mListTopic.size()>0){
+                        fetchTopic(mListTopic);
+
+                    }else{
+                        loadTopicsListener.onDataLoad();
+                    }
+                    System.out.println("TAGONDATALOAD");
+                   //  map.put(topic,resultWrapper);
+                }
+
+                @Override
+                public void onDataError(Throwable t) {
+                    System.out.println("TAGonDataError");
+                }
+            };
+
+             fetchTopic(mListTopic);
+
+
+
+    }
+
+    private void fetchTopic(ArrayList<String> mListTopic) {
+        String topic = mListTopic.get(0);
+        switch (topic){
+                case AppConfig.NOWPLAYINGKEY: loadNowPlaying(1);
+                    break;
+                case AppConfig.NOWPLAYINGTVKEY: loadNowPlayingTV(1);
+                    break;
+                case AppConfig.UPCOMMINGKEY: loadUpComming(1);
+                    break;
+                case AppConfig.TOPRATEDKEY: loadTopRated(1);
+                    break;
+                case AppConfig.POPULARPERSONKEY: loadPopularPerson(1);
+                  break;
+                case AppConfig.HOMEHEADERKEY: loadPopularPerson(1);
+                  break;
+            }
+    }
+
 
     public void loadMore(int page, String tag,DataReloading.DataReloadingListener listener) {
 
@@ -235,6 +298,35 @@ public class DataReloading {
             }
         });
     }
+
+    private void loadPopularPerson(int page){
+        useCaseHandler.execute(getPopularPerson, GetPopularPerson.Params.with(page),
+
+                new DisposableSubscriber<ResultWrapper>() {
+                    @Override
+                    public void onNext(ResultWrapper movieWrapper) {
+                        listener.onDataLoad(movieWrapper);
+
+
+
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        listener.onDataError(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        System.out.println("onComplete loadFirstPage_NowPlaying");
+                    }
+                }
+
+
+        );
+
+    }
+
 
     private ObservableSource<? extends DomainObject> isInWatchList(DomainObject item) {
 //        if(item instanceof Movie){

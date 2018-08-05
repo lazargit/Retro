@@ -62,12 +62,12 @@ final class DetailsPresenterImpl extends BasePresenter<DetailsView> implements D
 
     @Override
     public void onDoSomething(@IdRes int id) {
-        if (id == R.id.button_fetch_watchlist) {
-
-            Log.d("getTMDBConfiguration", "getTMDBConfiguration");
-
-
-        }
+//        if (id == R.id.button_fetch_watchlist) {
+//
+//            Log.d("getTMDBConfiguration", "getTMDBConfiguration");
+//
+//
+//        }
     }
 
 

@@ -12,6 +12,7 @@ import com.shamildev.retro.domain.executor.ExecutionThread;
 import com.shamildev.retro.domain.executor.PostExecutionThread;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.params.Discover;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.testdata.TestData;
@@ -150,7 +151,29 @@ public class GetGenreTest {
 
     }
 
+    @Test
+    public void testDiscoverBuilder() throws Exception {
+        String str = "";
 
+
+
+
+        Discover build = new Discover.Builder()
+                .with_people(2342)
+                .or_with_people(2222)
+                .year(2015)
+                .withCast(1231)
+                .withCast(23232)
+                .withGenres(18)
+                .withGenres(12)
+                .or_withGenres(21)
+                .sortBy(Discover.SORT_TYPE.POPULARITY_ASC)
+                .primaryReleaseDateGte("1996-01-01")
+                .primaryReleaseDateLte("1997-01-01")
+                .build();
+        System.out.println(">"+build.getPath());
+
+    }
 
 
 

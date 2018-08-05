@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import dagger.android.DaggerDialogFragment;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.DaggerFragment;
@@ -41,9 +42,7 @@ public abstract class BaseViewFragmentV4<T extends Presenter> extends DaggerFrag
     @Inject
     @Named(BaseFragmentModule.CHILD_FRAGMENT_V4_MANAGER)
     protected FragmentManager childFragmentManager;
-
-
-
+   // private Unbinder viewUnbinder;
 
 
     @Override
@@ -62,7 +61,7 @@ public abstract class BaseViewFragmentV4<T extends Presenter> extends DaggerFrag
          * in a no-UI Fragment. Do feel free to disagree and refactor.
          */
         presenter.onStart(savedInstanceState);
-        //viewUnbinder = ButterKnife.bind(this, getView());
+       // viewUnbinder = ButterKnife.bind(this, getView());
     }
 
     @Override

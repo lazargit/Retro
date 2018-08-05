@@ -7,8 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import com.shamildev.retro.di.scope.PerActivity;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.BaseActivityModule;
+import com.shamildev.retro.ui.home.fragment.gridlist.GridListFragment;
+import com.shamildev.retro.ui.home.fragment.gridlist.GridListFragmentModule;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragmentModule;
+import com.shamildev.retro.ui.home.fragment.view.ImageViewPagerFragment;
+import com.shamildev.retro.ui.home.fragment.view.ImageViewPagerFragmentModule;
+import com.shamildev.retro.ui.home.fragment.watchlist.WatchListFragment;
+import com.shamildev.retro.ui.home.fragment.watchlist.WatchListFragmentModule;
 import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragment;
 import com.shamildev.retro.ui.home.slideshowfragment.modules.SlideShowDialogFragmentModule;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
@@ -25,7 +31,7 @@ import dagger.android.ContributesAndroidInjector;
 
  * Provides WatchList activity dependencies.
  */
-@Module(includes = BaseActivityModule.class)
+@Module(includes = {BaseActivityModule.class})
 public abstract class HomeActivityModule {
 
     /**
@@ -35,6 +41,19 @@ public abstract class HomeActivityModule {
     @PerFragment
     @ContributesAndroidInjector(modules = HomeFragmentModule.class)
     abstract HomeFragment homeFragmentInjector();
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = GridListFragmentModule.class)
+    abstract GridListFragment gridListFragment();
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = WatchListFragmentModule.class)
+    abstract WatchListFragment watchListFragment();
+
+
+    @PerFragment
+    @ContributesAndroidInjector(modules = ImageViewPagerFragmentModule.class)
+    abstract ImageViewPagerFragment imageViewPagerFragment();
 
 
     @PerFragment
@@ -66,4 +85,5 @@ public abstract class HomeActivityModule {
     @Binds
     @PerActivity
     abstract AppCompatActivity activity(HomeActivity activity);
+
 }

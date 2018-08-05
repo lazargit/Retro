@@ -18,7 +18,7 @@ import dagger.android.ContributesAndroidInjector;
 
  * Provides Splashscreen activity dependencies.
  */
-@Module(includes = BaseActivityModule.class)
+@Module(includes = {BaseActivityModule.class})
 public abstract class SplashActivityModule {
 
     /**

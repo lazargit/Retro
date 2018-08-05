@@ -85,7 +85,7 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
 
     @Override
     public void onDoSomething(@IdRes int id) {
-        if (id == R.id.button_fetch_watchlist) {
+      //  if (id == R.id.button_fetch_watchlist) {
 
             Log.d("getTMDBConfiguration", "getTMDBConfiguration");
 
@@ -189,7 +189,7 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
 //                }
 //            });
         }
-    }
+   // }
 
 
 

@@ -19,6 +19,7 @@ public class GlideModule {
     @Provides
     @Singleton
     public Glide glide(Application application) {
+
         return  Glide.get(application);
 
     }

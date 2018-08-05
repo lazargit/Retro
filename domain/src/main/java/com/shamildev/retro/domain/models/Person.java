@@ -2,20 +2,24 @@ package com.shamildev.retro.domain.models;
 
 import com.google.auto.value.AutoValue;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.DomainObjectStorable;
+import com.shamildev.retro.domain.MediaItem;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 
 
 import io.reactivex.annotations.Nullable;
 
+
 /**
  * Created by Schamil Mischijew on 10.12.2017.
  */
 
 @AutoValue
-public abstract class Person implements DomainObject
+public abstract class Person implements DomainObject,MediaItem,Serializable
 {
 
 
@@ -34,15 +38,9 @@ public abstract class Person implements DomainObject
 
 
 
-
-
-
     public static Builder builder() {
         return new AutoValue_Person.Builder();
     }
-
-
-
 
 
     @Override
@@ -56,6 +54,7 @@ public abstract class Person implements DomainObject
     }
 
     public static Person create( Long id, String name, Integer gender, String profilePath, Float popularity, List<DomainObject> knownFor) {
+
         return builder()
                 .id(id)
                 .name(name)
@@ -81,12 +80,46 @@ public abstract class Person implements DomainObject
 
         public abstract Builder knownFor(List<DomainObject> knownFor);
 
-
-
         public abstract Person build();
     }
 
+    @Override
+    public Long itemId() {
+        return null;
+    }
 
+    @Override
+    public String itemTitle() {
+        return name();
+    }
 
+    @Override
+    public Float itemPopularity() {
+        return popularity();
+    }
 
+    @Override
+    public String itemPosterPath() {
+        return profilePath();
+    }
+
+    @Override
+    public String itemBackdropPath() {
+        return profilePath();
+    }
+
+    @Override
+    public Boolean itemIsInWatchList() {
+        return null;
+    }
+
+    @Override
+    public MediaItem itemAddToWatchList() {
+        return null;
+    }
+
+    @Override
+    public MediaItem itemRemoveFromWatchList() {
+        return null;
+    }
 }

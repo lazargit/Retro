@@ -12,7 +12,7 @@ import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.util.Constants;
 
 import java.util.List;
-
+import java.util.Map;
 
 
 import io.reactivex.Flowable;
@@ -61,6 +61,11 @@ public interface RemoteRepository {
      */
    // <V extends DomainObject> Flowable<V> fetchMultiSearch(String quary);
     Flowable<ResultWrapper> fetchMultiSearch(String quary,int page);
+
+
+    Flowable<ResultWrapper> fetchPopularPerson(int page);
+
+    Flowable<ResultWrapper> fetchDiscover(@NonNull Map<String, Object> map , int page);
 
 
     // Single<ResponseMovieDetails> gethMovieWithId(@Nonnull Integer movieId, String language, String appendToResponse);

@@ -14,10 +14,15 @@ import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.response.TVShowResponse;
 
+import java.util.Map;
+
 import io.reactivex.Single;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by Schamil Mischijew on 30.10.2017.
@@ -57,6 +62,28 @@ public interface TMDBServices {
         movie , person, tv
     }
 
+    String POPULARITYASC ="popularity.asc";
+    String POPULARITYDESC ="popularity.desc";
+    String RELEASE_DATEASC = "release_date.asc";
+    String RELEASE_DATEDESC = "release_date.desc";
+
+    enum SORTTYPE {
+
+        POPULARITY_ASC {
+            public String toString() {
+                return POPULARITYASC;
+            }
+        },
+        POPULARITY_DESC {
+            public String toString() {
+                return POPULARITYDESC;
+            }
+        },
+
+        popularity_asc, popularity_desc
+
+
+    }
 
 
     String API_KEY = "api_key";
@@ -66,6 +93,15 @@ public interface TMDBServices {
     String PAGE = "page";
     String MOVIE_ID ="movie_id";
     String TV_ID ="tv_id";
+    String SORTBY ="sort_by";
+
+
+
+
+
+
+
+
 
 
     String INCLUDE_ADULT = "include_adult";
@@ -275,11 +311,29 @@ public interface TMDBServices {
 
 
 
+   // https://api.themoviedb.org/3/person/popular?api_key=96306bc3cc12ed9ef756ba9a85628586&language=de-DE&page=1
+   @GET("3/person/popular")
+   Single<ResponseEntity> fetchPopularPerson(
+           @Query(API_KEY) String apikey,
+           @Query(LANGUAGE) String language,
+           @Query(PAGE) String page
+
+
+   );
+
+//https://api.themoviedb.org/3/discover/movie?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1955-10-22&primary_release_date.lte=1966-10-22
+   // https://api.themoviedb.org/3/discover/movie?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_people=7467
+    @GET("3/discover/movie")
+    Single<ResponseEntity> fetchDiscover(
+            @Query(API_KEY) String apikey,
+            @Query(LANGUAGE) String language,
+            @Query(PAGE) String page,
+            @QueryMap Map<String,Object> map
 
 
 
 
-
+    );
 
 
 }

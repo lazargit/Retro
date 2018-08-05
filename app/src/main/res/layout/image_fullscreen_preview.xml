@@ -14,28 +14,33 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorPrimary"
-        app:backgroundTint="@color/colorPrimaryDark"
+        android:background="@color/brand_primary"
+        android:backgroundTint="@color/brand_primary"
+        app:backgroundTint="@color/brand_primary_dark"
 
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_preview"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewRectItem"
         app:srcCompat="@drawable/ic_bookmark_white_24dp" />
 
-    <ImageView
-        android:id="@+id/image_preview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
 
+    <com.shamildev.retro.retroimage.views.RetroImageView
+        android:id="@+id/imageViewRectItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foregroundGravity="left"
+        android:transitionName="test"
 
         app:layout_constraintBottom_toBottomOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/material_flat" />
+
+
 
 
     <TextView

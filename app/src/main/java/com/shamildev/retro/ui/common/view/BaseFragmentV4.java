@@ -154,6 +154,9 @@ public abstract class BaseFragmentV4 extends Fragment implements HasSupportFragm
     }
 
 
+    public abstract void onBackPressed();
+
+
 
     protected final void addChildFragment(@IdRes int containerViewId, Fragment fragment) {
         childFragmentManager.beginTransaction()

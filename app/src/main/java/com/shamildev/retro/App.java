@@ -16,6 +16,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import timber.log.Timber;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
 /**
@@ -35,12 +36,21 @@ public class App extends Application implements HasActivityInjector {
     public void onCreate() {
         super.onCreate();
         initialiseLogger();
-       DaggerAppComponent.builder().create(this).inject(this);
+        DaggerAppComponent.builder().create(this).inject(this);
 
         Log.d("App","test");
        // boolean debug = BuildConfig.MOVIE_DB_API_TOKEN;
         networkManager.start();
 
+        initCalligraphy();
+    }
+
+    private void initCalligraphy() {
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/ClanPro-Book.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 
 

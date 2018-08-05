@@ -36,5 +36,17 @@
 	</string>
     <string name="activity__home">Home</string>
     <string name="search">Suche</string>
+    <string name="image_description">image</string>
+    <string name="nowplaying">im Kino</string>
+    <string name="nowplayingtv">Serien</string>
+    <string name="upcomming">bald im Kino</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_watchlist">Watchlist</string>
+    <string name="nav_search">Search</string>
+    <string name="activity_gallery">Gallery</string>
+    <string name="lorem_ipsum">khylkhsdklhfklsdklfhklsdhfklhsdklfklhsdklfhlksdhklfhklsdhfklhsdklfhklsdhfklhsdklhfklsdhklfhklsdhfklhsdklvhhfoihewiohowiehcoiwehiohecoihwecioheowifh hhfiowehfiowehfo oihfiowehe wfioheiofh heiofhiowe hf</string>
+    <string name="delete">Delete</string>
+    <string name="activity_mylist">My list</string>
+    <string name="activity_search">Search</string>
 
 </resources>

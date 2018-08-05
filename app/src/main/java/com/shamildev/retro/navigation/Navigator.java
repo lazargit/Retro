@@ -1,5 +1,6 @@
 package com.shamildev.retro.navigation;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
@@ -9,6 +10,8 @@ import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.home.HomeActivity;
+import com.shamildev.retro.ui.mylist.MyListActivity;
+import com.shamildev.retro.ui.search.SearchActivity;
 import com.shamildev.retro.ui.splash.SplashActivity;
 import com.shamildev.retro.ui.watchlist.WatchListActivity;
 
@@ -61,4 +64,20 @@ public final class Navigator {
         }
 
 
+    public void navigateToMyList(Context context) {
+        if (context != null) {
+            Intent intent = MyListActivity.getCallingIntent(context);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
     }
+
+    public void navigateToSearch(Context context) {
+        if (context != null) {
+            Intent intent = SearchActivity.getCallingIntent(context);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+
+    }
+}

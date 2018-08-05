@@ -31,16 +31,32 @@
 
 
         <activity
+            android:name=".ui.gallery.GalleryActivity"
+            android:label="@string/activity_gallery">
+        </activity>
+
+        <activity
             android:name=".ui.details.DetailsActivity"
             android:label="@string/activity__details">
         </activity>
         <activity
             android:name=".ui.home.HomeActivity"
+
             android:label="@string/activity__home">
         </activity>
         <activity
             android:name=".ui.watchlist.WatchListActivity"
             android:label="@string/activity__watchlist">
+        </activity>
+
+        <activity
+            android:name=".ui.mylist.MyListActivity"
+            android:label="@string/activity_mylist">
+        </activity>
+
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:label="@string/activity_search">
         </activity>
 
 

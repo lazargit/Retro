@@ -44,7 +44,7 @@
                 android:paddingLeft="@dimen/movie_title_padding"
                 android:paddingRight="@dimen/movie_title_padding"
                 android:paddingBottom="@dimen/user_rating_padding_bottom"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/brand_accent"
                 android:textSize="@dimen/user_rating"/>
 
         </RelativeLayout>

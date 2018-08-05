@@ -3,6 +3,7 @@ package com.shamildev.retro.domain.config;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ import io.reactivex.annotations.Nullable;
 @Singleton
 public class AppConfig {
 
+
+
     String imageUrl;
 
 
@@ -30,10 +33,19 @@ public class AppConfig {
     public static final String NOWPLAYINGTVKEY = "nowplayingtv";
     public static final String UPCOMMINGKEY = "upcomming";
     public static final String TOPRATEDKEY = "toprated";
+    public static final String POPULARPERSONKEY = "popularperson";
+    public static final String HOMEHEADERKEY = "homeheader";
+    public static final String WATCHLISTKEY = "watchlist";
 
 
-    public AppConfig(String imageUrl) {
-        this.imageUrl = imageUrl;
+
+    private final Pair<Integer, Integer> screenSizes;
+
+
+    public AppConfig(Pair<Integer, Integer> screenSizes) {
+        this.screenSizes = screenSizes;
+
+
     }
 
     public String getImageUrl() {
@@ -61,10 +73,17 @@ public class AppConfig {
     }
 
     public void setWatchList(List<DomainObject> items) {
+
         this.watchList = items;
     }
 
     public List<DomainObject> getWatchList() {
         return watchList;
     }
+
+    public Pair<Integer, Integer> getScreenSize() {
+        return screenSizes;
+    }
+
+
 }

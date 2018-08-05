@@ -7,23 +7,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
 import com.shamildev.retro.R;
-import com.shamildev.retro.domain.models.Movie;
-import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.navigation.Navigator;
 import com.shamildev.retro.ui.common.view.BaseViewFragment;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
+import com.shamildev.retro.util.DeviceUtils;
+import com.shamildev.retro.retroimage.views.RetroImageView;
+import com.shamildev.retro.views.ImageSliderView;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -45,28 +46,63 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
 
     private Unbinder butterKnifeUnbinder;
 
+
+    @BindView(R.id.img_test)
+    ImageView img_test;
+
+    @BindView(R.id.img_slider)
+    ImageSliderView img_slider;
+
+    @BindView(R.id.customimageview_test)
+    RetroImageView customImageView;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View fragmentView = inflater.inflate(R.layout.fragment_splash, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
+        presenter.screenWidth(DeviceUtils.getScreenWidth(application));
         presenter.onStartBootstrap();
+
+        int screenWidth = DeviceUtils.getScreenWidth(application);
+        Log.e("TAG","screenWidth "+screenWidth);
+
+
         return fragmentView;
 
 
 
     }
 
+
     @Override
     public void showSomething(String something) {
         //someText.setText(something);
     }
 
+    @Override
+    public ImageView getImageView() {
+        return img_test;
+    }
+
+    @Override
+    public ImageSliderView getImageSliderView() {
+        return img_slider;
+    }
+
+    @Override
+    public RetroImageView getCustomImageView() {
+        return customImageView;
+    }
 
     @Override
     public void navigateToHome(HashMap<String, ResultWrapper> map) {
-        navigator.navigateToHome(application,map);
+       //navigator.navigateToHome(application,map);
+        // navigator.navigateToMyList(application);
+        navigator.navigateToSearch(application);
     }
 
 

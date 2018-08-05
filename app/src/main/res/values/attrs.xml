@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Options">
+        <attr name="titleText" format="string" localization="suggested" />
+        <attr name="valueColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="RetroImageView">
+        <attr name="showFX" format="boolean" />
+
+
+        <attr name="fx_duration" format="float" />
+
+        <attr name="fx_interpolator" format="float" />
+
+        <attr name="labelPosition" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+    </declare-styleable>
+
+
+</resources>

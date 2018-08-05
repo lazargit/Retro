@@ -71,6 +71,8 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
     public Flowable<Configuration> execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
 
+        System.out.println("### "+appConfig.getScreenSize());
+
         return   fetchConfigurationFromCache()
 
                 .switchIfEmpty(fetchConfigurationFromNet())
@@ -84,7 +86,7 @@ public final class GetTMDBConfiguration implements UseCaseFlowable<ParamsBasic, 
 
 
                 .map(configuration -> fetchConfigurationFromCache().blockingSingle())
-                .map(configuration -> {
+                .map((Configuration configuration) -> {
                     appConfig.setConfigurations(configuration);
                     return configuration;
                 });

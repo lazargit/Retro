@@ -7,7 +7,9 @@ import android.util.Log;
 import com.shamildev.retro.BuildConfig;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
+import com.shamildev.retro.domain.util.Pair;
 import com.shamildev.retro.util.Constants;
+import com.shamildev.retro.util.DeviceUtils;
 
 import java.io.File;
 import java.util.Locale;
@@ -55,9 +57,16 @@ public class ConfigModule extends BaseConfigModule {
 
     @Provides
     @Singleton
-    static AppConfig appConfig() {
-        return new AppConfig("test");
+    static AppConfig appConfig(Application application) {
+
+
+        Pair<Integer, Integer> screenSizes = new Pair<>(DeviceUtils.getScreenWidth(application), DeviceUtils.getScreenHeight(application));
+        Log.e("TAG","appConfig");
+        return new AppConfig(screenSizes);
     }
+
+
+
 
 
     @Provides

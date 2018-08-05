@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -237,14 +238,17 @@ public class WatchListRecycleViewAdapter extends RecyclerView.Adapter<WatchListR
 
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder{
 
 
+        public RelativeLayout viewBackground, viewForeground;
         ImageView imageView;
         TextView textViewTitle;
         public MyViewHolder(View itemView,Glide glide) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.thumbnail);
+            imageView = itemView.findViewById(R.id.thumbnail);
+            viewBackground = itemView.findViewById(R.id.view_background);
+            viewForeground = itemView.findViewById(R.id.view_foreground);
           //  textViewTitle = (TextView) itemView.findViewById(R.id.userrating);
             //https://image.tmdb.org/t/p/original/ogrFPm9i2oVo6CiSXl0XNSPBzjI.jpg
         }

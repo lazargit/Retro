@@ -152,6 +152,12 @@ final class RealmCacheRepository implements CacheRepository {
                             .findAll();
 
                     if (result.size() == 0) {
+                        List<DomainObject> list1 = Observable.fromIterable(result)
+                                .cast(DomainObject.class)
+                                .toList()
+                                .blockingGet();
+
+                        e.onNext(list1);
                         e.onComplete();
                     }else {
 

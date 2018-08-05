@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.models.Movie;
+import com.shamildev.retro.helper.RecyclerItemTouchHelper;
 import com.shamildev.retro.navigation.Navigator;
 import com.shamildev.retro.ui.common.view.BaseViewFragment;
 import com.shamildev.retro.ui.layout.PreCachingGridLayoutManager;
@@ -77,7 +79,7 @@ public final class WatchListFragment extends BaseViewFragment<WatchListPresenter
 
         final View fragmentView = inflater.inflate(R.layout.fragment_watchlist, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
-        setUpRecyclerView();
+        setUpRecyclerView(recyclerView);
         return fragmentView;
 
 
@@ -104,14 +106,14 @@ public final class WatchListFragment extends BaseViewFragment<WatchListPresenter
 
 
 
-    @OnClick(R.id.button_fetch_watchlist)
-    void onButton_start_bootstrap(View view) {
-
-        System.out.println(">>>###>>>"+view.getId());
-
-        presenter.onDoSomething(R.id.button_fetch_watchlist);
-
-    }
+//    @OnClick(R.id.button_fetch_watchlist)
+//    void onButton_start_bootstrap(View view) {
+//
+//        System.out.println(">>>###>>>"+view.getId());
+//
+//        presenter.onDoSomething(R.id.button_fetch_watchlist);
+//
+//    }
 
 
     @Override
@@ -132,11 +134,13 @@ public final class WatchListFragment extends BaseViewFragment<WatchListPresenter
     }
 
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(RecyclerView recyclView) {
+
         watchListRecycleViewAdapter = new WatchListRecycleViewAdapter(movieArrayList, glide, getActivity());
        // LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         // mRecyclerViewHome.setLayoutManager(linearLayoutManager);
-        // mRecyclerViewHome.setHasFixedSize(true);
+        recyclView.setHasFixedSize(true);
+        recyclView.setNestedScrollingEnabled(false);
         //  mRecyclerViewHome.setItemViewCacheSize(20);
         // mRecyclerViewHome.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
@@ -153,16 +157,20 @@ public final class WatchListFragment extends BaseViewFragment<WatchListPresenter
 
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
 
-            recyclerView.setLayoutManager(layoutManager);
+            recyclView.setLayoutManager(layoutManager);
         } else {
             layoutManager = new PreCachingGridLayoutManager(getActivity(),4);
-            recyclerView.setLayoutManager(layoutManager);
+            recyclView.setLayoutManager(layoutManager);
         }
 
         layoutManager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getActivity()));
-        recyclerView.setAdapter(watchListRecycleViewAdapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclView.setAdapter(watchListRecycleViewAdapter);
+        recyclView.setItemAnimator(new DefaultItemAnimator());
 
+
+
+
+        // making http call and fetching menu json
 
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -175,12 +183,12 @@ public final class WatchListFragment extends BaseViewFragment<WatchListPresenter
             }
         };
         // Adds the scroll listener to RecyclerView
-        recyclerView.addOnScrollListener(scrollListener);
-        presenter.onDoSomething(R.id.button_fetch_watchlist);
-        recyclerView.addOnItemTouchListener(
+        recyclView.addOnScrollListener(scrollListener);
+        //presenter.onDoSomething(R.id.button_fetch_watchlist);
+        recyclView.addOnItemTouchListener(
                         new WatchListRecycleViewAdapter.
                         RecyclerTouchListener(application.getApplicationContext(),
-                                                recyclerView,
+                                this.recyclerView,
                                                 new WatchListRecycleViewAdapter.ClickListener(){
 
                                                     @Override

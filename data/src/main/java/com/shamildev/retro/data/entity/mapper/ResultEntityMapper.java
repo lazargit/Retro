@@ -68,45 +68,45 @@ final class ResultEntityMapper implements EntityMapper<ResponseEntity, ResultWra
 
         List<DomainObject> list= new ArrayList<>();
         for (Result item : entity.getResults()){
-
+            Log.e("##**",item.getMediaType()+"---"+item.getName());
            list.add(MediaTypeFactory.create(item,movieEntityMapper,tvShowEntityMapper,personResultEntityMapper ));
         }
 
-        list.forEach(domainObject -> {
-            if(domainObject instanceof Movie){
-               // Log.d("##**",Movie.class.getName());
-            }
-            if(domainObject instanceof TVShow){
-              //  Log.d("##**",TVShow.class.getName());
-            }
-            if(domainObject instanceof Person){
-                Log.e("##**",Person.class.getName());
-                Person person = (Person) domainObject;
-                if(person.knownFor().size()>0){
-                    Log.d("bekannt aus ",":");
-
-
-
-                        for (DomainObject item :person.knownFor()) {
-                                if(item instanceof Movie){
-                                    Movie item1 = (Movie) item;
-                                    Log.d("# ",item1.title());
-                                }
-
-
-
-                        }
-
-
-
-
-                }
-            }
-
-
-           // Log.d("##",domainObject.getClass().getName());
-
-        });
+//        list.forEach(domainObject -> {
+//            if(domainObject instanceof Movie){
+//               // Log.d("##**",Movie.class.getName());
+//            }
+//            if(domainObject instanceof TVShow){
+//              //  Log.d("##**",TVShow.class.getName());
+//            }
+//            if(domainObject instanceof Person){
+//                Log.e("##**",Person.class.getName());
+//                Person person = (Person) domainObject;
+//                if(person.knownFor().size()>0){
+//                    Log.d("bekannt aus ",":");
+//
+//
+//
+//                        for (DomainObject item :person.knownFor()) {
+//                                if(item instanceof Movie){
+//                                    Movie item1 = (Movie) item;
+//                                    Log.d("# ",item1.title());
+//                                }
+//
+//
+//
+//                        }
+//
+//
+//
+//
+//                }
+//            }
+//
+//
+//           // Log.d("##",domainObject.getClass().getName());
+//
+//        });
 
 
 

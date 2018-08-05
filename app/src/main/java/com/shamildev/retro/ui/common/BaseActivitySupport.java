@@ -61,10 +61,28 @@ public abstract class BaseActivitySupport extends AppCompatActivity implements  
 
     protected  void addFragment(@IdRes int containerViewId, Fragment fragment) {
         Log.d("resplace",">>"+fragment.getClass().getSimpleName());
-        fragmentManager.beginTransaction()
+        fragmentManager
+                .beginTransaction()
                 .add(containerViewId,fragment)
                 .commit();
     }
+
+
+    protected  void replaceFragment(@IdRes int containerViewId, Fragment fragment,String tag) {
+        Log.d("replaceFragment",">>"+fragment.getClass().getSimpleName());
+
+        fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,android.R.anim.slide_out_right,android.R.anim.slide_in_left)
+               // .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .replace(containerViewId,fragment,tag)
+                .addToBackStack(tag)
+                .commit();
+
+
+    }
+
+
 
 
     protected  void addFragment(@IdRes int containerViewId, Fragment fragment, @AnimRes int enterAni, @AnimRes int exitAni) {

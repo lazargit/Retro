@@ -320,6 +320,12 @@ public abstract class Movie  implements DomainObject,MediaItem, DomainObjectStor
     public final String itemPosterPath() {
         return posterPath();
     }
+
+    @Override
+    public String itemBackdropPath() {
+        return backdropPath();
+    }
+
     @Override
     public final Float itemPopularity() {
         return popularity();

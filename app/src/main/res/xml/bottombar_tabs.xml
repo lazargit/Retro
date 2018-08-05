@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/nav_home"
+        icon="@drawable/baseline_home_white_24"
+        title="@string/nav_home"
+        inActiveColor="@color/brand_primary"
+        activeColor="@color/brand_primary"
+        barColorWhenSelected="@color/brand_primary"
+        badgeBackgroundColor="@color/brand_primary"
+        badgeHidesWhenActive="true"/>
+    <tab
+        id="@+id/nav_watchlist"
+        icon="@drawable/baseline_bookmarks_white_24"
+        title="@string/nav_watchlist" />
+    <tab
+        id="@+id/nav_search"
+        icon="@drawable/baseline_search_white_24"
+        title="@string/nav_search" />
+
+</tabs>
+

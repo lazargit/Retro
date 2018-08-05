@@ -5,7 +5,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/colorPrimary"
+    android:background="@color/brand_primary"
     app:layout_scrollFlags="scroll|enterAlways"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 

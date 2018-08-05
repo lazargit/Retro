@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.shamildev.retro.R;
@@ -24,12 +26,14 @@ import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.navigation.Navigator;
 import com.shamildev.retro.ui.common.view.BaseViewFragmentV4;
+import com.shamildev.retro.ui.home.fragment.gridlist.GridListFragment;
 import com.shamildev.retro.ui.home.fragment.presenter.HomePresenter;
 import com.shamildev.retro.ui.watchlist.adapter.WatchListRecycleViewAdapter;
 import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
 import com.shamildev.retro.ui.widgets.Search.PaginationScrollListener;
 import com.shamildev.retro.ui.widgets.Search.SearchResultRecycleViewAdapter;
 import com.shamildev.retro.ui.widgets.Search.SearchResultWidget;
+import com.shamildev.retro.ui.widgets.Search.SearchViewWidget;
 import com.shamildev.retro.ui.widgets.Search.presenter.SearchResultPresenter;
 import com.shamildev.retro.util.EndlessRecyclerViewScrollListener;
 
@@ -61,6 +65,7 @@ import static me.everything.android.ui.overscroll.IOverScrollState.STATE_DRAG_ST
  */
 public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultPresenter> implements SearchResultView {
 
+    public static final String TAG = SearchResultFragment.class.getSimpleName();
     private static final String PARAM_MOVIE = "param_movie";
 
 
@@ -78,8 +83,13 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
     @Inject
     Navigator navigator;
 
-    @BindView(R.id.recycler_view_searchresult)
-    RecyclerView recyclerView;
+
+
+//    @BindView(R.id.search_view)
+//    SearchViewWidget searchViewWidget;
+
+//    @BindView(R.id.recycler_view_searchresult)
+//    RecyclerView recyclerView;
 
 
     private Unbinder butterKnifeUnbinder;
@@ -117,7 +127,7 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
         presenter.onSearch(str);
     }
 
-    public static SearchResultFragment with() {
+    public static SearchResultFragment instance() {
         final SearchResultFragment fragment = new SearchResultFragment();
       //  Log.e("FRAGTAG",fragment.getTag());
              // fragment.getTag();
@@ -151,7 +161,25 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
         final View fragmentView = inflater.inflate(R.layout.fragment_searchresult, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
         //setUpRecyclerView();
-        initVerticalRecyclerView(recyclerView);
+       // initVerticalRecyclerView(recyclerView);
+
+
+
+    //    searchViewWidget.setIconifiedByDefault(false);
+//        searchViewWidget.setFocusable(true);
+//        searchViewWidget.setIconified(false);
+//        searchViewWidget.clearFocus();
+//        searchViewWidget.requestFocusFromTouch();
+//        searchViewWidget.requestFocus();
+
+
+
+//        ImageView mCloseButton = (ImageView) searchViewWidget.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+//        mCloseButton.setEnabled(false);
+//        mCloseButton.setImageDrawable(null);
+
+
+       // searchViewWidget.setUpSearchObservable();
         return fragmentView;
 
 
@@ -208,23 +236,23 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
        // LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false);
 
 
-        DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
-        divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.devider_gray));
+       // DividerItemDecoration divider = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+       // divider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.devider_gray));
         // Apply over-scroll in 'advanced form' - i.e. create an instance manually.
 
 
 
 
 
-        if(recyclerView != null) {
-          //  OverScrollDecoratorHelper.setUpOverScroll(recyclerView, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
-          //  recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.addItemDecoration(divider);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setItemViewCacheSize(20);
-            recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-            recyclerView.setAdapter(adapter);
+//        if(recyclerView != null) {
+//          //  OverScrollDecoratorHelper.setUpOverScroll(recyclerView, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
+//          //  recyclerView.setLayoutManager(linearLayoutManager);
+//            recyclerView.addItemDecoration(divider);
+//            recyclerView.setHasFixedSize(true);
+//            recyclerView.setItemViewCacheSize(20);
+//            recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+//            recyclerView.setItemAnimator(new DefaultItemAnimator());
+//            recyclerView.setAdapter(adapter);
 
            /* recyclerView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
                 @Override
@@ -269,9 +297,9 @@ public final class SearchResultFragment extends BaseViewFragmentV4<SearchResultP
 
 
 
-        } else {
-            throw new IllegalStateException("No RecyclerView associated to SearchResultWidget");
-        }
+//        } else {
+//            throw new IllegalStateException("No RecyclerView associated to SearchResultWidget");
+//        }
 
 
     }

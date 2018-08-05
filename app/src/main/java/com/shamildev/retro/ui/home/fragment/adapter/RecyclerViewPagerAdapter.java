@@ -1,9 +1,6 @@
 package com.shamildev.retro.ui.home.fragment.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,28 +12,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.TVShow;
-import com.shamildev.retro.ui.home.fragment.view.ImagePagerFragment;
-import com.shamildev.retro.ui.widgets.Search.SearchResultRecycleViewAdapter;
+
+
+import com.shamildev.retro.retroimage.core.RetroImage;
+import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
+import com.shamildev.retro.retroimage.views.RetroImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -44,6 +32,10 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
+
+
+    private final Fragment fragment;
+    private final RetroImage retroImage;
 
 
     /**
@@ -57,19 +49,20 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
     }
 
 
-    private final RequestManager requestManager;
+
     private  ViewHolderListener viewHolderListener;
     ArrayList<DomainObject> movieItems = new ArrayList<>();
     Context context;
     private final int ITEM_MOVIE = 0, ITEM_SHOW = 1, ITEM_PERSON = 2, ITEM_LOADER = 5;
 
 
-    public RecyclerViewPagerAdapter(ArrayList<DomainObject> items, Context context) {
+    public RecyclerViewPagerAdapter(ArrayList<DomainObject> items, Context context, RetroImage retroImage, Fragment fragment) {
 
+        this.fragment = fragment;
 
         this.movieItems = items;
         this.context = context;
-        this.requestManager = Glide.with(context);
+        this.retroImage = retroImage;
 
 
     }
@@ -81,7 +74,7 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
 
 
         View row = inflater.inflate(R.layout.rect_item_row, parent, false);
-        return new WideItemHolder(row,requestManager);
+        return new WideItemHolder(row);
 
     }
 
@@ -97,40 +90,60 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
     }
 
 
-    private void loadImage(String imagePath, WideItemHolder viewHolder){
+    private void loadImage(MediaItem item, WideItemHolder viewHolder){
 
-        this.requestManager.
-                load("https://image.tmdb.org/t/p/w500/"+imagePath) //TODO dyn. image Path
+        this.retroImage
+                .load(item)
+                .Poster()
+                .w780().into(viewHolder.imageView, new RetroImageRequestListener() {
+                        @Override
+                        public boolean onLoadFailed() {
+                            return false;
+                        }
 
-                .apply(new RequestOptions()
+                        @Override
+                        public boolean onResourceReady() {
+                            fragment.startPostponedEnterTransition();
+                            return false;
 
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                .dontAnimate()
+                        }
+               });
 
 
-//                            .placeholder(R.drawable.movie1)
-//                            .dontAnimate()
+
+//
+//        this.requestManager.
+//                load("https://image.tmdb.org/t/p/w500/"+imagePath) //TODO dyn. image Path
+//
+//                .apply(new RequestOptions()
+//
+//                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+//                                .dontAnimate()
 //
 //
-                                .override(viewHolder.itemView.getWidth(), viewHolder.itemView.getHeight()) // set exact size
-                                .centerCrop()
-                )
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e("TAG","onLoadFailed..");
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-
-                        Log.e("TAG","onResourceReady"+isFirstResource);
-                        return false;
-                    }
-                })
-                .into(viewHolder.imageView);
+////                            .placeholder(R.drawable.movie1)
+////                            .dontAnimate()
+////
+////
+//                                .override(viewHolder.itemView.getWidth(), viewHolder.itemView.getHeight()) // set exact size
+//                                .centerCrop()
+//                )
+//                .transition(DrawableTransitionOptions.withCrossFade())
+//                .listener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        Log.e("TAG","onLoadFailed..");
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//
+//                        Log.e("TAG","onResourceReady"+isFirstResource);
+//                        return false;
+//                    }
+//                })
+//                .into(viewHolder.imageView);
 
 
 
@@ -140,20 +153,22 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
     protected class WideItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
-        ImageView imageView;
+        private final AtomicBoolean enterTransitionStarted;
+        RetroImageView imageView;
         TextView vote;
 
 
-        public WideItemHolder(View itemView, RequestManager requestManager) {
+        public WideItemHolder(View itemView) {
 
 
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.imageViewRectItem);
+            imageView = (RetroImageView) itemView.findViewById(R.id.imageViewRectItem);
             vote = (TextView) itemView.findViewById(R.id.vote);
 
             View viewById = itemView.findViewById(R.id.square_view);
             viewById.setOnClickListener(this);
+            this.enterTransitionStarted = new AtomicBoolean();
 
 
 
@@ -188,42 +203,29 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
 
 
                 if(imagePath!=null) {
-                    loadImage(imagePath, this);
+                    loadImage((MediaItem) movieItems.get(adapterPosition), this);
                     vote.setText(popularity.toString());
 
                 }else{
-                    requestManager
-                            .load(R.drawable.movie1)
-                            .into(imageView);
+//                    requestManager
+//                            .load(R.drawable.movie1)
+//                            .into(imageView);
                 }
 
 
-            imageView.setTransitionName(imagePath);
+         //   imageView.setTransitionName(nameTitle);
 
         }
 
         @Override
         public void onClick(View v) {
             Log.e("onClick","#"+getAdapterPosition());
-           // viewHolderListener.onItemClicked(v, getAdapterPosition());
+         //  viewHolderListener.onItemClicked(v, getAdapterPosition());
 
         }
     }
 
 
-
-    private class ViewHolderListenerImpl {
-
-
-        private final AtomicBoolean enterTransitionStarted;
-
-        public ViewHolderListenerImpl() {
-
-            this.enterTransitionStarted = new AtomicBoolean();
-
-        }
-
-    }
 
 
 

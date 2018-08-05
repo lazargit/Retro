@@ -1,10 +1,17 @@
 package com.shamildev.retro.ui.splash.fragment.presenter;
 
+
+
 import android.support.annotation.IdRes;
+
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import com.shamildev.retro.R;
-import com.shamildev.retro.domain.DomainObject;
+
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.data.net.NetworkManager;
@@ -12,11 +19,13 @@ import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.domain.bootstrap.Bootstrap;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.helper.DataReloading;
+import com.shamildev.retro.domain.helper.ProcessData;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
 
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
 import com.shamildev.retro.domain.interactor.GetNowPlayingTVShows;
+import com.shamildev.retro.domain.interactor.GetPopularPerson;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
@@ -24,16 +33,17 @@ import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.models.Configuration;
-import com.shamildev.retro.domain.models.Movie;
-import com.shamildev.retro.domain.models.MovieWrapper;
-import com.shamildev.retro.domain.models.Person;
 import com.shamildev.retro.domain.models.ResultWrapper;
-import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.util.Pair;
+import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
+import com.shamildev.retro.retroimage.core.RetroImage;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.domain.bootstrap.BootstrapImpl;
+import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
 import com.shamildev.retro.ui.splash.fragment.view.SplashView;
+import com.shamildev.retro.views.ImageSliderView;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,15 +51,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableSource;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.subscribers.DisposableSubscriber;
-import io.realm.Realm;
+
 
 /**
  * Created by Shamil Lazar on 13.12.2017.
@@ -79,29 +82,47 @@ import io.realm.Realm;
         private final GetMovieById getMovieById;
         private final BootstrapImpl bootstrap;
         private final DataConfig dataConfig;
+        private final RequestManager requestManager;
+        private final AppConfig appConfig;
+        private final GetPopularPerson getPopularPerson;
+        private final ArrayList<String> mListTopic = new ArrayList<String>();
+
+
+
+
 
 
 
         @Inject
-        AppConfig appConfig;
+        Glide glide;
+
+
+
         @Inject
         DataReloading dataReloading;
+
+        @Inject
+        RetroImage retroImage;
+
         private ArrayList resultsNowPlaying ,resultsUpComming ;
         private HashMap<String,ResultWrapper> map = new HashMap<>();
-
+        private int screenWidth = 1080;
 
 
         @Inject
-        SplashPresenterImpl(SplashView view,
+        SplashPresenterImpl(
+                            AppConfig appConfig,
+                            SplashView view,
+                            SplashFragment fragment,
                             NetworkManager networkManager,
                             UseCaseHandler useCaseHandler,
-
                             GetTMDBConfiguration getTMDBConfiguration,
                             GetGenre getGenre,
                             GetUpcomingMovies getUpcomingMovies,
                             GetNowPlayingMovies getNowPlayingMovies,
                             GetTopRatedMovies getTopRatedMovies,
                             GetNowPlayingTVShows getNowPlayingTVShows,
+                            GetPopularPerson getPopularPerson,
                             GetMovieById getMovieById,
                             BootstrapImpl bootstrap,
                             DataConfig dataConfig
@@ -111,21 +132,35 @@ import io.realm.Realm;
 
 
             this.useCaseHandler = useCaseHandler;
-
-
             this.getTMDBConfiguration = getTMDBConfiguration;
             this.getGenre = getGenre;
             this.getUpcomingMovies = getUpcomingMovies;
             this.getTopRatedMovies = getTopRatedMovies;
             this.getNowPlayingMovies = getNowPlayingMovies;
             this.getNowPlayingTVShows = getNowPlayingTVShows;
+            this.getPopularPerson = getPopularPerson;
             this.getMovieById = getMovieById;
-
             this.networkManager = networkManager;
             this.networkManager.add(toString(), this::refreshData);
             this.bootstrap = bootstrap;
             this.bootstrap.setUp(this);
             this.dataConfig = dataConfig;
+            this.requestManager = Glide.with(fragment);
+            this.appConfig = appConfig;
+
+
+            this.mListTopic.add(AppConfig.NOWPLAYINGKEY);
+            this.mListTopic.add(AppConfig.NOWPLAYINGTVKEY);
+            this.mListTopic.add(AppConfig.UPCOMMINGKEY);
+            this.mListTopic.add(AppConfig.TOPRATEDKEY);
+            this.mListTopic.add(AppConfig.POPULARPERSONKEY);
+            this.mListTopic.add(AppConfig.HOMEHEADERKEY);
+
+
+
+
+            Log.e("TAG","appconfig "+this.appConfig.getConfigurations());
+
 
 
         }
@@ -347,21 +382,13 @@ import io.realm.Realm;
         @Override
         public void onBootstrapComplete() {
             view.makeToast("Bootstrap Complete");
-            System.out.println("DATACONFIG"+appConfig.getImageUrl());
-            //appConfig.setImageUrl("override test");
-            System.out.println("DATACONFIG"+appConfig.getImageUrl());
 
             if(appConfig.getConfigurations() != null){
-                System.out.println("DATACONFIGURATION"+appConfig.getConfigurations().baseUrl());
+                this.retroImage.setConfigurations(appConfig.getConfigurations());
+
             }
-            if(appConfig.getGenres() != null){
-                System.out.println("DATACONFIGENRES"+appConfig.getGenres().size()+" # "+appConfig.getGenres().get(0).name());
-            }
-            System.out.println("DATACONFIG"+dataConfig.baseUrl());
 
 
-            //loadFirstPage_NowPlaying();
-           // loadFirstPage_NowPlayingTVShows();
             loadWatchList();
 
 
@@ -372,148 +399,411 @@ import io.realm.Realm;
 
         private void loadWatchList(){
             dataReloading.loadMyWatchList();
-            loadFirstPage_NowPlayingTVShows();
 
+
+
+            //  loadHomeHeaderGallery(map);
+
+          // loadFirstPage_NowPlayingTVShows();
+
+
+
+            dataReloading.loadTopics(this.mListTopic,this.map,new DataReloading.LoadTopicsListener(){
+
+
+                @Override
+                public void onDataLoad() {
+                Log.e("SPLASH","TOPICS  LOADED");
+
+                         loadHomeHeaderGallery(map);
+                }
+
+                @Override
+                public void onDataError() {
+
+                }
+            });
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        private void loadHomeHeaderGallery(HashMap<String, ResultWrapper> map){
+        //    List<MediaItem> homeGalleryList = ProcessData.createHomeGalleryList(map);
+            List<MediaItem> homeGalleryList = ProcessData.createTopRatedGalleryList(map);
+
+            ImageSliderView imageSliderView = view.getImageSliderView();
+            Log.e("TAG","homeGalleryList "+homeGalleryList.size());
+
+
+//            this.processImageHelper
+//                    .load(homeGalleryList)
+//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","GALLERY LIST IMAGES LOADED");
+//                        //    view.navigateToHome(map);
+//
+//                            return false;
+//                        }
+//                    })
+//                    .backdrop()
+//                    .high()
+//                    .preload();
+
+        //    loadHomePersonrGallery(map);
+
+//            this.processImageHelper
+//                    .load(homeGalleryList.get(0))
+//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            return false;
+//                        }
+//                    })
+//                    .backdrop()
+//                    .high()
+//                    .into(view.getImageView());
+
+            List<MediaItem> nowplayingList = ProcessData.createNowPlayingGalleryList(map);
+//            this.retroImage
+//                    .load(nowplayingList)
+//                    .poster()
+//                    .huge()
+//                    .preload(new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGE LOAD FAILED.");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","IMAGE LOADED..");
+//                            return false;
+//                        }
+//                    });
+            List<MediaItem> nowplayingList2 = ProcessData.createTopRatedGalleryList(map);
+            this.retroImage
+                    .load(nowplayingList2.get(1))
+                    .Backdrop()
+                    .original()
+                    .into(view.getCustomImageView(),new RetroImageRequestListener() {
+                        @Override
+                        public boolean onLoadFailed() {
+                            Log.e("TAG","IMAGES LOAD FAILED.");
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady() {
+                            Log.e("TAG","ALL IMAGES PRELOADED...!");
+                            return false;
+                        }
+                    });
+
+
+         //   view.getImageSliderView().startSlide(nowplayingList2,this.retroImage);
+
+
+            //https://media.giphy.com/media/87kcVw4PjxGr6/giphy.gif
+//            ArrayList<String> gifUrl = new ArrayList<>();
+//            gifUrl.add("https://i.gifer.com/2Gr0.gif");
+//            gifUrl.add("https://media.giphy.com/media/87kcVw4PjxGr6/giphy.gif");
+//            gifUrl.add("https://media.giphy.com/media/lR8eXSeYUF5vO/giphy.gif");
+//
+//
+//            List<MediaItem> personList = ProcessData.createHomePersonList(map);
+//
+//            this.retroImage
+//                     .load(gifUrl)
+//
+//                     .preload(new RetroImageRequestListener() {
+//                         @Override
+//                         public boolean onLoadFailed() {
+//                             Log.e("TAG","IMAGE LOAD FAILED");
+//                             return false;
+//                         }
+//
+//                         @Override
+//                         public boolean onResourceReady() {
+//                             Log.e("TAG","ALL IMAGES PRELOADED");
+//                             return false;
+//                         }
+//                     });
+
+//            List<MediaItem> personList = ProcessData.createHomePersonList(map);
+//
+//            this.retroImage
+//                    .load(personList)
+//                    .Profile()
+//                    .w632()
+//
+//
+//                    .preload(new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGE LOAD FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","IMAGE  LOAD");
+//                            return false;
+//                        }
+//                    });
+
+//            this.retroImage
+//                    .load(nowplayingList)
+//                    .Poster().w342()
+//                    .preload( new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGE LOAD FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","ALL IMAGES PRELOAD");
+//                            return false;
+//                        }
+//                    });
+
+//            this.retroImage
+//                    .load("https://i.gifer.com/2Gr0.gif")
+//                    .Poster().original()
+//                    .preload( new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGE LOAD FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","ALL IMAGES PRELOAD");
+//                            return false;
+//                        }
+//                    });
+
+
+
+
+
+
+
+
+
+
+//            this.retroImage
+//                    .load("https://i.gifer.com/2Gr0.gif")
+//                    .into(view.getImageView(),new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGE LOAD FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","IMAGE LOADED");
+//                            return false;
+//                        }
+//                    });
+
+
+
+
+
+//            this.retroImage
+//                    .load(homeGalleryList)
+//                    .backdrop()
+//                    .medium()
+//                    .preload(new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGE LOAD FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","IMAGE LOADED");
+//                            return false;
+//                        }
+//                    });
+
+
+
+
+
+//
+//                    .load(gifUrl)
+//                    .into(view.getImageView(),new RetroImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                                      Log.e("TAG","STRING....."+obj+" ");
+//                            return false;
+//                        }
+//                    });
+
+            //                    .load("https://i.gifer.com/2Gr0.gif")
+
+
+
+
+
+
+
+
+
+
+
+
+//            this.processImageHelper
+//                    .load(homeGalleryList.get(10))
+//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            return false;
+//                        }
+//                    })
+//                    .profile()
+//                    .high()
+//                    .into(imageView);
+//
+//                    ;
+//            this.processImageHelper
+//                    .load(homeGalleryList)
+//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGES LOADING FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","ALL IMAGES PRELOADED");
+//                            return false;
+//
+//                        }
+//                    })
+//                    .backdrop()
+//                    .high()
+//                    .preload();
+
+
+
+//            List<MediaItem> nowPlayingGalleryList = ProcessData.createNowPlayingGalleryList(map);
+//
+//            CustomImageView customImageView = view.getCustomImageView();
+//
+//            this.processImageHelper
+//                    .load(nowPlayingGalleryList.get(9))
+//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
+//
+//
+//
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","CUSOM IMAGES LOADING FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","CUSTOM IMAGES LOADED");
+//                            return false;
+//
+//                        }
+//                    })
+//                    .poster()
+//                    .high()
+//                    .into(customImageView);
+
+
+
+//            this.processImageHelper
+//                    .load("https://i.gifer.com/2Gr0.gif")
+//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
+//                        @Override
+//                        public boolean onLoadFailed() {
+//                            Log.e("TAG","IMAGES LOADING FAILED");
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean onResourceReady() {
+//                            Log.e("TAG","ALL IMAGES LOADED");
+//                            return false;
+//
+//                        }
+//                    })
+//                    .gif()
+//                    .into(imageView);
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //view.navigateToHome(map);
 
 
         }
 
-
-
-
-
-        private void loadFirstPage_NowPlayingTVShows(){
-
-            useCaseHandler.execute(getNowPlayingTVShows, GetNowPlayingTVShows.Params.withPage(1),
-
-                    new DisposableSubscriber<ResultWrapper>() {
-                        @Override
-                        public void onNext(ResultWrapper movieWrapper) {
-                            System.out.println("onNext1  :"+movieWrapper.results().size());
-//                            List<DomainObject> list = prepareData(movieWrapper.results());
-//                            System.out.println("onNext2  :"+list.size());
-//                            movieWrapper.results().clear();
-//                            movieWrapper.results().addAll(list);
-                            //  resultsNowPlaying.addAll(movieWrapper.results());
-                             map.put(AppConfig.NOWPLAYINGTVKEY,movieWrapper);
-
-
-
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            System.out.println("onError"+t.getMessage());
-                        }
-
-                        @Override
-                        public void onComplete() {
-                           loadFirstPage_NowPlaying();
-                            System.out.println("onComplete loadFirstPage_NowPlaying");
-                        }
-                    }
-
-
-            );
-
-
-        }
-        private void loadFirstPage_NowPlaying(){
-            resultsNowPlaying = new ArrayList<>();
-            useCaseHandler.execute(getNowPlayingMovies, GetNowPlayingMovies.Params.withPage(1),
-
-                    new DisposableSubscriber<ResultWrapper>() {
-                        @Override
-                        public void onNext(ResultWrapper movieWrapper) {
-                            System.out.println("onNext"+movieWrapper.results().size());
-                           // resultsNowPlaying.addAll(movieWrapper.results());
-                           // map.put(AppConfig.NOWPLAYINGKEY,movieWrapper);
-                            map.put(AppConfig.NOWPLAYINGKEY,movieWrapper);
-
-
-
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            System.out.println("onError"+t.getMessage());
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                          loadFirstPage_UpComming();
-                           // System.out.println("onComplete loadFirstPage_NowPlaying");
-                        }
-                    }
-
-
-            );
-
-        }
-        private void loadFirstPage_UpComming(){
-            resultsUpComming = new ArrayList<>();
-            useCaseHandler.execute(getUpcomingMovies, GetUpcomingMovies.Params.withPage(1),
-
-                    new DisposableSubscriber<ResultWrapper>() {
-                        @Override
-                        public void onNext(ResultWrapper movieWrapper) {
-                            System.out.println("onNext"+movieWrapper.results().size());
-
-                            map.put(AppConfig.UPCOMMINGKEY,movieWrapper);
-
-
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            System.out.println("onError"+t.getMessage());
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            loadFirstPage_TopRated();
-
-                        }
-                    }
-
-
-            );
-
-        }
-        private void loadFirstPage_TopRated(){
-            resultsUpComming = new ArrayList<>();
-            useCaseHandler.execute(getTopRatedMovies, GetTopRatedMovies.Params.withPage(1),
-
-                    new DisposableSubscriber<ResultWrapper>() {
-                        @Override
-                        public void onNext(ResultWrapper movieWrapper) {
-
-
-                            map.put(AppConfig.TOPRATEDKEY,movieWrapper);
-
-
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            System.out.println("onError"+t.getMessage());
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            view.navigateToHome(map);
-                        }
-                    }
-
-
-            );
-
-        }
 
         @Override
         public void onBootstrapError(Throwable t) {
             view.makeToast("Error "+t);
 
+        }
+
+        @Override
+        public void screenWidth(int screenWidth) {
+            this.screenWidth = screenWidth;
         }
     }

@@ -326,6 +326,10 @@ public static TVShow create(Long id, String name, String originalName, String ov
         return posterPath();
     }
     @Override
+    public String itemBackdropPath() {
+        return backdropPath();
+    }
+    @Override
     public final Float itemPopularity() {
         return popularity();
     }

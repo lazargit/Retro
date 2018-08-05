@@ -60,7 +60,7 @@ final class SearchResultPresenterImpl extends BasePresenter<SearchResultView> im
 
     @Override
     public void onDoSomething(@IdRes int id) {
-        if (id == R.id.button_fetch_watchlist) {
+      //  if (id == R.id.button_fetch_watchlist) {
 
             Log.d("getTMDBConfiguration", "getTMDBConfiguration");
 
@@ -163,7 +163,7 @@ final class SearchResultPresenterImpl extends BasePresenter<SearchResultView> im
 //                    Log.d("onComplete", ">>");
 //                }
 //            });
-        }
+      //  }
     }
 
     @Override

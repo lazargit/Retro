@@ -62,10 +62,12 @@ public class SearchViewWidget extends SearchView{
         super(context);
 
 
+
     }
 
     public SearchViewWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
 
     }
 
@@ -113,7 +115,7 @@ public class SearchViewWidget extends SearchView{
         this.clickListener = clickListener;
 
 
-
+        setUpSearchObservable();
 
 
 
@@ -123,6 +125,7 @@ public class SearchViewWidget extends SearchView{
             public void onViewAttachedToWindow(View v) {
                 Log.d("MyTag","Search Expanded");
                clickListener.onExpand(v);
+                setUpSearchObservable();
                // fragment_search = new Fragment_Search();
               //  replaceFragment(fragment_search);
             }

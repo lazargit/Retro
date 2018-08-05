@@ -17,7 +17,12 @@
 package com.shamildev.retro.data.repository;
 
 
+import android.os.Build;
+import android.text.Html;
+import android.util.Log;
+
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.DataConfig;
 
 
@@ -34,7 +39,14 @@ import com.shamildev.retro.domain.models.TVShow;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.Constants;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,6 +58,7 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import retrofit2.http.Url;
 import timber.log.Timber;
 
 
@@ -59,6 +72,9 @@ public final class TMDBRepository implements RemoteRepository{
     private final TMDBServices tmdbServices;
     private final EntityMapperHolder entityMapperHolder;
     private final DataConfig dataConfig;
+    private String decode;
+    private String encode1;
+    private String encode2;
 
     @Inject
     TMDBRepository(@Named("TMDBServices") TMDBServices tmdbServices, EntityMapperHolder entityMapperHolder, DataConfig dataConfig) {
@@ -352,8 +368,66 @@ public final class TMDBRepository implements RemoteRepository{
     }
 
 
+    /*
+   *
+   *TSEARCH
+   */
+    @Override
+    public Flowable<ResultWrapper> fetchPopularPerson(int page) {
+//        return tmdbServices.fetchPopularPerson(dataConfig.authClientSecret(),dataConfig.language(),String.valueOf(page)).toFlowable()
+//
+//                .map(responseEntity ->  entityMapperHolder.resultWrapperEntityMapper().map(responseEntity));
+
+
+        return tmdbServices.fetchPopularPerson(dataConfig.authClientSecret(), dataConfig.language(), String.valueOf(page))
+                .toFlowable()
+                .map(responseEntity1 -> {
+                    Flowable.fromIterable(responseEntity1.getResults())
+                            .map(result -> {
+                                result.setMediaType(Constants.MEDIA_TYPE.PERSON.toString());
+                                return result;
+
+                            }).subscribe();
+
+                    return responseEntity1;
+
+                })
+                .map(responseEntity -> entityMapperHolder.resultWrapperEntityMapper().map(responseEntity));
+
+    }
+
+
+ /*
+   *
+   *DISCOVER
+   */
+
+    @Override
+    public Flowable<ResultWrapper> fetchDiscover(Map<String, Object> map , int page) {
 
 
 
+
+        return  tmdbServices
+                .fetchDiscover(dataConfig.authClientSecret(), dataConfig.language(), String.valueOf(page),map)
+
+
+                .toFlowable()
+                .map(responseEntity1 -> {
+                    Flowable.fromIterable(responseEntity1.getResults())
+                            .map(result -> {
+                                result.setMediaType(Constants.MEDIA_TYPE.MOVIE.toString());
+                                return result;
+
+                            })
+
+                            .subscribe();
+
+                    return responseEntity1;
+
+                })
+                .map(movieWrapperEntity -> entityMapperHolder.resultWrapperEntityMapper().map(movieWrapperEntity));
+
+    }
 
 }

@@ -16,4 +16,5 @@ public interface SplashPresenter extends Presenter {
     void onDoSomething(@IdRes int id);
     void onStartBootstrap();
 
+    void screenWidth(int screenWidth);
 }

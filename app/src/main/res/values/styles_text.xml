@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ClanProBook" parent="android:TextAppearance">
+        <item name="fontPath">fonts/ClanPro-Book.ttf</item>
+    </style>
+
+    <style name="ClanProMedium" parent="android:TextAppearance">
+        <item name="fontPath">fonts/ClanPro-Medium.ttf</item>
+    </style>
+
+</resources>
