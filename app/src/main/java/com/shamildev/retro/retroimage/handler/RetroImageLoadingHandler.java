@@ -56,7 +56,7 @@ public class RetroImageLoadingHandler {
 
 
 
-        Log.e("TAG","<------------------------------------> "+imageRequest.getItems());
+
         if(!imageRequest.getItems().isEmpty()){
             for (Object obj:imageRequest.getItems()){
                 if(!prepareRequest(obj).isEmpty()) {
@@ -65,16 +65,12 @@ public class RetroImageLoadingHandler {
 
             }
         }
-        Log.e("TAG","<------------------------------------> "+map.size());
-        Log.e("TAG","<------------------------------------> ");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             map.forEach((o, s) -> {
 
                  if(imageView instanceof RetroImageView){
-                     Log.e("TAG","<---------RetroImageView-------------> ");
-                             if(imageView instanceof RetroImageView){
 
-                             }
                        this.imageView = (RetroImageView) imageView;
                        this.imageView .getProgressBar().setVisibility(View.VISIBLE);
                        loadFile(o).into(this.imageView .getImageView());

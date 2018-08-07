@@ -17,7 +17,7 @@ import com.shamildev.retro.ui.common.view.BaseViewFragment;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
 import com.shamildev.retro.util.DeviceUtils;
 import com.shamildev.retro.retroimage.views.RetroImageView;
-import com.shamildev.retro.views.ImageSliderView;
+import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 
 import java.util.HashMap;
@@ -47,11 +47,12 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     private Unbinder butterKnifeUnbinder;
 
 
-    @BindView(R.id.img_test)
-    ImageView img_test;
 
-    @BindView(R.id.img_slider)
-    ImageSliderView img_slider;
+   @BindView(R.id.img_slider)
+   ImageSliderView img_slider;
+
+    @BindView(R.id.img_slider2)
+    ImageSliderView img_slider2;
 
     @BindView(R.id.customimageview_test)
     RetroImageView customImageView;
@@ -83,14 +84,15 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
         //someText.setText(something);
     }
 
-    @Override
-    public ImageView getImageView() {
-        return img_test;
-    }
+
 
     @Override
     public ImageSliderView getImageSliderView() {
         return img_slider;
+    }
+    @Override
+    public ImageSliderView getImageSliderView2() {
+        return img_slider2;
     }
 
     @Override

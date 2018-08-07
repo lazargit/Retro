@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.ui.common.view.MVPView;
 import com.shamildev.retro.retroimage.views.RetroImageView;
-import com.shamildev.retro.views.ImageSliderView;
+import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 
 import java.util.HashMap;
@@ -20,9 +20,10 @@ public interface SplashView extends MVPView {
 
     void showSomething(String something);
 
-    ImageView getImageView();
 
     ImageSliderView getImageSliderView();
+
+    ImageSliderView getImageSliderView2();
 
     RetroImageView getCustomImageView();
 

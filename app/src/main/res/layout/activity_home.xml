@@ -26,13 +26,13 @@
             app:collapsedTitleGravity="left"
             >
 
-            <com.shamildev.retro.views.ImageSliderView
+            <com.shamildev.retro.views.retroslider.views.ImageSliderView
                 android:id="@+id/imgsliderview_header"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_collapseMode="parallax"
                 >
-            </com.shamildev.retro.views.ImageSliderView>
+            </com.shamildev.retro.views.retroslider.views.ImageSliderView>
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_height="?attr/actionBarSize"
@@ -142,14 +142,14 @@
     <!--&lt;!&ndash;app:title=""&ndash;&gt;-->
 
 
-    <!--<com.shamildev.retro.views.ImageSliderView-->
-        <!--android:id="@+id/imgsliderview_header"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="180dp"-->
-        <!--app:layout_collapseMode="parallax"-->
-        <!--&gt;-->
+    <!--<com.shamildev.retro.views.retroslider.ImageSliderViewView&ndash;&gt;-->
+        <!--&lt;!&ndash;android:id="@+id/imgsliderview_header"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+        <!--&lt;!&ndash;android:layout_height="180dp"&ndash;&gt;-->
+        <!--&lt;!&ndash;app:layout_collapseMode="parallax"&ndash;&gt;-->
+        <!--&lt;!&ndash;&gt;&ndash;&gt;-->
 
-    <!--</com.shamildev.retro.views.ImageSliderView>-->
+    <!--<!com.shamildev.retro.views.retroslider.ImageSliderViewView>&ndash;&gt;-->
 
 
     <!--<android.support.v7.widget.Toolbar-->

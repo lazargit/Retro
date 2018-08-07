@@ -42,7 +42,7 @@ import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.domain.bootstrap.BootstrapImpl;
 import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
 import com.shamildev.retro.ui.splash.fragment.view.SplashView;
-import com.shamildev.retro.views.ImageSliderView;
+import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 
 import java.util.ArrayList;
@@ -526,8 +526,8 @@ import io.reactivex.subscribers.DisposableSubscriber;
                     });
 
 
-         //   view.getImageSliderView().startSlide(nowplayingList2,this.retroImage);
-
+            view.getImageSliderView().startSlide(nowplayingList,this.retroImage);
+            view.getImageSliderView2().startSlide(nowplayingList2,this.retroImage);
 
             //https://media.giphy.com/media/87kcVw4PjxGr6/giphy.gif
 //            ArrayList<String> gifUrl = new ArrayList<>();

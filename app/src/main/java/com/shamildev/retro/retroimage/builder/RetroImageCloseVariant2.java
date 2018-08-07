@@ -2,7 +2,7 @@ package com.shamildev.retro.retroimage.builder;
 
 import com.shamildev.retro.retroimage.core.RetroImageRequest;
 import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
-import com.shamildev.retro.views.ImageSliderView;
+import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 public class RetroImageCloseVariant2{
 

@@ -5,6 +5,21 @@
         <attr name="valueColor" format="color" />
     </declare-styleable>
 
+
+    <declare-styleable name="ImageSliderView">
+        <attr name="showImageFX" format="boolean" />
+        <attr name="showCircleIndicator" format="boolean" />
+        <attr name="showTitle" format="boolean" />
+        <attr name="pagefx" format="enum">
+            <enum name="Slide" value="0"/>
+            <enum name="FadeOut" value="1"/>
+            <enum name="ZoomOut" value="2"/>
+            <enum name="Pop" value="3"/>
+        </attr>
+
+    </declare-styleable>
+
+
     <declare-styleable name="RetroImageView">
         <attr name="showFX" format="boolean" />
 

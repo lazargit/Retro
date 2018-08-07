@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:id="@+id/view_image_slider_page"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <com.flaviofaria.kenburnsview.KenBurnsView
-        android:id="@+id/image_imgpageslider"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:adjustViewBounds="true"
-        android:layout_gravity="center"
-        android:src="@drawable/london_flat"
+    <!--<com.shamildev.retro.retroimage.views.RetroImageView-->
+        <!--android:id="@+id/image_imgpageslider"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--app:showFX="true"-->
+        <!--android:scaleType="fitXY" >-->
 
-        android:scaleType="fitXY" />
+    <!--</com.shamildev.retro.retroimage.views.RetroImageView>-->
+
 
 
 

@@ -12,25 +12,28 @@
     android:orientation="vertical"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/img_test"
+
+    <com.shamildev.retro.views.retroslider.views.ImageSliderView
+        android:id="@+id/img_slider2"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="@drawable/london_flat"
+        android:layout_height="200dp"
+        app:showImageFX="true"
+        app:pagefx="Pop"
+        app:showCircleIndicator="false"
+        app:showTitle="true">
 
-        />
+    </com.shamildev.retro.views.retroslider.views.ImageSliderView>
 
-    <com.shamildev.retro.views.ImageSliderView
-
+    <com.shamildev.retro.views.retroslider.views.ImageSliderView
         android:id="@+id/img_slider"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="?android:selectableItemBackground"
-        android:onClick="onClicked"
+        android:layout_height="200dp"
+        app:showImageFX="false"
+        app:pagefx="FadeOut"
+        app:showCircleIndicator="false"
+        app:showTitle="true">
 
-        >
-
-    </com.shamildev.retro.views.ImageSliderView>
+    </com.shamildev.retro.views.retroslider.views.ImageSliderView>
 
     <com.shamildev.retro.retroimage.views.RetroImageView
         android:id="@+id/customimageview_test"

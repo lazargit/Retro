@@ -29,7 +29,7 @@ import com.shamildev.retro.ui.home.fragment.view.HomeFragment;
 import com.shamildev.retro.ui.home.fragment.watchlist.WatchListFragment;
 import com.shamildev.retro.ui.widgets.Search.SearchViewWidget;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
-import com.shamildev.retro.views.ImageSliderView;
+import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 
 import java.util.HashMap;
