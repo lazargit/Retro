@@ -66,7 +66,8 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
         final View fragmentView = inflater.inflate(R.layout.fragment_splash, container, false);
         butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
         presenter.screenWidth(DeviceUtils.getScreenWidth(application));
-        presenter.onStartBootstrap();
+      //  presenter.onStartBootstrap();
+        presenter.initTables();
 
         int screenWidth = DeviceUtils.getScreenWidth(application);
         Log.e("TAG","screenWidth "+screenWidth);

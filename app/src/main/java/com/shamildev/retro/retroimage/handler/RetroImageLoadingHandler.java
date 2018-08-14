@@ -93,7 +93,7 @@ public class RetroImageLoadingHandler {
 
 
     private void imageLoadSuccessful(Drawable resource, Object obj) {
-        Log.e("TAG","imageLoadSuccessful "+map.size()+" # "+obj.hashCode());
+     //   Log.e("TAG","imageLoadSuccessful "+map.size()+" # "+obj.hashCode());
 
         if(this.imageView != null) {
             this.imageView.getProgressBar().setVisibility(View.GONE);
@@ -125,7 +125,7 @@ public class RetroImageLoadingHandler {
             String path="";
 
 
-            Log.e("TAG","MEDIAITEM.....TYPE"+this.imageRequest.getImageType()+" ,,,,,,,,,, "+this.imageRequest.getImageSizeSetting()+" ");
+           // Log.e("TAG","MEDIAITEM.....TYPE"+this.imageRequest.getImageType()+" ,,,,,,,,,, "+this.imageRequest.getImageSizeSetting()+" ");
                 switch (this.imageRequest.getImageType()){
                     case POSTER:
                         if(item.itemPosterPath()!=null)

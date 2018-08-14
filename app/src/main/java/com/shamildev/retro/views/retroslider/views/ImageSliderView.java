@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.MediaItem;
@@ -30,6 +32,9 @@ import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
 import com.shamildev.retro.retroimage.views.RetroImageView;
 import com.shamildev.retro.ui.widgets.Search.SearchResultRecycleViewAdapter;
 import com.shamildev.retro.ui.widgets.Search.SearchViewWidget;
+import com.shamildev.retro.views.retroslider.transformation.FadeOutTransformation;
+import com.shamildev.retro.views.retroslider.transformation.PopTransformation;
+import com.shamildev.retro.views.retroslider.transformation.ZoomOutTransformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +67,14 @@ public class ImageSliderView extends RelativeLayout {
     private boolean mShowTitle;
     private boolean mShowCircleIndicator;
     private int mPagefx;
-    private long DURATION = 800;
+    private long DURATION = 400;
+    private long DELAY = 5000;
+    private int oldDragPosition = 0;
+    private long PERIOD = 5000;
+    private List<MediaItem> itemList;
+    private Handler handler;
+    private Runnable Update;
+    private Timer swipeTimer;
 
     public interface Listener {
         void onNextPage();
@@ -100,6 +112,7 @@ public class ImageSliderView extends RelativeLayout {
 
     public ImageSliderView(Context context) {
         super(context);
+
         init(null);
     }
 
@@ -135,6 +148,7 @@ public class ImageSliderView extends RelativeLayout {
         mPager =  findViewById(R.id.pager_image_slider);
         mCircleIndicator =  findViewById(R.id.indicator);
         mProgessBar =  findViewById(R.id.progressBar);
+
         if(!mShowCircleIndicator){
             mCircleIndicator.setVisibility(GONE);
         }
@@ -169,12 +183,12 @@ public class ImageSliderView extends RelativeLayout {
 
     public void startSlide(List<MediaItem> itemList, RetroImage retroImage) {
 
-
+          this.itemList = itemList;
           this.retroImage = retroImage;
-
-        retroImage.load(itemList)
+          this.mProgessBar.setVisibility(VISIBLE);
+          retroImage.load(itemList)
                 .Backdrop()
-                .w780()
+                .w1280()
                 .preload(new RetroImageRequestListener() {
                     @Override
                     public boolean onLoadFailed() {
@@ -205,13 +219,22 @@ public class ImageSliderView extends RelativeLayout {
 
 
 
+        // Auto start of viewpager
+        start();
+
 
     }
-    private int oldDragPosition = 0;
+
 
     private void setPager(List<MediaItem> itemList){
-         mPager.setAdapter(new ImageSliderAdapter(getContext(),itemList));
 
+
+
+         this.mProgessBar.setVisibility(GONE);
+         mPager.setClipToPadding(false);
+         mPager.setOffscreenPageLimit(itemList.size()-1);
+         mPager.setAdapter(new ImageSliderAdapter(getContext(),itemList));
+         mCircleIndicator.setViewPager(mPager);
 
         if(mPagefx == FX_FADEOUT){
             mPager.setPageTransformer(false, new FadeOutTransformation());
@@ -235,6 +258,7 @@ public class ImageSliderView extends RelativeLayout {
              switch(motionEvent.getAction()){
                  case MotionEvent.ACTION_MOVE:
                      Log.e("ACTION","ACTION_MOVE");
+                     stop();
                      return false; //This is important, if you return TRUE the action of swipe will not take place.
                  case MotionEvent.ACTION_DOWN:
                      TOUCH = true;
@@ -242,6 +266,7 @@ public class ImageSliderView extends RelativeLayout {
                      break;
                  case MotionEvent.ACTION_UP:
                      TOUCH = false;
+                     start();
                      Log.e("ACTION","ACTION_UP");
                      break;
              }
@@ -257,12 +282,19 @@ public class ImageSliderView extends RelativeLayout {
 
 
 
-         mCircleIndicator.setViewPager(mPager);
 
 
-        // Auto start of viewpager
-        final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
+
+
+
+
+    }
+
+
+    private void start(){
+
+        handler = new Handler();
+        Update = new Runnable() {
             public void run() {
                 if(!TOUCH) {
                     animatePagerTransition(DIRECTION, itemList.size());
@@ -270,17 +302,22 @@ public class ImageSliderView extends RelativeLayout {
 
             }
         };
-        Timer swipeTimer = new Timer();
+        swipeTimer = new Timer();
         swipeTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-
                 handler.post(Update);
             }
-        }, 5000, 5000);
+        }, DELAY, PERIOD);
+    }
 
-
-
+    private void stop(){
+        if(swipeTimer!=null){
+            swipeTimer.cancel();
+        }
+        if(handler!=null) {
+            handler = null;
+        }
     }
 
 
@@ -292,6 +329,9 @@ public class ImageSliderView extends RelativeLayout {
             pagerAnimation.cancel();
         }
         pagerAnimation = getPagerTransitionAnimation(forward, pageCount);
+
+
+
         if (mPager.beginFakeDrag()) {    // checking that started drag correctly
             pagerAnimation.start();
         }
@@ -302,12 +342,11 @@ public class ImageSliderView extends RelativeLayout {
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                Log.e("TAG","onAnimationStart");
+
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-
                 oldDragPosition = 0;
                 if(((mPager.getCurrentItem()+1)>=pageCount) && DIRECTION)  {
                     DIRECTION = !DIRECTION;
@@ -315,24 +354,21 @@ public class ImageSliderView extends RelativeLayout {
                 if((mPager.getCurrentItem()==0) && !DIRECTION)  {
                     DIRECTION = !DIRECTION;
                 }
-                Log.e("TAG",DIRECTION+" onAnimationEnd "+mPager.getCurrentItem());
-                mPager.endFakeDrag();
+
+                if (mPager.isFakeDragging()) mPager.endFakeDrag();
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
                 oldDragPosition = 0;
-
-
-                mPager.endFakeDrag();
+                if (mPager.isFakeDragging()) mPager.endFakeDrag();
 
             }
-
             @Override
             public void onAnimationRepeat(Animator animation) {
                 mPager.endFakeDrag();
                 oldDragPosition = 0;
-                mPager.beginFakeDrag();
+                if (mPager.isFakeDragging()) mPager.beginFakeDrag();
             }
         });
 
@@ -349,69 +385,13 @@ public class ImageSliderView extends RelativeLayout {
         });
 
         animator.setDuration(DURATION); // remove divider if you want to make each transition have the same speed as single page transition
-        //animator.setRepeatMode(0);
-        Log.e("TAG","oldDragPosition "+oldDragPosition);
         return animator;
     }
 
 
-    public class FadeOutTransformation implements ViewPager.PageTransformer{
-        @Override
-        public void transformPage(View page, float position) {
-
-            page.setTranslationX(-position*page.getWidth());
-
-            page.setAlpha(1-Math.abs(position));
 
 
-        }
-    }
-    public class ZoomOutTransformation implements ViewPager.PageTransformer {
 
-        private static final float MIN_SCALE = 0.65f;
-        private static final float MIN_ALPHA = 0.3f;
-
-        @Override
-        public void transformPage(View page, float position) {
-
-            if (position <-1){  // [-Infinity,-1)
-                // This page is way off-screen to the left.
-                page.setAlpha(0);
-
-            }
-            else if (position <=1){ // [-1,1]
-
-                page.setScaleX(Math.max(MIN_SCALE,1-Math.abs(position)));
-                page.setScaleY(Math.max(MIN_SCALE,1-Math.abs(position)));
-                page.setAlpha(Math.max(MIN_ALPHA,1-Math.abs(position)));
-
-            }
-            else {  // (1,+Infinity]
-                // This page is way off-screen to the right.
-                page.setAlpha(0);
-
-            }
-
-
-        }
-    }
-    public class PopTransformation implements ViewPager.PageTransformer {
-        @Override
-        public void transformPage(View page, float position) {
-
-            page.setTranslationX(-position * page.getWidth());
-
-            if (Math.abs(position) < 0.5) {
-                page.setVisibility(View.VISIBLE);
-                page.setScaleX(1 - Math.abs(position));
-                page.setScaleY(1 - Math.abs(position));
-            } else if (Math.abs(position) > 0.5) {
-                page.setVisibility(View.GONE);
-            }
-
-
-        }
-    }
 
     public class ImageSliderAdapter extends PagerAdapter {
 
@@ -437,13 +417,20 @@ public class ImageSliderView extends RelativeLayout {
 
 
 
+
         @Override
         public Object instantiateItem(ViewGroup view, int position) {
+
+            MediaItem mediaItem = images.get(position);
+
+
 
             View myImageLayout = inflater.inflate(R.layout.view_image_slider_page, view, false);
          //   RetroImageView myImage =  myImageLayout.findViewById(R.id.image_imgpageslider);
 
-            FrameLayout view_image_slider_page = myImageLayout.findViewById(R.id.view_image_slider_page);
+            RelativeLayout view_image_slider_page = myImageLayout.findViewById(R.id.view);
+
+            TextView textView = myImageLayout.findViewById(R.id.title);
 
 
             RetroImageView retroImageView = new RetroImageView(getContext(),mShowImageFX);
@@ -452,47 +439,45 @@ public class ImageSliderView extends RelativeLayout {
             view_image_slider_page.addView(retroImageView);
             view.addView(myImageLayout, 0);
 
-
-
-            retroImage.load(images.get(position))
-                    .Backdrop()
-                    .w780()
-                    .into(retroImageView,new RetroImageRequestListener() {
-                        @Override
-                        public boolean onLoadFailed() {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady() {
-
-                            return false;
-                        }
-                    });
-
-//            retroImage
-//                    .load(images.get(position))
-//                    .listener(new ProcessImageHelper.ProcessImageRequestListener() {
-//                        @Override
-//                        public boolean onLoadFailed() {
-//                            Log.e("TAG","IMAGES LOADING FAILED");
-//                            return false;
-//                        }
+//            TextView textView = new TextView(getContext());
+//            LayoutParams layoutParamsTextView = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 //
-//                        @Override
-//                        public boolean onResourceReady() {
-//                            Log.e("TAG","IMAGE 4 LOADED");
-//                            myImage.setTag("load");
+//            layoutParamsTextView.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            textView.setText(mediaItem.itemTitle());
+//            textView.setShadowLayer(3, 1, 1,  getResources().getColor(R.color.grey_500));
+//            textView.setLayoutParams(layoutParamsTextView);
 //
-//                            return false;
+////            textView.setTextSize(16);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                textView.setTextAppearance(R.style.WalkWayBold);
+//            }else{
+//                textView.setTextAppearance(getContext(),R.style.WalkWayBold);
+//            }
 //
-//                        }
-//                    })
-//                    .backdrop()
-//                    .high()
-//                    .into(myImage);
+//
+//            view_image_slider_page.addView(textView);
+            Log.e("TAG","instantiateItem");
 
-         // myImage.setImageResource(images.get(position));
+
+
+                retroImage.load(images.get(position))
+                        .Backdrop()
+                        .w1280()
+                        .into(retroImageView, new RetroImageRequestListener() {
+                            @Override
+                            public boolean onLoadFailed() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady() {
+
+                                return false;
+                            }
+                        });
+
+
+
 
             return myImageLayout;
         }

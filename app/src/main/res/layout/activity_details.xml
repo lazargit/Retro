@@ -96,7 +96,7 @@
                         android:fontFamily="sans-serif-light"
                         android:text="The Dark Knight"
                         android:textAlignment="viewStart"
-                        android:textAppearance="@style/TextAppearance.Header"
+
                         android:textColor="@color/black_text"
                         android:textColorLink="@color/black_text"
                         android:textStyle="bold" />

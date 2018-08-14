@@ -2,6 +2,7 @@
 <resources>
 
 
+    <color name="title_stripe_color">#d8232222</color>
 
 
     <color name="red_50">#ffebee</color>
@@ -289,4 +290,7 @@
     <color name="white_text_secondary">#b3ffffff</color>
     <color name="white_text">#ffffff</color>
     <color name="transparent">#00000000</color>
+
+    <color name="grey_alpha_50">#80424242</color>
+
 </resources>

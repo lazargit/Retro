@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
-
-import com.shamildev.retro.data.DataModule;
 import com.shamildev.retro.data.net.NetworkManager;
-import com.shamildev.retro.domain.DomainModule;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
-
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import timber.log.Timber;
@@ -36,21 +32,34 @@ public class App extends Application implements HasActivityInjector {
     public void onCreate() {
         super.onCreate();
         initialiseLogger();
+        initCalligraphy();
         DaggerAppComponent.builder().create(this).inject(this);
 
         Log.d("App","test");
        // boolean debug = BuildConfig.MOVIE_DB_API_TOKEN;
         networkManager.start();
 
-        initCalligraphy();
+
     }
 
     private void initCalligraphy() {
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/ClanPro-Book.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+                        .setDefaultFontPath("fonts/ClanPro-Book.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                       // .addCustomViewWithSetTypeface(CustomViewWithTypefaceSupport.class)
+                       // .addCustomStyle(TextField.class, R.attr.textFieldStyle)
+                        .build());
+
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//         //       .setDefaultFontPath("fonts/ClanPro-Book.ttf")
+//                .setDefaultFontPath("fonts/Walkway_Bold.ttf")
+//
+//                .setFontAttrId(R.attr.fontPath)
+//            //    .addCustomViewWithSetTypeface(CustomViewWithTypefaceSupport.class)
+//             //   .addCustomStyle(TextField.class, R.attr.textFieldStyle)
+//                .build()
+      //  );
     }
 
 

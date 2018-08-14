@@ -332,6 +332,12 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 
         @Override
+        public void initTables() {
+
+        }
+
+
+        @Override
         public void onStartBootstrap() {
 
             GetTMDBConfiguration.Params params = GetTMDBConfiguration.Params.withCacheTime(1);
@@ -806,4 +812,6 @@ import io.reactivex.subscribers.DisposableSubscriber;
         public void screenWidth(int screenWidth) {
             this.screenWidth = screenWidth;
         }
+
+
     }

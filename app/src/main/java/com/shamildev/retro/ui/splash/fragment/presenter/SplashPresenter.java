@@ -17,4 +17,7 @@ public interface SplashPresenter extends Presenter {
     void onStartBootstrap();
 
     void screenWidth(int screenWidth);
+
+    void initTables();
+
 }
