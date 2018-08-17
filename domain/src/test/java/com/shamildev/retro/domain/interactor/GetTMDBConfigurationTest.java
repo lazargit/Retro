@@ -258,11 +258,6 @@ public class GetTMDBConfigurationTest {
 
 
 
-
-
-
-
-
         Flowable<Configuration> configurationFlowableRepoData = TestData.REPO_TMDB_CONFIGURATION_DATA(classLoader);
 
 

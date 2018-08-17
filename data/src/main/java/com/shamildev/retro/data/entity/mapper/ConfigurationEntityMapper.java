@@ -17,6 +17,7 @@
 package com.shamildev.retro.data.entity.mapper;
 
 
+import com.google.gson.JsonObject;
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.domain.models.Configuration;
 
@@ -28,7 +29,7 @@ import dagger.Reusable;
  * Maps {@link ConfigurationResponseEntity} to {@link Configuration} .
  */
 @Reusable
-final class ConfigurationEntityMapper implements EntityMapper<ConfigurationResponseEntity, Configuration> {
+final class ConfigurationEntityMapper implements EntityMapper<ConfigurationResponseEntity, Configuration>{
 
 
 
@@ -60,4 +61,6 @@ final class ConfigurationEntityMapper implements EntityMapper<ConfigurationRespo
         return null;
 
     }
+
+
 }

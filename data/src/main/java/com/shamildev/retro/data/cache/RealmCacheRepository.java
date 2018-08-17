@@ -202,34 +202,22 @@ final class RealmCacheRepository implements CacheRepository {
 
     @Override
     public Completable saveGenre(final Genre genreModel) {
+
         final GenreRealm realmObj = realmMapperHolder.genreRealmMapper().map(genreModel);
                          realmObj.setLast_update(DateUtil.NOW());
-
         return Completable.create(e -> {
 
             try (Realm realm = realmProvider.get()) {
                 realm.executeTransaction(realm1 -> {
-
                     realm1.insertOrUpdate(realmObj);
                     e.onComplete();
                 });
             }
 
         });
-
-//        return Completable.create(e -> {
-//            Realm realm = realmProvider.get();
-//            realm.beginTransaction();
-//
-//            realm.copyToRealmOrUpdate(realmObj);
-//
-//            realm.commitTransaction();
-//            e.onComplete();
-//            realm.close();
-//
-//        });
-
     }
+
+
 
     @Override
     public Flowable<List<Genre>> fetchGenre(final Constants.MEDIA_TYPE mediaType, final String language) {
@@ -341,7 +329,6 @@ final class RealmCacheRepository implements CacheRepository {
 
     @Override
     public Completable saveTMDbConfiguration(Configuration configuration) {
-        Log.d("TAG", "saveTMDbConfiguration");
 
 
 
@@ -358,29 +345,26 @@ final class RealmCacheRepository implements CacheRepository {
             realm.close();
 
         });
-
-//        return Completable.create(e -> {
-//            Log.d("TAG", "saveTMDbConfiguration RX");
-//            try (Realm realm = realmProvider.get()) {
-//                if(!realm.isInTransaction()) {
-//                    realm.executeTransaction(realm1 -> {
-//
-//                        realm1.insertOrUpdate(realmObj);
-//
-//
-//                    });
-//                }
-//
-//            }
-//            e.onComplete();
-//        });
-
-
-
     }
 
+    @Override
+    public Completable insertTMDbConfiguration(Configuration configuration,Long date) {
+        TMDbConfigurationRealm realmObj = realmMapperHolder.configurationRealmMapper().map(configuration);
+        realmObj.setLast_update(date);
 
-//    public <T extends DomainObjectStorable> Observable<T> save(T object, Class<T> clazz) {
+
+        return Completable.create(e -> {
+            Realm realm = realmProvider.get();
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(realmObj);
+            realm.commitTransaction();
+            e.onComplete();
+            realm.close();
+
+        });
+    }
+
+    //    public <T extends DomainObjectStorable> Observable<T> save(T object, Class<T> clazz) {
 //        Realm realm = this.realmProvider.get();
 //
 //        long id;

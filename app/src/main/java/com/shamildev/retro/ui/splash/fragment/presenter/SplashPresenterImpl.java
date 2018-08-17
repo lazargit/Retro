@@ -2,6 +2,7 @@ package com.shamildev.retro.ui.splash.fragment.presenter;
 
 
 
+import android.app.Application;
 import android.support.annotation.IdRes;
 
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.bumptech.glide.RequestManager;
 
 import com.shamildev.retro.R;
 
+import com.shamildev.retro.domain.DomainObjectStorable;
 import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
@@ -29,6 +31,7 @@ import com.shamildev.retro.domain.interactor.GetPopularPerson;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
+import com.shamildev.retro.domain.interactor.InitTables;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.di.scope.PerFragment;
@@ -45,12 +48,15 @@ import com.shamildev.retro.ui.splash.fragment.view.SplashView;
 import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 
@@ -86,16 +92,15 @@ import io.reactivex.subscribers.DisposableSubscriber;
         private final AppConfig appConfig;
         private final GetPopularPerson getPopularPerson;
         private final ArrayList<String> mListTopic = new ArrayList<String>();
-
-
-
-
-
+        private final InitTables initTables;
 
 
         @Inject
         Glide glide;
 
+
+        @Inject
+        Application application;
 
 
         @Inject
@@ -116,6 +121,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
                             SplashFragment fragment,
                             NetworkManager networkManager,
                             UseCaseHandler useCaseHandler,
+                            InitTables initTables,
                             GetTMDBConfiguration getTMDBConfiguration,
                             GetGenre getGenre,
                             GetUpcomingMovies getUpcomingMovies,
@@ -132,6 +138,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 
             this.useCaseHandler = useCaseHandler;
+            this.initTables = initTables;
             this.getTMDBConfiguration = getTMDBConfiguration;
             this.getGenre = getGenre;
             this.getUpcomingMovies = getUpcomingMovies;
@@ -334,6 +341,32 @@ import io.reactivex.subscribers.DisposableSubscriber;
         @Override
         public void initTables() {
 
+
+
+            Log.e("TAG","INITTABLES ");
+            useCaseHandler.execute(initTables, InitTables.Params.withCacheTime(1), new DisposableSubscriber<DomainObjectStorable>() {
+                @Override
+                public void onNext(DomainObjectStorable item) {
+
+                    if(item instanceof Genre) {
+                        Log.e("TAG", "INITTABLES " + ((Genre) item).name());
+                    }
+                    if(item instanceof Configuration) {
+                        Log.e("TAG", "INITTABLES " + ((Configuration) item).baseUrl());
+                    }
+
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Log.e("TAG","ERROR"+t);
+                }
+
+                @Override
+                public void onComplete() {
+                    Log.e("TAG","onComplete");
+                }
+            });
         }
 
 

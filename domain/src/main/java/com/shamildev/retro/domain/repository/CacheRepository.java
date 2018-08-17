@@ -28,6 +28,7 @@ public interface CacheRepository {
 
     Flowable<Configuration> fetchConfiguration();
     Completable saveTMDbConfiguration(Configuration configuration);
+    Completable insertTMDbConfiguration(Configuration configuration,Long date);
 
 
 

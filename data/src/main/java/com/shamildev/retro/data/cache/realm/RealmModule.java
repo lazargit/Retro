@@ -34,7 +34,7 @@ public class RealmModule {
        // builder = builder.deleteRealmIfMigrationNeeded();
         // Realm.deleteRealm(builder.build());
 
-         }
+          }
         return builder.build();
     }
 

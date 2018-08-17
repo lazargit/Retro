@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.data;
+package com.shamildev.retro.data.local;
+import com.shamildev.retro.data.cache.realm.RealmModule;
+import com.shamildev.retro.data.cache.realm.mapper.RealmMapperModule;
+import com.shamildev.retro.data.local.load.LocalLoaderModule;
+import com.shamildev.retro.domain.repository.LocalRepository;
 
-
-import com.shamildev.retro.data.cache.CacheModule;
-import com.shamildev.retro.data.local.LocalModule;
-import com.shamildev.retro.data.repository.RepositoryModule;
-
+import dagger.Binds;
 import dagger.Module;
+import dagger.Reusable;
+
 
 /**
- * Provides data dependencies.
+ * Provides entity dependencies.
  */
-@Module(includes = {
-        RepositoryModule.class,
-        CacheModule.class,
-        LocalModule.class
 
 
+@Module( includes = {
+        RealmModule.class,
+        RealmMapperModule.class,
+        LocalLoaderModule.class
 })
-public abstract class DataModule {
+public abstract class LocalModule {
 
-
+    @Binds
+    @Reusable
+    abstract LocalRepository cacheRepository(LocalCacheRepository repository);
 
 
 }
+
