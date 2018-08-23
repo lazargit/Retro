@@ -3,6 +3,7 @@ package com.shamildev.retro.navigation;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.shamildev.retro.di.scope.ApplicationScope;
 import com.shamildev.retro.domain.models.Movie;
@@ -45,6 +46,9 @@ public final class Navigator {
         }
 
       public void navigateToHome(Context context, HashMap<String,ResultWrapper> map) {
+
+          Log.e("TAG","navigateToHome>>> "+context);
+
         if (context != null) {
             Intent intent = HomeActivity.getCallingIntent(context, map);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

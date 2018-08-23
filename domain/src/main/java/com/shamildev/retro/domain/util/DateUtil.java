@@ -33,6 +33,22 @@ public class DateUtil {
         return formatter.format(calendar.getTime()); //DateFormat.format("dd/MM/yyyy hh:mm:ss", dateInMilliseconds).toString();
     }
 
+//    public static Long convertDateToTimestamp(long dateInMilliseconds) {
+//
+//        Calendar calendar = new GregorianCalendar();
+//        calendar.setTimeInMillis(dateInMilliseconds);
+//        java.text.DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss z", Locale.GERMANY);
+//
+//        formatter.setCalendar(calendar);
+//
+//        // System.out.println(formatter.format(calendar.getTime()));
+//
+//
+//        return formatter.format(calendar.getTime()); //DateFormat.format("dd/MM/yyyy hh:mm:ss", dateInMilliseconds).toString();
+//    }
+
+
+
     public static long dateDifInMinutes(long a, long b) {
 
         return TimeUnit.MILLISECONDS.toMinutes((a-b));
@@ -76,7 +92,7 @@ public class DateUtil {
                 System.out.println("isCacheTimeExpired"+true);
                 return Flowable.just(true);
             }
-
+            System.out.println("isCacheTimeExpired"+false);
             return Flowable.just(false);
 
 

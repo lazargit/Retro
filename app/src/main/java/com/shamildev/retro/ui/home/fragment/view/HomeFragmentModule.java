@@ -23,7 +23,7 @@ import dagger.android.ContributesAndroidInjector;
 
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar.
 
  * Provides Splashfragment dependencies.
  */

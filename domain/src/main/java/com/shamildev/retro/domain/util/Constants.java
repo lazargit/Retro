@@ -48,7 +48,7 @@ public abstract class Constants {
         GSON = gsonBuilder.create();
     }
 
-    public static  enum MEDIA_TYPE {
+    public  enum MEDIA_TYPE {
 
         MOVIE {
             public String toString() {
@@ -72,7 +72,7 @@ public abstract class Constants {
     }
 
 
-    public static  enum APPEND_TO_RESPONSE {
+    public  enum APPEND_TO_RESPONSE {
 //videos,images,trailers,similar_movies,release_dates,changes,credits,reviews,keywords,lists,translations,recommendations
         IMAGES {
             public String toString() {

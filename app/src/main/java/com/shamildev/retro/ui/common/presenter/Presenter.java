@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar
  *
  *
  * A presenter that defines its own lifecycle methods.

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.navigation.Navigator;
+import com.shamildev.retro.retrovideo.view.RetroVideoView;
 import com.shamildev.retro.ui.common.view.BaseViewFragment;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
 import com.shamildev.retro.util.DeviceUtils;
@@ -31,7 +32,7 @@ import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar.
 
  * A fragment implementation of {@link SplashView}.
  */
@@ -44,12 +45,9 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     @Inject
     Application application;
 
-    private Unbinder butterKnifeUnbinder;
 
-
-
-   @BindView(R.id.img_slider)
-   ImageSliderView img_slider;
+    @BindView(R.id.img_slider)
+    ImageSliderView img_slider;
 
     @BindView(R.id.img_slider2)
     ImageSliderView img_slider2;
@@ -57,25 +55,14 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     @BindView(R.id.customimageview_test)
     RetroImageView customImageView;
 
-
+    @BindView(R.id.splashbg)
+    RetroImageView splashbg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        final View fragmentView = inflater.inflate(R.layout.fragment_splash, container, false);
-        butterKnifeUnbinder = ButterKnife.bind(this, fragmentView);
-        presenter.screenWidth(DeviceUtils.getScreenWidth(application));
-      //  presenter.onStartBootstrap();
-        presenter.initTables();
-
-        int screenWidth = DeviceUtils.getScreenWidth(application);
-        Log.e("TAG","screenWidth "+screenWidth);
-
-
-        return fragmentView;
-
-
+        Log.e("onCreateView","SplashFragment");
+        return inflater.inflate(R.layout.fragment_splash, container, false);
 
     }
 
@@ -102,10 +89,15 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     }
 
     @Override
+    public RetroImageView getSplashBg() {
+        return splashbg;
+    }
+
+    @Override
     public void navigateToHome(HashMap<String, ResultWrapper> map) {
-       //navigator.navigateToHome(application,map);
+      navigator.navigateToHome(application,map);
         // navigator.navigateToMyList(application);
-        navigator.navigateToSearch(application);
+        // navigator.navigateToSearch(application);
     }
 
 

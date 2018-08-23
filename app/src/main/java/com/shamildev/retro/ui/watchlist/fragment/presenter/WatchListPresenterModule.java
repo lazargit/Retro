@@ -1,6 +1,7 @@
 package com.shamildev.retro.ui.watchlist.fragment.presenter;
 
 import com.shamildev.retro.di.scope.PerFragment;
+import com.shamildev.retro.ui.watchlist.fragment.model.WatchListModelModule;
 
 import dagger.Binds;
 import dagger.Module;
@@ -10,7 +11,9 @@ import dagger.Module;
  */
 
 
-@Module
+@Module(includes = {
+        WatchListModelModule.class
+})
 public abstract class WatchListPresenterModule {
 
     @Binds

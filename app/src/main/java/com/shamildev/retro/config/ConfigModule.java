@@ -48,8 +48,10 @@ public class ConfigModule extends BaseConfigModule {
         return  BASE_CONFIG_BUILDER
                 .debug(BuildConfig.DEBUG)
                 .authClientSecret(BuildConfig.MOVIE_DB_API_TOKEN)
+                .youtubeKey(BuildConfig.YOUTUBE_API_TOKEN)
                 .language( Locale.getDefault().toString().replace('_','-'))
                 .country(Locale.getDefault().getCountry())
+                .maxCacheTime(1440)
                 .build();
     }
 
@@ -59,10 +61,10 @@ public class ConfigModule extends BaseConfigModule {
     @Singleton
     static AppConfig appConfig(Application application) {
 
-
         Pair<Integer, Integer> screenSizes = new Pair<>(DeviceUtils.getScreenWidth(application), DeviceUtils.getScreenHeight(application));
         Log.e("TAG","appConfig");
-        return new AppConfig(screenSizes);
+        return new AppConfig(screenSizes,DeviceUtils.isFirstLaunch(application));
+
     }
 
 
@@ -76,7 +78,13 @@ public class ConfigModule extends BaseConfigModule {
     }
 
     @Provides
+    @Named("isFirstStart")
+    boolean provideIsFirstStart(Application context) {
 
+        return DeviceUtils.isFirstLaunch(context);
+    }
+
+    @Provides
     @Named("cacheSize")
     long provideCacheSize() {
         return Constants.CACHE_SIZE;
@@ -108,6 +116,8 @@ public class ConfigModule extends BaseConfigModule {
     File provideCacheDir(Application context) {
         return context.getCacheDir();
     }
+
+
 
 
 }

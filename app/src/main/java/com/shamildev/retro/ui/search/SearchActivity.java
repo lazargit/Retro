@@ -235,7 +235,7 @@ public class SearchActivity extends BaseActivitySupport {
                                             @Override
                                             public void onSearch(String txt) {
                                                 Log.e("<ON SEARCH>","#"+txt);
-                                               // SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+                                               // YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 
 
                                                // searchResultFragment.doSearch(txt);
@@ -245,7 +245,7 @@ public class SearchActivity extends BaseActivitySupport {
 
                                             @Override
                                             public void onStartSearchLoading() {
-                                                  // SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+                                                  // YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 
 
                                                    // searchResultFragment.startSearchLoading();
@@ -255,7 +255,7 @@ public class SearchActivity extends BaseActivitySupport {
 
                                             @Override
                                             public void onEmpty() {
-//                                                SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //                                                if(searchResultFragment!=null) {
 //                                                    searchResultFragment.notSearch();
@@ -281,8 +281,8 @@ public class SearchActivity extends BaseActivitySupport {
                                             public void onExpand(View view) {
                                                 Log.e("<ON EXPAND>","#"+view);
                                                 replaceFragment(R.id.fragmentContainer,SearchFragment.instance(),SearchFragment.TAG);
-                                              //  replaceFragment(R.id.fragmentContainer,SearchResultFragment.instance(),SearchResultFragment.TAG);
-                                               // addFragment(R.id.fragmentContainer, SearchResultFragment.instance(),R.anim.enter_from_right,R.anim.exit_to_right);
+                                              //  replaceFragment(R.id.fragmentContainer,YoutubePlayerFragment.instance(),YoutubePlayerFragment.TAG);
+                                               // addFragment(R.id.fragmentContainer, YoutubePlayerFragment.instance(),R.anim.enter_from_right,R.anim.exit_to_right);
 
 
                                             }

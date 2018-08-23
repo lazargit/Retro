@@ -13,6 +13,7 @@ import com.shamildev.retro.domain.executor.ExecutionThread;
 
 import com.shamildev.retro.domain.executor.PostExecutionThread;
 import com.shamildev.retro.retroimage.core.ProcessImageModule;
+import com.shamildev.retro.retrovideo.core.VideoPlayerModule;
 import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.details.DetailsActivityModule;
 import com.shamildev.retro.ui.home.HomeActivity;
@@ -46,6 +47,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
                 ConfigModule.class,
                 GlideModule.class,
                 ProcessImageModule.class,
+                VideoPlayerModule.class,
                 NetworkMangerModule.class,
                 DataModule.class,
                 ExecutorModule.class,

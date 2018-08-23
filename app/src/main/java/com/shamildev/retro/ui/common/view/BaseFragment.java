@@ -1,7 +1,7 @@
 package com.shamildev.retro.ui.common.view;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar.
  */
 
 import android.app.Activity;
@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -122,6 +123,8 @@ public abstract class BaseFragment extends Fragment implements HasFragmentInject
          * called with a non-null View.
          */
         viewUnbinder = ButterKnife.bind(this, getView());
+        Log.e("BaseFragment","onViewStateRestored "+viewUnbinder.toString());
+
     }
 
     @Override

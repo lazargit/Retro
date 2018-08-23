@@ -38,12 +38,12 @@ public abstract class DataConfig {
      */
     public static Builder builder() {
 
-
-
         return new AutoValue_DataConfig.Builder();
     }
 
     public abstract String baseUrl();
+
+    public abstract String youtubeKey();
 
     public abstract String authGrantType();
 
@@ -66,6 +66,12 @@ public abstract class DataConfig {
     public abstract String language();
 
     public abstract String country();
+
+
+    public abstract int maxCacheTime();
+
+    @Nullable
+    public abstract Long lastUpdate();
 
     @Nullable
     public abstract Configuration configurations();
@@ -110,13 +116,16 @@ public abstract class DataConfig {
                     .debug(this.debug())
                     .language(this.language())
                     .country(this.country())
+                    .maxCacheTime(this.maxCacheTime())
+                    .lastUpdate(this.lastUpdate())
                     .configurations(this.configurations())
                     .genres(this.genres());
     }
 
-    public static DataConfig create(String baseUrl, String authGrantType, String authClientId, String authClientSecret, String cacheRootDir, String cacheDir, int cacheMaxSizeMb, int offlineCacheTimeDays, int networkCacheTimeSeconds, boolean debug, String language, String country, Configuration configurations, List<Genre> genres) {
+    public static DataConfig create(String baseUrl, String youtubeKey, String authGrantType, String authClientId, String authClientSecret, String cacheRootDir, String cacheDir, int cacheMaxSizeMb, int offlineCacheTimeDays, int networkCacheTimeSeconds, boolean debug, String language, String country, int maxCacheTime, Long lastUpdate, Configuration configurations, List<Genre> genres) {
         return builder()
                 .baseUrl(baseUrl)
+                .youtubeKey(youtubeKey)
                 .authGrantType(authGrantType)
                 .authClientId(authClientId)
                 .authClientSecret(authClientSecret)
@@ -128,6 +137,8 @@ public abstract class DataConfig {
                 .debug(debug)
                 .language(language)
                 .country(country)
+                .maxCacheTime(maxCacheTime)
+                .lastUpdate(lastUpdate)
                 .configurations(configurations)
                 .genres(genres)
                 .build();
@@ -171,7 +182,15 @@ public abstract class DataConfig {
 
         public abstract Builder genres(List<Genre> genres);
 
+        public abstract Builder lastUpdate(Long lastUpdate);
+
+        public abstract Builder maxCacheTime(int maxCacheTime);
+
+        public abstract Builder youtubeKey(String youtubeKey);
+
         public abstract DataConfig build();
+
+
     }
 
 

@@ -10,6 +10,7 @@ import com.shamildev.retro.domain.helper.DataReloading;
 import com.shamildev.retro.domain.interactor.GetMyWatchList;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.fragment.adapter.ViewPagerAdapter;
+import com.shamildev.retro.ui.mylist.fragment.model.MyListModel;
 import com.shamildev.retro.ui.mylist.fragment.view.MyListView;
 
 
@@ -28,7 +29,7 @@ import io.reactivex.Observable;
  * An implementation of {@link com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter}.
  */
 @PerFragment
-public class MyListPresenterImpl extends BasePresenter<MyListView> implements MyListPresenter {
+public class MyListPresenterImpl extends BasePresenter<MyListView, MyListModel> implements MyListPresenter {
 
 
 
@@ -46,11 +47,12 @@ public class MyListPresenterImpl extends BasePresenter<MyListView> implements My
 
     @Inject
     MyListPresenterImpl(MyListView view,
+                        MyListModel model,
                         AppConfig appConfig,
                         UseCaseHandler useCaseHandler,
                         GetMyWatchList getMyWatchList ,
                         DataReloading dataReloading) {
-        super(view);
+        super(view,model);
 
 
 

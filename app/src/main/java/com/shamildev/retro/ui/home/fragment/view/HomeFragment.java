@@ -144,25 +144,25 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 
 
 
-        map = (HashMap<String, ResultWrapper> ) getArguments().getSerializable(PARAM_MOVIE);
-        resultNowplaying = map.get(AppConfig.NOWPLAYINGKEY);
-        resultNowplayingTv = map.get(AppConfig.NOWPLAYINGTVKEY);
-        resultUpcomming = map.get(AppConfig.UPCOMMINGKEY);
-
-
-
-
-
-
-        if(view.findViewById(R.id.recyclerViewTeaser) !=null){
-            RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTeaser);
-            setupRecyclerView(recyclerView,resultNowplaying);
-        }
-
-        View nowplayingtv = view.findViewById(R.id.home_nowplayingtv);
-        RecyclerView recyclerView = nowplayingtv.findViewById(R.id.recyclerViewTeaser);
-
-        setupRecyclerView(recyclerView,resultNowplayingTv);
+//        map = (HashMap<String, ResultWrapper> ) getArguments().getSerializable(PARAM_MOVIE);
+//        resultNowplaying = map.get(AppConfig.NOWPLAYINGKEY);
+//        resultNowplayingTv = map.get(AppConfig.NOWPLAYINGTVKEY);
+//        resultUpcomming = map.get(AppConfig.UPCOMMINGKEY);
+//
+//
+//
+//
+//
+//
+//        if(view.findViewById(R.id.recyclerViewTeaser) !=null){
+//            RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTeaser);
+//            setupRecyclerView(recyclerView,resultNowplaying);
+//        }
+//
+//        View nowplayingtv = view.findViewById(R.id.home_nowplayingtv);
+//        RecyclerView recyclerView = nowplayingtv.findViewById(R.id.recyclerViewTeaser);
+//
+//        setupRecyclerView(recyclerView,resultNowplayingTv);
 
 
 

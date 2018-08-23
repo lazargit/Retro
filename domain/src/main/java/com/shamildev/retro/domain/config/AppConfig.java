@@ -20,7 +20,7 @@ import io.reactivex.annotations.Nullable;
 public class AppConfig {
 
 
-
+    private  Boolean firststart;
     String imageUrl;
 
 
@@ -42,8 +42,9 @@ public class AppConfig {
     private final Pair<Integer, Integer> screenSizes;
 
 
-    public AppConfig(Pair<Integer, Integer> screenSizes) {
+    public AppConfig(Pair<Integer, Integer> screenSizes,Boolean firststart) {
         this.screenSizes = screenSizes;
+        this.firststart = firststart;
 
 
     }
@@ -86,4 +87,7 @@ public class AppConfig {
     }
 
 
+    public Boolean isFirstStart() {
+        return this.firststart;
+    }
 }

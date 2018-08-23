@@ -10,11 +10,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.shamildev.retro.R;
+import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.MediaItem;
+import com.shamildev.retro.domain.config.AppConfig;
+import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.helper.ProcessData;
 import com.shamildev.retro.domain.interactor.GetMultiSearch;
@@ -29,6 +36,7 @@ import com.shamildev.retro.ui.home.fragment.view.HomeFragment;
 import com.shamildev.retro.ui.home.fragment.watchlist.WatchListFragment;
 import com.shamildev.retro.ui.widgets.Search.SearchViewWidget;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
+import com.shamildev.retro.ui.widgets.youtubeplayer.view.YoutubePlayerFragment;
 import com.shamildev.retro.views.retroslider.views.ImageSliderView;
 
 
@@ -72,6 +80,10 @@ public class HomeActivity extends BaseActivitySupport {
     // Determines the scroll UP/DOWN offset
     private int scrollingOffset;
 
+    private YouTubePlayerSupportFragment youTubePlayerFragment;
+    //youtube player to play video when new video selected
+    private YouTubePlayer youTubePlayer;
+
     SearchViewWidget searchView;
 
 
@@ -82,12 +94,17 @@ public class HomeActivity extends BaseActivitySupport {
     @Inject
     RetroImage retroImage;
 
+    @Inject
+    DataConfig dataConfig;
 
-    @BindView(R.id.imgsliderview_header)
-    ImageSliderView imgsliderHeader;
+
+//    @BindView(R.id.imgsliderview_header)
+//    ImageSliderView imgsliderHeader;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.img_slider)
+    ImageSliderView img_slider;
 
 
 
@@ -110,22 +127,26 @@ public class HomeActivity extends BaseActivitySupport {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("SearchActivity","onCreate");
+        Log.e("HomeActivity","onCreate");
         super.onCreate(savedInstanceState);
         //ActivityCompat.postponeEnterTransition(this);
         setContentView(R.layout.activity_home);
         butterKnifeUnbinder = ButterKnife.bind(this);
 
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN|WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
 
 
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .add(R.id.fragmentContainer, WatchListFragment.instance(),WatchListFragment.TAG)
-//                .addToBackStack(WatchListFragment.TAG)
-//                .commit();
+
+
+
+       getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragmentContainer, YoutubePlayerFragment.instance(),YoutubePlayerFragment.TAG)
+                .addToBackStack(WatchListFragment.TAG)
+                .commit();
 
        // this.requestManager = Glide.with( this);
        //setSupportActionBar(toolBar);
@@ -133,14 +154,11 @@ public class HomeActivity extends BaseActivitySupport {
 
 
 
-        initializeActivity(savedInstanceState);
+      // initializeActivity(savedInstanceState);
+
+       // initializeYoutubePlayer();
 
     }
-
-    /**
-     * Initializes this activity.
-     */
-
 
     private void initializeActivity(Bundle savedInstanceState) {
 
@@ -149,6 +167,10 @@ public class HomeActivity extends BaseActivitySupport {
             this.map = (HashMap<String,ResultWrapper>)  getIntent().getSerializableExtra(INTENT_EXTRA_PARAM_MOVIE1);
             initImghHeader(map);
 
+
+
+
+
 //            FragmentManager fragmentManager = getSupportFragmentManager();
 //            fragmentManager
 //                    .beginTransaction()
@@ -156,7 +178,7 @@ public class HomeActivity extends BaseActivitySupport {
 //                    .commit();
 
             //  addFragment(R.id.fragmentContainer, HomeFragment.with(map));
-        replaceFragment(R.id.fragmentContainer,HomeFragment.with(map),HomeFragment.TAG);
+       // replaceFragment(R.id.fragmentContainer,HomeFragment.with(map),HomeFragment.TAG);
 
 
 
@@ -182,7 +204,7 @@ public class HomeActivity extends BaseActivitySupport {
 //                }
 //                if (tabId == R.id.nav_search) {
 //
-//                    loadFragment(SearchResultFragment.instance());
+//                    loadFragment(YoutubePlayerFragment.instance());
 //                    // The tab with id R.id.tab_favorites was selected,
 //                    // change your content accordingly.
 //                }
@@ -216,7 +238,8 @@ public class HomeActivity extends BaseActivitySupport {
 
 
         List<MediaItem> homeGalleryList = ProcessData.createTopRatedGalleryList(hashMap);
-        imgsliderHeader.startSlide(homeGalleryList,retroImage);
+      //  imgsliderHeader.startSlide(homeGalleryList,retroImage);
+        img_slider.startSlide(homeGalleryList,retroImage);
 
 
 
@@ -338,7 +361,7 @@ public class HomeActivity extends BaseActivitySupport {
 //                                            @Override
 //                                            public void onSearch(String txt) {
 //                                                Log.e("<ON SEARCH>","#"+txt);
-//                                                SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //
 //                                                searchResultFragment.doSearch(txt);
@@ -348,7 +371,7 @@ public class HomeActivity extends BaseActivitySupport {
 //
 //                                            @Override
 //                                            public void onStartSearchLoading() {
-//                                                   SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                   YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //
 //                                                    searchResultFragment.startSearchLoading();
@@ -358,7 +381,7 @@ public class HomeActivity extends BaseActivitySupport {
 //
 //                                            @Override
 //                                            public void onEmpty() {
-//                                                SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //                                                if(searchResultFragment!=null) {
 //                                                    searchResultFragment.notSearch();
@@ -370,7 +393,7 @@ public class HomeActivity extends BaseActivitySupport {
 //                                            public void onHide(View view) {
 //                                                Log.e("<ON HIDE>","#"+view);
 //
-//                                                removeFragment("SearchResultFragment", R.anim.enter_from_right,R.anim.exit_to_right);
+//                                                removeFragment("YoutubePlayerFragment", R.anim.enter_from_right,R.anim.exit_to_right);
 //                                                //toolBar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
 //
 //
@@ -382,7 +405,7 @@ public class HomeActivity extends BaseActivitySupport {
 //                                            @Override
 //                                            public void onExpand(View view) {
 //                                                Log.e("<ON EXPAND>","#"+view);
-//                                                addFragment(R.id.fragmentContainer, SearchResultFragment.instance(),R.anim.enter_from_right,R.anim.exit_to_right);
+//                                                addFragment(R.id.fragmentContainer, YoutubePlayerFragment.instance(),R.anim.enter_from_right,R.anim.exit_to_right);
 //                                                searchView.setUpSearchObservable();
 //
 //                                            }

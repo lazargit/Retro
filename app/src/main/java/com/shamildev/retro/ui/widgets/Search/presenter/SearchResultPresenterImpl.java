@@ -3,25 +3,17 @@ package com.shamildev.retro.ui.widgets.Search.presenter;
 import android.support.annotation.IdRes;
 import android.util.Log;
 
-import com.shamildev.retro.R;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.interactor.GetMultiSearch;
-import com.shamildev.retro.domain.interactor.GetMyWatchList;
-import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
-import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
-import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.models.ResultWrapper;
-import com.shamildev.retro.domain.responsemodels.Response;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
-import com.shamildev.retro.ui.home.fragment.view.HomeView;
 import com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter;
+import com.shamildev.retro.ui.widgets.Search.model.SearchResultModel;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultView;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
@@ -33,7 +25,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
  * An implementation of {@link WatchListPresenter}.
  */
 @PerFragment
-final class SearchResultPresenterImpl extends BasePresenter<SearchResultView> implements SearchResultPresenter {
+final class SearchResultPresenterImpl extends BasePresenter<SearchResultView,SearchResultModel> implements SearchResultPresenter {
 
 
 
@@ -47,9 +39,10 @@ final class SearchResultPresenterImpl extends BasePresenter<SearchResultView> im
 
     @Inject
     SearchResultPresenterImpl(SearchResultView view,
+                              SearchResultModel model,
                               UseCaseHandler useCaseHandler,
                               GetMultiSearch getMultiSearch) {
-        super(view);
+        super(view,model);
         this.useCaseHandler = useCaseHandler;
         this.getMultiSearch = getMultiSearch;
 

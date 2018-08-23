@@ -16,11 +16,6 @@
 
 package com.shamildev.retro.domain.interactor;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.shamildev.retro.domain.DomainObjectStorable;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.domain.models.Configuration;
@@ -31,32 +26,39 @@ import com.shamildev.retro.domain.repository.LocalRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 import com.shamildev.retro.domain.util.Constants;
 import com.shamildev.retro.domain.util.DateUtil;
-import com.shamildev.retro.domain.util.StreamJsonFile;
 
-import java.io.InputStream;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
+import io.reactivex.FlowableEmitter;
+
 import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Use case for getting a businesses with a given id.
  */
-public final class InitTables implements UseCaseFlowable<ParamsBasic,DomainObjectStorable> {
+public final class InitTables implements UseCaseFlowable<ParamsBasic,String> {
 
     private final RemoteRepository repository;
     private final CacheRepository cache;
     private final LocalRepository local;
     private DataConfig dataConfig;
-    private ClassLoader classLoader;
+    private String[] taskArray = new String[]{"init configuration","init genres"};
+    private String[] anArray = new String[]{"en-US","de-DE","fr-FR"};
+
 
     @Inject
     AppConfig appConfig;
+
+
 
 
     @Inject
@@ -68,190 +70,121 @@ public final class InitTables implements UseCaseFlowable<ParamsBasic,DomainObjec
     }
 
 
-    //return a single symbol from the list of symbols, or an error to catch if not.
-    private Flowable<Configuration> lookupStockSymbol() {
 
 
 
-        return   repository.fetchConfiguration()
-                 .flatMap(this::saveToCache)
 
-                ;
-    }
 
     @Override
-    public Flowable<DomainObjectStorable> execute(ParamsBasic params) {
+    public Flowable<String> execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
+         String pLanguage = ((Params) params).language;
 
-//       saveToCache(this.local.streamJsonCongiguration().blockingSingle())
-//
-//       .subscribeOn();
-      return this.local.streamJsonCongiguration()
-                .cast(Configuration.class)
-                .flatMap(this::saveToCache)
-                .flatMap(s->local.streamJsonGenres().doOnNext(d->this.saveToCache((Genre) d)))
+        String language = !Arrays.asList(anArray).contains(pLanguage) ? anArray[0] : pLanguage;
 
 
 
+        // aBoolean -> (aBoolean) ? fetchAllGenreFromNet() : fetchAllGenreFromCache(language))
 
-
-                ;
-
-       // return this.local.streamJsonCongiguration();
-
-
-//        return   fetchConfigurationFromCache()
-//
-//                .switchIfEmpty(fetchConfigurationFromNet())
-//                .map(configuration -> {
-//
-//                    if(DateUtil.isCacheTimeExpired(configuration, cacheTime).blockingSingle()){
-//                        return fetchConfigurationFromNet().blockingSingle();
-//                    }
-//                    return configuration;
-//                })
-//
-//
-//                .map(configuration -> fetchConfigurationFromCache().blockingSingle())
-//                .map((Configuration configuration) -> {
-//                    appConfig.setConfigurations(configuration);
-//                    return configuration;
-//                });
-
-
-
-    }
-
-    public Flowable<Genre> saveToCache(Genre genreModel ) {
-
-        return Flowable.defer(() -> {
-
-            try {
-
-                return Flowable.just(genreModel)
-                        .flatMap(genreMod -> Flowable.just(genreMod)
-                                .flatMapCompletable(cache::saveGenre)
-                                .toFlowable()
-                                .startWith(genreMod)
-
-                        ).cast(Genre.class);
-
-            } catch (Exception e) {
-
-                return Flowable.error(e);
-
-            }
-        });
-    }
-
-
-    public Flowable<Configuration> saveToCache(Configuration model ) {
-        System.out.println("saveToCache"+model.baseUrl());
-        return   Flowable.defer(() -> {
-            try {
-                return Flowable.just(model)
-                                .flatMap(configModel -> Flowable.just(configModel)
-                                                                .flatMapCompletable(configuration -> cache.insertTMDbConfiguration(model, DateUtil.NOW()))
-                                                              //  .flatMapCompletable(cache::saveTMDbConfiguration)
-                                                                .toFlowable()
-                                                                .startWith(configModel)
-
-                                ).cast(Configuration.class);
-
-            } catch (Exception e) {
-
-                return Flowable.error(e);
-
-            }
-        });
-
-
-    }
-    public Flowable<Configuration> fetchConfigurationFromNet() {
-        System.out.println("fetchConfigurationFromNet");
-
-
-        return    repository.fetchConfiguration()
-                  .flatMap(this::saveToCache)
-
-                ;
-
-
-    }
-
-
-    public Flowable<Configuration> fetchConfigurationFromCache() {
-        System.out.println("fetchConfigurationFromCache");
-
-        return  cache.fetchConfiguration()
-                .subscribeOn(Schedulers.computation())
-                ;
-
-    }
-
-
-
-//    <K extends Entity, V extends DomainObject> List<V> mapToV(EntityMapper<K, V> entityMapper,
-//                                                              List<K> kList) throws MappingError {
-//        List<V> vList = new ArrayList<>(kList.size());
-//        for (K k : kList) {
-//            vList.add(entityMapper.map(k));
+//        if(!Arrays.asList(anArray).contains(language)){
+//            language = anArray[0];
 //        }
-//        return vList;
-//    }
-public Flowable<List<Genre>> streamData(ClassLoader classLoader, String language){
 
-    InputStream inputStream = classLoader.getResourceAsStream("GenreMovieTestData.json");
-    String s = StreamJsonFile.stream(inputStream);
-    if(s.length()>0){
-        JsonParser jsonParser = new JsonParser();
-        JsonArray arrayFromString = jsonParser.parse(s).getAsJsonArray();
-        List<Genre> genres = Observable.fromIterable(arrayFromString)
-                .map(new Function<JsonElement, Genre>() {
-                    @Override
-                    public Genre apply(JsonElement jsonElement) throws Exception {
+        System.out.println("execute: " + Thread.currentThread().getName());
 
-                        JsonObject provider = jsonElement.getAsJsonObject();
-                        return Genre.builder()
-                                .id(provider.get("id").getAsInt())
-                                .name(provider.get("name").toString())
-                                .type(Constants.MEDIA_TYPE.MOVIE.toString())
-                                .lastUpdate(0L)
-                                .language(language)
-                                .build();
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.set(Calendar.MONTH, 8); // Months are 0-based!
+        currentDate.set(Calendar.DAY_OF_MONTH, 16); // Clearer than DATE
+        currentDate.set(Calendar.YEAR, 2018); // Clearer than DATE
 
-                    }
-                }).toList().blockingGet();
+        java.text.DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss z", Locale.GERMANY);
 
-        return Flowable.fromArray(genres);
+       String finalLanguage = language;
+
+
+
+
+
+      return Flowable.create((FlowableEmitter<String> e) -> {
+
+          //Get Configuration from local JSON file and save to local cache DB
+
+          System.out.println("init create: " + Thread.currentThread().getName());
+
+
+
+          local.streamJsonCongiguration()
+                  .cast(Configuration.class)
+                  .flatMapCompletable(cache::saveTMDbConfiguration)
+                  .doOnComplete(() -> e.onNext("CONFIG"))
+                  .doOnError(e::onError)
+                  .subscribeOn(Schedulers.io())
+                  .subscribe();
+
+          //Get Genres from local JSON file and save to local cache DB
+                  local.streamJsonGenres(Constants.MEDIA_TYPE.MOVIE, finalLanguage)
+                          .cast(Genre.class)
+                          .flatMapCompletable(cache::saveGenre)
+                          .doOnError(e::onError)
+                          .doOnComplete(() ->
+                              e.onNext("GENRES MOVIE")
+
+                          )
+                          .subscribeOn(Schedulers.io())
+                          .subscribe();
+
+
+
+          local.streamJsonGenres(Constants.MEDIA_TYPE.TV, finalLanguage)
+                  .cast(Genre.class)
+                  .flatMapCompletable(cache::saveGenre)
+                  .doOnError(e::onError)
+                  .doOnComplete(() -> {
+                      e.onNext("GENRES TV");
+                      e.onComplete();}
+                  )
+                  .subscribeOn(Schedulers.io())
+                  .subscribe();
+
+
+      }, BackpressureStrategy.BUFFER);
+
+
+
+
 
     }
 
-    return Flowable.empty();
 
 
-}
 
 
 
 
     public static final class Params implements ParamsBasic {
 
-        private Params() { }
+
 
         private int cacheTime = 0;
+        private String language;
 
-        public Params(int cacheTime) {
+        public Params(String language) {
+            this.language = language;
+        }
+        public Params(int cacheTime,String language ) {
             this.cacheTime = cacheTime;
+            this.language = language;
+        }
+
+
+        public static InitTables.Params with(String language) {
+            return new InitTables.Params(language);
+        }
+        public static InitTables.Params with(String language, int cacheTime) {
+            return new InitTables.Params(cacheTime,language);
         }
 
 
 
-        public static InitTables.Params withCacheTime(int cacheTime) {
-            return new InitTables.Params(cacheTime);
-        }
-
-
-
-}
+    }
 }

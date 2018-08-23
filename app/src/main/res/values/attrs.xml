@@ -37,6 +37,17 @@
             <enum name="left" value="0"/>
             <enum name="right" value="1"/>
         </attr>
+        <attr name="scaleType" format="enum">
+            <enum name="CENTER" value="0"/>
+            <enum name="CENTER_CROP" value="1"/>
+            <enum name="CENTER_INSIDE" value="2"/>
+            <enum name="FIT_CENTER" value="3"/>
+            <enum name="FIT_END" value="4"/>
+            <enum name="FIT_START" value="5"/>
+            <enum name="FIT_XY" value="6"/>
+            <enum name="MATRIX" value="7"/>
+        </attr>
+
     </declare-styleable>
 
 

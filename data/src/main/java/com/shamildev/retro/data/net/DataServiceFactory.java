@@ -20,6 +20,7 @@ package com.shamildev.retro.data.net;
 
 import android.util.Log;
 
+import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.data.net.auth.AuthRequestInterceptor;
 import com.shamildev.retro.data.net.error.ErrorInterceptor;
@@ -54,12 +55,14 @@ public final class DataServiceFactory {
     private final ErrorInterceptor errorInterceptor;
     private final MoshiConverterFactory moshiConverterFactory;
     private final RxJava2CallAdapterFactory rxJava2CallAdapterFactory;
+    private final AppConfig appConfig;
 
 
     @Inject
     DataServiceFactory(
                        @Named("isDebug") Boolean isDebug,
                        DataConfig config,
+                       AppConfig appConfig,
                        @Named(HTTP_CACHE_PATH)  Lazy<Cache> cache,
                        OfflineCacheInterceptor offlineCacheInterceptor,
                        NetworkCacheInterceptor networkCacheInterceptor,
@@ -69,6 +72,7 @@ public final class DataServiceFactory {
 
         this.isDebug = isDebug;
         this.config = config;
+        this.appConfig = appConfig;
         this.cache = cache;
         this.offlineCacheInterceptor = offlineCacheInterceptor;
         this.networkCacheInterceptor = networkCacheInterceptor;

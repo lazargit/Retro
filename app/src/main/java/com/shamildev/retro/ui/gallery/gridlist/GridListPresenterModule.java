@@ -10,7 +10,9 @@ import dagger.Module;
  */
 
 
-@Module
+@Module(includes = {
+        GridListModelModule.class
+})
 public abstract class GridListPresenterModule {
 
     @Binds

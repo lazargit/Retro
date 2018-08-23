@@ -13,16 +13,23 @@ import io.reactivex.Observable;
 
 public class JsonMapGenres extends JsonMapper {
 
-    protected Observable<Genre> map(JsonArray arrayFromString) {
+
+    private final Constants.MEDIA_TYPE type;
+
+    public JsonMapGenres(Constants.MEDIA_TYPE type) {
+        this.type = type;
+    }
+
+    protected Observable<Genre> map(JsonArray arrayFromString,String language) {
          return Observable.fromIterable(arrayFromString)
                  .map(jsonElement -> {
                      JsonObject provider = jsonElement.getAsJsonObject();
                      return Genre.builder()
                              .id(provider.get("id").getAsInt())
-                             .name(provider.get("name").toString())
-                             .type(Constants.MEDIA_TYPE.MOVIE.toString())
+                             .name(provider.get("name").toString().replace("\"", ""))
+                             .type(this.type.toString())
                              .lastUpdate(0L)
-                             .language("DE")
+                             .language(language)
                              .build();
                  });
 

@@ -40,6 +40,7 @@ android {
     }
     buildTypes.each{
         it.buildConfigField 'String', 'MOVIE_DB_API_TOKEN', MovieDBApiToken
+        it.buildConfigField 'String', 'YOUTUBE_API_TOKEN', YouTubeApiToken
     }
 
 
@@ -90,71 +91,45 @@ dependencies {
     def developmentDependencies = rootProject.ext.developmentDependencies
     implementation project(':domain')
     implementation project(':data')
-
-
-    implementation                    presentationDependencies.androidSupport.recyclerView
-    implementation                    presentationDependencies.androidSupport.supportCompat
-    implementation                    presentationDependencies.androidSupport.coreUi
-    implementation                    presentationDependencies.androidSupport.appCompat
-    implementation                    presentationDependencies.androidSupport.designSupport
-    implementation                    presentationDependencies.androidSupport.cardView
-    implementation                    presentationDependencies.androidSupport.constrainlayout
-    implementation                    presentationDependencies.androidSupport.palette
-    annotationProcessor               presentationDependencies.autoValue.autoValue
-    annotationProcessor               presentationDependencies.javaxAnnotation
-
-
-
+    implementation presentationDependencies.androidSupport.recyclerView
+    implementation presentationDependencies.androidSupport.supportCompat
+    implementation presentationDependencies.androidSupport.coreUi
+    implementation presentationDependencies.androidSupport.appCompat
+    implementation presentationDependencies.androidSupport.designSupport
+    implementation presentationDependencies.androidSupport.cardView
+    implementation presentationDependencies.androidSupport.constrainlayout
+    implementation presentationDependencies.androidSupport.palette
+    annotationProcessor presentationDependencies.autoValue.autoValue
+    annotationProcessor presentationDependencies.javaxAnnotation
     //RX
-    compile                    presentationDependencies.rx.rxJava
-    compile                    presentationDependencies.rx.rxAndroid
-    compile                    presentationDependencies.rx.rxBinding
-    compile                    presentationDependencies.rx.rxBindingsupport
-    compile                    presentationDependencies.rx.rxBindingappcompat
-
-
-
+    compile presentationDependencies.rx.rxJava
+    compile presentationDependencies.rx.rxAndroid
+    compile presentationDependencies.rx.rxBinding
+    compile presentationDependencies.rx.rxBindingsupport
+    compile presentationDependencies.rx.rxBindingappcompat
     implementation 'com.github.bumptech.glide:glide:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
-
-
-
-
-
-    compile                           presentationDependencies.butterKnife.core
-    annotationProcessor               presentationDependencies.butterKnife.compiler
-
-    implementation                    presentationDependencies.dagger.core
-    annotationProcessor               presentationDependencies.dagger.compiler
-    annotationProcessor               presentationDependencies.dagger.android.processor
-    implementation                    presentationDependencies.dagger.android.core
-    implementation                    presentationDependencies.dagger.android.support
-
-
+    compile presentationDependencies.butterKnife.core
+    annotationProcessor presentationDependencies.butterKnife.compiler
+    implementation presentationDependencies.dagger.core
+    annotationProcessor presentationDependencies.dagger.compiler
+    annotationProcessor presentationDependencies.dagger.android.processor
+    implementation presentationDependencies.dagger.android.core
+    implementation presentationDependencies.dagger.android.support
     implementation 'me.everything:overscroll-decor-android:1.0.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'
-
-
-    implementation "com.github.kubode.wiggle:framelayout:1.3.0"
+    implementation 'com.github.kubode.wiggle:framelayout:1.3.0'
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
     implementation 'ca.barrenechea.header-decor:header-decor:0.2.8'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'me.relex:circleindicator:1.2.2@aar'
-    implementation  'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.github.Commit451:ElasticDragDismissLayout:1.0.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.roughike:bottom-bar:2.3.1'
-
-
-
-
-
-
-
     //   implementation                    presentationDependencies.image.glide
-  // annotationProcessor               presentationDependencies.image.glide
-
+    // annotationProcessor               presentationDependencies.image.glide
     androidTestImplementation presentationTestDependencies.mockito
     androidTestImplementation presentationTestDependencies.dexmaker
     androidTestImplementation presentationTestDependencies.dexmakerMockito
@@ -164,4 +139,5 @@ dependencies {
     // compile developmentDependencies.leakCanary
     compile developmentDependencies.timber
     compile 'org.jetbrains:annotations:15.0'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }

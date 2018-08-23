@@ -17,7 +17,7 @@ import static com.shamildev.retro.data.local.util.Util.jsonToList;
 
 public class JsonMapConfiguration extends JsonMapper {
 
-    protected Observable<Configuration> map(JsonArray arrayFromString) {
+    protected Observable<Configuration> map(JsonArray arrayFromString,String language) {
         return Observable.fromIterable(arrayFromString)
                 .map(jsonElement -> {
                     JsonObject provider = jsonElement.getAsJsonObject();
@@ -29,10 +29,12 @@ public class JsonMapConfiguration extends JsonMapper {
                     ArrayList<String> logo_sizes = jsonToList(provider.get("images").getAsJsonObject().get("logo_sizes"));
                     ArrayList<String> still_sizes = jsonToList(provider.get("images").getAsJsonObject().get("still_sizes"));
                     ArrayList<String> change_keys = jsonToList(provider.get("change_keys"));
+
+
                     return Configuration.builder()
                             .changeKeys(change_keys)
-                            .baseUrl(base_url)
-                            .secureBaseUrl(secure_base_url)
+                            .baseUrl(base_url.replace("\"", ""))
+                            .secureBaseUrl(secure_base_url.replace("\"", ""))
                             .logoSizes(logo_sizes)
                             .posterSizes(poster_sizes)
                             .backdropSizes(backdrop_sizes)

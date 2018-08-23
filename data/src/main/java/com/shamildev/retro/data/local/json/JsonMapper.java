@@ -12,6 +12,6 @@ import io.reactivex.Observable;
 
 abstract class JsonMapper {
 
-   protected abstract <T extends DomainObjectStorable>Observable<T> map(JsonArray arrayFromString);
+   protected abstract <T extends DomainObjectStorable>Observable<T> map(JsonArray arrayFromString,String language);
 
 }

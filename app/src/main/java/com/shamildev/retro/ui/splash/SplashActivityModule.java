@@ -6,14 +6,14 @@ import com.shamildev.retro.di.scope.PerActivity;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.BaseActivityModule;
 import com.shamildev.retro.ui.splash.fragment.view.SplashFragment;
-import com.shamildev.retro.ui.splash.fragment.view.SplashFragmentModule;
+import com.shamildev.retro.ui.splash.fragment.modul.SplashFragmentModule;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar.
 
 
  * Provides Splashscreen activity dependencies.

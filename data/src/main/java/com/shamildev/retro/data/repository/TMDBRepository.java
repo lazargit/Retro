@@ -79,7 +79,6 @@ public final class TMDBRepository implements RemoteRepository{
     @Inject
     TMDBRepository(@Named("TMDBServices") TMDBServices tmdbServices, EntityMapperHolder entityMapperHolder, DataConfig dataConfig) {
         this.tmdbServices = tmdbServices;
-
         this.entityMapperHolder = entityMapperHolder;
         this.dataConfig = dataConfig;
     }

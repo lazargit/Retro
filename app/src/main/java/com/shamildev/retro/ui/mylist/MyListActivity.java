@@ -167,7 +167,7 @@ public class MyListActivity extends BaseActivitySupport {
 //                }
 //                if (tabId == R.id.nav_search) {
 //
-//                    loadFragment(SearchResultFragment.instance());
+//                    loadFragment(YoutubePlayerFragment.instance());
 //                    // The tab with id R.id.tab_favorites was selected,
 //                    // change your content accordingly.
 //                }
@@ -313,7 +313,7 @@ public class MyListActivity extends BaseActivitySupport {
 //                                            @Override
 //                                            public void onSearch(String txt) {
 //                                                Log.e("<ON SEARCH>","#"+txt);
-//                                                SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //
 //                                                searchResultFragment.doSearch(txt);
@@ -323,7 +323,7 @@ public class MyListActivity extends BaseActivitySupport {
 //
 //                                            @Override
 //                                            public void onStartSearchLoading() {
-//                                                   SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                   YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //
 //                                                    searchResultFragment.startSearchLoading();
@@ -333,7 +333,7 @@ public class MyListActivity extends BaseActivitySupport {
 //
 //                                            @Override
 //                                            public void onEmpty() {
-//                                                SearchResultFragment searchResultFragment = (SearchResultFragment) getFragmentByTag("SearchResultFragment");
+//                                                YoutubePlayerFragment searchResultFragment = (YoutubePlayerFragment) getFragmentByTag("YoutubePlayerFragment");
 //
 //                                                if(searchResultFragment!=null) {
 //                                                    searchResultFragment.notSearch();
@@ -345,7 +345,7 @@ public class MyListActivity extends BaseActivitySupport {
 //                                            public void onHide(View view) {
 //                                                Log.e("<ON HIDE>","#"+view);
 //
-//                                                removeFragment("SearchResultFragment", R.anim.enter_from_right,R.anim.exit_to_right);
+//                                                removeFragment("YoutubePlayerFragment", R.anim.enter_from_right,R.anim.exit_to_right);
 //                                                //toolBar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
 //
 //
@@ -357,7 +357,7 @@ public class MyListActivity extends BaseActivitySupport {
 //                                            @Override
 //                                            public void onExpand(View view) {
 //                                                Log.e("<ON EXPAND>","#"+view);
-//                                                addFragment(R.id.fragmentContainer, SearchResultFragment.instance(),R.anim.enter_from_right,R.anim.exit_to_right);
+//                                                addFragment(R.id.fragmentContainer, YoutubePlayerFragment.instance(),R.anim.enter_from_right,R.anim.exit_to_right);
 //                                                searchView.setUpSearchObservable();
 //
 //                                            }

@@ -20,6 +20,7 @@ import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.retroimage.core.RetroImage;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.fragment.adapter.RecyclerViewPagerAdapter;
+import com.shamildev.retro.ui.home.fragment.model.ImageViewPagerModel;
 import com.shamildev.retro.ui.home.fragment.view.ImageViewPagerFragment;
 import com.shamildev.retro.ui.home.fragment.view.ImageViewPagerView;
 import com.shamildev.retro.ui.home.slideshowfragment.adapter.SlideShowPageAdapter;
@@ -42,7 +43,7 @@ import io.reactivex.disposables.Disposable;
  * An implementation of {@link WatchListPresenter}.
  */
 @PerFragment
-public class ImageViewPagerPresenterImpl extends BasePresenter<ImageViewPagerView> implements ImageViewPagerPresenter {
+public class ImageViewPagerPresenterImpl extends BasePresenter<ImageViewPagerView, ImageViewPagerModel> implements ImageViewPagerPresenter {
 
 
     private final RetroImage retroImage;
@@ -77,6 +78,7 @@ public class ImageViewPagerPresenterImpl extends BasePresenter<ImageViewPagerVie
 
     @Inject
     ImageViewPagerPresenterImpl(ImageViewPagerView view,
+                                ImageViewPagerModel model,
                                 RetroImage retroImage,
                                 UseCaseHandler useCaseHandler,
                                 GetMyWatchList getMyWatchList ,
@@ -87,7 +89,7 @@ public class ImageViewPagerPresenterImpl extends BasePresenter<ImageViewPagerVie
                                 SaveToWatchList saveToWatchList,
                                 GetMultiSearch getMultiSearch,
                                 DataReloading dataReloading) {
-        super(view);
+        super(view,model);
 
         this.retroImage = retroImage;
         this.useCaseHandler = useCaseHandler;

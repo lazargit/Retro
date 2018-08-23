@@ -1,17 +1,19 @@
 package com.shamildev.retro.ui.home.fragment.presenter;
 
-import com.shamildev.retro.di.scope.PerChildFragment;
 import com.shamildev.retro.di.scope.PerFragment;
+import com.shamildev.retro.ui.home.fragment.model.ImageViewPagerModelModule;
 
 import dagger.Binds;
 import dagger.Module;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar.
  */
 
 
-@Module
+@Module(includes = {
+        ImageViewPagerModelModule.class
+})
 public abstract class ImageViewPagerPresenterModule {
 
     @Binds

@@ -17,11 +17,6 @@
 package com.shamildev.retro.domain;
 
 
-import com.shamildev.retro.domain.models.Images;
-import com.shamildev.retro.domain.models.Movie;
-
-import io.reactivex.Flowable;
-import io.reactivex.annotations.NonNull;
 
 public interface DomainObject {
 

@@ -21,6 +21,7 @@ import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.retroimage.core.RetroImage;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.slideshowfragment.adapter.SlideShowPageAdapter;
+import com.shamildev.retro.ui.home.slideshowfragment.model.SlideShowModel;
 import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragment;
 import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowView;
 
@@ -37,7 +38,7 @@ import io.reactivex.disposables.Disposable;
 
 
 @PerFragment
-public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> implements SlideShowPresenter {
+public class SlideShowPresenterImpl extends BasePresenter<SlideShowView,SlideShowModel> implements SlideShowPresenter {
 
 
     private SlideShowPageAdapter myViewPagerAdapter;
@@ -61,6 +62,7 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
 
     @Inject
     SlideShowPresenterImpl(SlideShowView view,
+                           SlideShowModel model,
                            UseCaseHandler useCaseHandler,
                            GetMyWatchList getMyWatchList ,
                            GetUpcomingMovies getUpcomingMovies,
@@ -70,7 +72,7 @@ public class SlideShowPresenterImpl extends BasePresenter<SlideShowView> impleme
                            SaveToWatchList saveToWatchList,
                            GetMultiSearch getMultiSearch,
                            DataReloading dataReloading) {
-        super(view);
+        super(view,model);
         this.useCaseHandler = useCaseHandler;
         this.getMyWatchList = getMyWatchList;
         this.getUpcomingMovies = getUpcomingMovies;

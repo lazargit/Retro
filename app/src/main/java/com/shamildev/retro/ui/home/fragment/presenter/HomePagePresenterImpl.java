@@ -19,6 +19,7 @@ import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.retroimage.core.RetroImage;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.fragment.adapter.RecyclerViewPagerAdapter;
+import com.shamildev.retro.ui.home.fragment.model.HomePageModel;
 import com.shamildev.retro.ui.home.fragment.view.HomePageFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomePageView;
 import com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter;
@@ -38,7 +39,7 @@ import javax.inject.Inject;
  * An implementation of {@link WatchListPresenter}.
  */
 @PerChildFragment
-final class HomePagePresenterImpl extends BasePresenter<HomePageView> implements HomePagePresenter {
+final class HomePagePresenterImpl extends BasePresenter<HomePageView,HomePageModel> implements HomePagePresenter {
 
 
 
@@ -70,6 +71,7 @@ final class HomePagePresenterImpl extends BasePresenter<HomePageView> implements
 
     @Inject
     HomePagePresenterImpl(HomePageView view,
+                          HomePageModel model,
                           AppConfig appConfig,
                           RetroImage retroImage,
                           UseCaseHandler useCaseHandler,
@@ -80,7 +82,7 @@ final class HomePagePresenterImpl extends BasePresenter<HomePageView> implements
                           GetNowPlayingTVShows getNowPlayingTVShows,
                           GetMultiSearch getMultiSearch,
                           DataReloading dataReloading) {
-        super(view);
+        super(view,model);
         this.retroImage = retroImage;
         this.appConfig = appConfig;
         if (appConfig.getConfigurations() != null) {

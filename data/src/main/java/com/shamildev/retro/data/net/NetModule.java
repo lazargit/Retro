@@ -53,9 +53,6 @@ public class NetModule {
         return dataServiceFactory.create(TMDBServices.class);
     }
 
-
-
-
     @Provides
     public MoshiConverterFactory provideMoshiConverterFactory() {
         return MoshiConverterFactory.create();

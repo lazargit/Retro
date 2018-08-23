@@ -66,7 +66,7 @@ public final class GetPopularPerson implements UseCaseFlowable<ParamsBasic,Resul
 
 
 
-        public static Params with(int page) {
+        public static Params withPage(int page) {
             return new Params(page);
         }
 

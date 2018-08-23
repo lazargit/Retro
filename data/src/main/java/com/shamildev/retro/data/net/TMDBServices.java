@@ -1,25 +1,17 @@
 package com.shamildev.retro.data.net;
 
 
-
-
-
-
-
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.GenresResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.response.CreditsResponse;
 import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
 import com.shamildev.retro.data.entity.tmdb.response.MovieResponse;
-import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.response.TVShowResponse;
 
 import java.util.Map;
-
 import io.reactivex.Single;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
-import retrofit2.http.PATCH;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -29,13 +21,6 @@ import retrofit2.http.QueryMap;
  */
 
 public interface TMDBServices {
-
-
-   // @GET("test-mobile/iOS/json/test2.json")
-   // Observable<Heroes> getHeroes();
-
-
-
 
 
 

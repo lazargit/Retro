@@ -4,16 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     tools:context=".ui.home.HomeActivity"
     >
 
 
 
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="210dp"
+       >
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -26,13 +26,20 @@
             app:collapsedTitleGravity="left"
             >
 
+
+
             <com.shamildev.retro.views.retroslider.views.ImageSliderView
-                android:id="@+id/imgsliderview_header"
+                android:id="@+id/img_slider"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_collapseMode="parallax"
-                >
+                android:layout_height="210dp"
+                app:showImageFX="false"
+                app:pagefx="FadeOut"
+                app:showCircleIndicator="false"
+                app:showTitle="true">
+
             </com.shamildev.retro.views.retroslider.views.ImageSliderView>
+
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_height="?attr/actionBarSize"
@@ -65,9 +72,27 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:behavior_overlapTop="16dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
+
+
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+       <!--app:behavior_overlapTop="16dp"-->
+
+            <!--  Youtube Player Fragment  -->
+            <!--<fragment-->
+                <!--android:id="@+id/youtube_player_fragment"-->
+                <!---->
+                <!--android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!---->
+                <!--/>-->
+
+
+
+
+
+
 
 
 

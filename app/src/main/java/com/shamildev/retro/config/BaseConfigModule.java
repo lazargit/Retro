@@ -17,6 +17,7 @@
 package com.shamildev.retro.config;
 
 
+import com.shamildev.retro.BuildConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 
 /**
@@ -32,6 +33,7 @@ public abstract class BaseConfigModule {
      */
     protected static final DataConfig.Builder BASE_CONFIG_BUILDER = DataConfig.builder()
             .baseUrl("https://api.themoviedb.org/")
+            .youtubeKey(BuildConfig.YOUTUBE_API_TOKEN)
             .authGrantType("client_credentials")
             .authClientId("pTnZUGJqLM_Q0pQt-jsCXw") // Replace this with your own client id
             .authClientSecret("zRs7F1e2B3Dc4OBNsp7yF0Jfh5eksGRXroaLE59JCxxwZUDO" + "ppzjn6bQaVPB3bop") // Replace this with your own client secret

@@ -19,6 +19,8 @@ import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragmen
 import com.shamildev.retro.ui.home.slideshowfragment.modules.SlideShowDialogFragmentModule;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragmentModule;
+import com.shamildev.retro.ui.widgets.youtubeplayer.view.YoutubePlayerFragment;
+import com.shamildev.retro.ui.widgets.youtubeplayer.view.YoutubePlayerFragmentModule;
 
 
 import dagger.Binds;
@@ -61,6 +63,9 @@ public abstract class HomeActivityModule {
     abstract SlideShowDialogFragment slideShowDialogFragment();
 
 
+    @PerFragment
+    @ContributesAndroidInjector(modules = YoutubePlayerFragmentModule.class)
+    abstract YoutubePlayerFragment youtubePlayerFragment();
 
 
     @PerFragment

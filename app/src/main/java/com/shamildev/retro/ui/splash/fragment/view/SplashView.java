@@ -27,6 +27,8 @@ public interface SplashView extends MVPView {
 
     RetroImageView getCustomImageView();
 
+    RetroImageView getSplashBg();
+
     void navigateToHome(HashMap<String,ResultWrapper> map);
 
 }

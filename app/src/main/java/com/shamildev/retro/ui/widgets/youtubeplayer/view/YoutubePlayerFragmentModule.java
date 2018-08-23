@@ -1,15 +1,19 @@
-package com.shamildev.retro.ui.splash.fragment.view;
+package com.shamildev.retro.ui.widgets.youtubeplayer.view;
 
-import android.app.Fragment;
+
+
+import android.support.v4.app.Fragment;
 
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.ui.common.view.BaseFragmentModule;
-import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenterModule;
+import com.shamildev.retro.ui.widgets.Search.presenter.SearchResultPresenterModule;
+import com.shamildev.retro.ui.widgets.youtubeplayer.presenter.YoutubePlayerPresenterModule;
 
 import javax.inject.Named;
 
 import dagger.Binds;
 import dagger.Module;
+
 
 /**
  * Created by Shamil Lazar on 13.12.2017.
@@ -18,24 +22,24 @@ import dagger.Module;
  */
 @Module(includes = {
         BaseFragmentModule.class,
-        SplashPresenterModule.class
+        YoutubePlayerPresenterModule.class
 })
-public abstract class SplashFragmentModule {
+public abstract class YoutubePlayerFragmentModule {
 
     /**
      * As per the contract specified in {@link BaseFragmentModule}; "This must be included in all
      * fragment modules, which must provide a concrete implementation of {@link Fragment}
      * and named {@link BaseFragmentModule#FRAGMENT}.
      *
-     * @param fragment the Splashfragment
+     * @param fragment the {@link YoutubePlayerFragment}
      * @return the fragment
      */
     @Binds
-    @Named(BaseFragmentModule.FRAGMENT)
+    @Named(BaseFragmentModule.FRAGMENT_V4)
     @PerFragment
-    abstract Fragment fragment(SplashFragment fragment);
+    abstract Fragment fragment(YoutubePlayerFragment fragment);
 
     @Binds
     @PerFragment
-    abstract SplashView splashView(SplashFragment fragment);
+    abstract YoutubePlayerView watchListView(YoutubePlayerFragment fragment);
 }

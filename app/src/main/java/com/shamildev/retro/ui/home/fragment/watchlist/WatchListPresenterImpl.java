@@ -28,7 +28,7 @@ import io.reactivex.Observable;
  * An implementation of {@link com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter}.
  */
 @PerFragment
-final class WatchListPresenterImpl extends BasePresenter<WatchListView> implements WatchListPresenter {
+final class WatchListPresenterImpl extends BasePresenter<WatchListView,WatchListModel> implements WatchListPresenter {
 
 
     private final RetroImage retroImage;
@@ -46,12 +46,13 @@ final class WatchListPresenterImpl extends BasePresenter<WatchListView> implemen
 
     @Inject
     WatchListPresenterImpl(WatchListView view,
+                           WatchListModel model,
                            RetroImage retroImage,
                            AppConfig appConfig,
                            UseCaseHandler useCaseHandler,
                            GetMyWatchList getMyWatchList ,
                            DataReloading dataReloading) {
-        super(view);
+        super(view,model);
 
         this.retroImage = retroImage;
 

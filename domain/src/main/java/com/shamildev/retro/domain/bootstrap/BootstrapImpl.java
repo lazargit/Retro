@@ -1,23 +1,10 @@
 package com.shamildev.retro.domain.bootstrap;
-
-
-
-
-
-
-import com.shamildev.retro.domain.bootstrap.Bootstrap;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
-import com.shamildev.retro.domain.interactor.UseCase;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.util.Pair;
-
-
 import java.util.ArrayList;
-import java.util.Map;
-
 import javax.inject.Inject;
-
 import io.reactivex.subscribers.DisposableSubscriber;
 
 
@@ -81,25 +68,7 @@ public class BootstrapImpl {
 
                 }
             });
-//            useCaseParamsBasicPair.first.execute(new DisposableSubscriber() {
-//                                                    @Override
-//                                                    public void onNext(Object o) {
-//
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onError(Throwable t) {
-//
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onComplete() {
-//                                                      onBootstrap.onBootstrapNext(useCaseParamsBasicPair.first.getClass());
-//                                                      useCases.remove(useCaseParamsBasicPair);
-//                                                      startBootstrap();
-//
-//                                                    }
-//            },useCaseParamsBasicPair.second);
+
         }else {
             this.onBootstrap.onBootstrapComplete();
 

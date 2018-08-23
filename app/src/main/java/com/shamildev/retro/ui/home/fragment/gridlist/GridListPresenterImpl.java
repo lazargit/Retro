@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * An implementation of {@link WatchListPresenter}.
  */
 @PerFragment
-final class GridListPresenterImpl extends BasePresenter<GridListView> implements GridListPresenter{
+final class GridListPresenterImpl extends BasePresenter<GridListView,GridListModel> implements GridListPresenter{
 
 
     private final RetroImage retroImage;
@@ -25,8 +25,10 @@ final class GridListPresenterImpl extends BasePresenter<GridListView> implements
 
 
     @Inject
-    GridListPresenterImpl(GridListView view, RetroImage retroImage) {
-        super(view);
+    GridListPresenterImpl(GridListView view,
+                          GridListModel model,
+                          RetroImage retroImage) {
+        super(view,model);
         this.retroImage = retroImage;
 
 

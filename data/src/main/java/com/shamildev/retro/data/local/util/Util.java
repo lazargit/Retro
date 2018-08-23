@@ -18,7 +18,8 @@ public class Util {
 
         if (element.getAsJsonArray() != null) {
             for (int i = 0; i < element.getAsJsonArray().size(); i++) {
-                listdata.add(element.getAsJsonArray().get(i).toString());
+
+                listdata.add(element.getAsJsonArray().get(i).toString().replace("\"", ""));
             }
         }
         return listdata;

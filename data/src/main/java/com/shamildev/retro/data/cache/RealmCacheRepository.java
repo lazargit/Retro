@@ -203,6 +203,8 @@ final class RealmCacheRepository implements CacheRepository {
     @Override
     public Completable saveGenre(final Genre genreModel) {
 
+       Log.e(Thread.currentThread().getName()+" SAVE GENRE TO CACHE",">"+genreModel.name()+"><"+genreModel.type());
+
         final GenreRealm realmObj = realmMapperHolder.genreRealmMapper().map(genreModel);
                          realmObj.setLast_update(DateUtil.NOW());
         return Completable.create(e -> {
@@ -222,46 +224,35 @@ final class RealmCacheRepository implements CacheRepository {
     @Override
     public Flowable<List<Genre>> fetchGenre(final Constants.MEDIA_TYPE mediaType, final String language) {
 
+        return Flowable.create(e -> {
 
+            try (Realm realm = realmProvider.get()) {
+                realm.executeTransaction(realm1 -> {
+                    RealmResults<GenreRealm> result = realm1.where(GenreRealm.class)
+                            .equalTo(GenreRealm.FIELD_LANGUAGE,language)
+                            .equalTo(GenreRealm.FIELD_MEDIATYPE,mediaType.toString())
+                            .findAll();
+                    if (result.size() == 0) {
+                        e.onComplete();
+                    }else {
+                        List<Genre> genreResult = Observable
+                                .fromIterable(result)
+                                .map(realmMapperHolder.genreRealmMapper()::map)
+                                .toList()
+                                .blockingGet();
 
+                        e.onNext(genreResult);
+                        e.onComplete();
+                    }
 
-
-        return Flowable.create(new FlowableOnSubscribe<List<Genre>>() {
-            @Override
-            public void subscribe(FlowableEmitter<List<Genre>> e) throws Exception {
-
-
-                try (Realm realm = realmProvider.get()) {
-                    realm.executeTransaction(realm1 -> {
-
-                        RealmResults<GenreRealm> result = realm1.where(GenreRealm.class)
-                                .equalTo(GenreRealm.FIELD_LANGUAGE,language)
-                                .equalTo(GenreRealm.FIELD_MEDIATYPE,mediaType.toString())
-                                .findAll();
-
-                        if (result.size() == 0) {
-                            e.onComplete();
-                        }else {
-
-                            List<Genre> genreResult = Observable
-                                    .fromIterable(result)
-                                    .map(realmMapperHolder.genreRealmMapper()::map)
-                                    .toList()
-                                    .blockingGet();
-
-                            e.onNext(genreResult);
-                            e.onComplete();
-                        }
-
-                    });
-                } //autoclose
+                });
+            } //autoclose
 
 
 
 
 
 
-            }
         }, BackpressureStrategy.LATEST);
     }
 

@@ -217,11 +217,13 @@ public class ProcessData {
 
         List<MediaItem> randomList = new ArrayList<>();
 
+        if(map!=null) {
 
-        randomList.add(randomItem(map.get(AppConfig.NOWPLAYINGTVKEY)));
-        randomList.add(randomItem(map.get(AppConfig.NOWPLAYINGKEY)));
-        randomList.add(randomItem(map.get(AppConfig.UPCOMMINGKEY)));
-        randomList.add(randomItem(map.get(AppConfig.TOPRATEDKEY)));
+            randomList.add(randomItem(map.get(AppConfig.NOWPLAYINGTVKEY)));
+            randomList.add(randomItem(map.get(AppConfig.NOWPLAYINGKEY)));
+            randomList.add(randomItem(map.get(AppConfig.UPCOMMINGKEY)));
+            randomList.add(randomItem(map.get(AppConfig.TOPRATEDKEY)));
+        }
 
 
 

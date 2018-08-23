@@ -49,7 +49,6 @@ public class DataReloading {
 
     public interface DataReloadingListener {
 
-
         void onDataLoad(ResultWrapper resultWrapper);
         void onDataError(Throwable t);
 
@@ -300,15 +299,12 @@ public class DataReloading {
     }
 
     private void loadPopularPerson(int page){
-        useCaseHandler.execute(getPopularPerson, GetPopularPerson.Params.with(page),
+        useCaseHandler.execute(getPopularPerson, GetPopularPerson.Params.withPage(page),
 
                 new DisposableSubscriber<ResultWrapper>() {
                     @Override
                     public void onNext(ResultWrapper movieWrapper) {
                         listener.onDataLoad(movieWrapper);
-
-
-
                     }
 
                     @Override

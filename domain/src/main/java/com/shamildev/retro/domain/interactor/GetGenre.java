@@ -91,7 +91,6 @@ public final class GetGenre implements UseCaseFlowable<ParamsBasic,List<Genre>> 
 
 
     public Flowable<Genre> saveToCache(Genre genreModel ) {
-
         return Flowable.defer(() -> {
 
             try {
@@ -113,27 +112,21 @@ public final class GetGenre implements UseCaseFlowable<ParamsBasic,List<Genre>> 
     }
 
     public Flowable<Genre> fetchAllGenreFromNet() {
-        System.out.println("fetchAllGenreFromNet");
-        Flowable<List<Genre>> listFlowable1 = this.repository.fetchGenre(Constants.MEDIA_TYPE.MOVIE);
-        Flowable<List<Genre>> listFlowable2 = this.repository.fetchGenre(Constants.MEDIA_TYPE.TV);
-        return Flowable.concat(listFlowable1,listFlowable2)
+        return Flowable.concat(
+                this.repository.fetchGenre(Constants.MEDIA_TYPE.MOVIE),
+                this.repository.fetchGenre(Constants.MEDIA_TYPE.TV))
                 .flatMap(Flowable::fromIterable)
-                .flatMap(this::saveToCache)
-                ;
-
+                .flatMap(this::saveToCache);
     }
 
     public Flowable<Genre> fetchAllGenreFromCache(String language) {
-
-        System.out.println("fetchAllGenreFromCache"+language);
-        Flowable<List<Genre>> listFlowableMovie = this.cache.fetchGenre(Constants.MEDIA_TYPE.MOVIE, language);
-        Flowable<List<Genre>> listFlowableTv = this.cache.fetchGenre(Constants.MEDIA_TYPE.TV, language);
        return Flowable.fromIterable(
-                       Flowable.concat(listFlowableMovie, listFlowableTv).flatMap(Flowable::fromIterable)
+                       Flowable.concat(
+                               this.cache.fetchGenre(Constants.MEDIA_TYPE.MOVIE, language),
+                               this.cache.fetchGenre(Constants.MEDIA_TYPE.TV, language))
+                               .flatMap(Flowable::fromIterable)
                                .subscribeOn(Schedulers.computation())
-                               .toList().blockingGet()
-              );
-
+                               .toList().blockingGet() );
     }
 
 

@@ -10,6 +10,7 @@ import com.shamildev.retro.domain.models.ResultWrapper;
 import com.shamildev.retro.retroimage.core.RetroImage;
 import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.home.fragment.adapter.ViewPagerAdapter;
+import com.shamildev.retro.ui.home.fragment.model.HomeModel;
 import com.shamildev.retro.ui.home.fragment.view.GridFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomeView;
 import com.shamildev.retro.ui.watchlist.fragment.presenter.WatchListPresenter;
@@ -28,7 +29,7 @@ import javax.inject.Inject;
  * An implementation of {@link WatchListPresenter}.
  */
 @PerFragment
-final class HomePresenterImpl extends BasePresenter<HomeView> implements HomePresenter{
+final class HomePresenterImpl extends BasePresenter<HomeView, HomeModel> implements HomePresenter{
 
 
     private final RetroImage retroImage;
@@ -36,8 +37,10 @@ final class HomePresenterImpl extends BasePresenter<HomeView> implements HomePre
 
 
     @Inject
-    HomePresenterImpl(HomeView view,RetroImage retroImage) {
-        super(view);
+    HomePresenterImpl(HomeView view,
+                      HomeModel model,
+                      RetroImage retroImage) {
+        super(view,model);
         this.retroImage = retroImage;
 
 
