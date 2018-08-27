@@ -11,5 +11,5 @@ Realm<br>
 Youtubeplayer<br> 
 Firebase (soon) 
 
-a playground to practice
-project still in work , 
+a playground to practice, 
+project still in work.
