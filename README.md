@@ -1,5 +1,5 @@
 # Retro
-app for searching movies and shows and more
+app for searching movies and shows and more.<br>
 Retrolambda and other Java 8 support. 
 
 Android App for movies:  
