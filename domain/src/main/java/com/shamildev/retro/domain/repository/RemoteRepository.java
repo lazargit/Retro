@@ -28,7 +28,7 @@ public interface RemoteRepository {
 
     Observable<MovieWrapper> getTestService();
 
-    //TVSHOW
+    //MOVIE
     Flowable<Movie> fetchMovie(@NonNull Long movieId, String appendToResponse,String includeImageLanguage);
 
     Flowable<Images> fetchImages(@NonNull Long movieId);
