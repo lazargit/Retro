@@ -8,7 +8,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by Shamil Lazar on 18.12.2017.
+ * Created by Shamil Lazar
  */
 
 
