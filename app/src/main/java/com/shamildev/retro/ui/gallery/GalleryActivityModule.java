@@ -14,8 +14,6 @@ import com.shamildev.retro.ui.home.fragment.view.HomeFragment;
 import com.shamildev.retro.ui.home.fragment.view.HomeFragmentModule;
 import com.shamildev.retro.ui.home.fragment.view.ImageViewPagerFragment;
 import com.shamildev.retro.ui.home.fragment.view.ImageViewPagerFragmentModule;
-import com.shamildev.retro.ui.home.slideshowfragment.modules.SlideShowDialogFragmentModule;
-import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragment;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragment;
 import com.shamildev.retro.ui.widgets.Search.view.SearchResultFragmentModule;
 
@@ -50,9 +48,6 @@ public abstract class GalleryActivityModule {
     abstract ImageViewPagerFragment imageViewPagerFragment();
 
 
-    @PerFragment
-    @ContributesAndroidInjector(modules = SlideShowDialogFragmentModule.class)
-    abstract SlideShowDialogFragment slideShowDialogFragment();
 
 
 

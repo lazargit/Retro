@@ -33,7 +33,7 @@ import com.shamildev.retro.ui.home.fragment.presenter.HomePagePresenter;
 import com.shamildev.retro.ui.home.fragment.presenter.ImageViewPagerPresenter;
 import com.shamildev.retro.ui.home.slideshowfragment.adapter.ParallaxPageTransformer;
 import com.shamildev.retro.ui.home.slideshowfragment.adapter.SlideShowPageAdapter;
-import com.shamildev.retro.ui.home.slideshowfragment.view.SlideShowDialogFragment;
+
 import com.shamildev.retro.ui.layout.PreCachingGridLayoutManager;
 import com.shamildev.retro.ui.watchlist.fragment.view.WatchListView;
 import com.shamildev.retro.util.DeviceUtils;
@@ -64,7 +64,7 @@ public final class ImageViewPagerFragment extends BaseViewFragmentV4<ImageViewPa
     private static final String PARAM_POS = "param_items_slideshow_pos";
     private static final String KEY_IMAGE_RES = "com.shamildev.retro.ui.home.key.imageres";
     // private final RequestManager requestManager;
-    SlideShowDialogFragment.OnHeadlineSelectedListener mCallback;
+    //SlideShowDialogFragment.OnHeadlineSelectedListener mCallback;
 
 
 
