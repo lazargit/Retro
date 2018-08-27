@@ -2,9 +2,7 @@ package com.shamildev.retro.data.net.error;
 
 import java.io.IOException;
 
-/**
- * Created by R_KAY on 11/21/2017.
- */
+
 
 public class EmptyDatasetException extends IOException {
 
