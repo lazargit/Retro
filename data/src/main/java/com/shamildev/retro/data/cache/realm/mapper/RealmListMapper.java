@@ -1,19 +1,3 @@
-/*
- * Copyright 2017 Vandolf Estrellado
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.shamildev.retro.data.cache.realm.mapper;
 
 
@@ -56,28 +40,23 @@ final class RealmListMapper {
 
 
     public static <V extends Number> List<V> mapToList(RealmList<V> list) {
-
-
+        
         List<V> vList = new ArrayList<>();
         for (V id : list) {
             vList.add(id);
         }
         return vList;
-
-
+        
     }
 
     public static <V extends String> List<V> mapToStringList(RealmList<V> list) {
-
-
+        
         List<V> vList = new ArrayList<>();
         for (V id : list) {
             vList.add(id);
         }
         return vList;
-
-
-    }
+   }
 
     <K extends Entity, V extends DomainObject> List<V> mapToV(EntityMapper<K, V> entityMapper,
                                                               List<K> kList) throws MappingError {
