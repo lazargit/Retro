@@ -277,15 +277,15 @@ public interface TMDBServices {
 
 
 
-    //https://api.themoviedb.org/3/configuration?api_key=96306bc3cc12ed9ef756ba9a85628586"
+    //https://api.themoviedb.org/3/configuration?api_key=XXX"
     @GET("3/configuration")
     Single<ConfigurationResponseEntity> fetchConfiguration(
             @Query(API_KEY) String apikey
 
     );
 
-    //https://api.themoviedb.org/3/genre/movie/list?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US
-    //https://api.themoviedb.org/3/genre/tv/list?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US
+    //https://api.themoviedb.org/3/genre/movie/list?api_key=XXX&language=en-US
+    //https://api.themoviedb.org/3/genre/tv/list?api_key=XXX&language=en-US
     @GET("3/genre/{media}/list")
     Single<GenresResponseEntity> fetchGenre(
             @Path("media") String media,
@@ -296,7 +296,7 @@ public interface TMDBServices {
 
 
 
-   // https://api.themoviedb.org/3/person/popular?api_key=96306bc3cc12ed9ef756ba9a85628586&language=de-DE&page=1
+   // https://api.themoviedb.org/3/person/popular?api_key=XXX&language=de-DE&page=1
    @GET("3/person/popular")
    Single<ResponseEntity> fetchPopularPerson(
            @Query(API_KEY) String apikey,
@@ -306,8 +306,8 @@ public interface TMDBServices {
 
    );
 
-//https://api.themoviedb.org/3/discover/movie?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1955-10-22&primary_release_date.lte=1966-10-22
-   // https://api.themoviedb.org/3/discover/movie?api_key=96306bc3cc12ed9ef756ba9a85628586&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_people=7467
+   //https://api.themoviedb.org/3/discover/movie?api_key=XXX6&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=1955-10-22&primary_release_date.lte=1966-10-22
+   // https://api.themoviedb.org/3/discover/movie?api_key=XXXX&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_people=7467
     @GET("3/discover/movie")
     Single<ResponseEntity> fetchDiscover(
             @Query(API_KEY) String apikey,
