@@ -7,8 +7,8 @@ MVP Architecture
 Dagger2  
 RxJava2,RxAndroid  
 Retrofit2  
-Realm 
-Youtubeplayer 
+Realm<br> 
+Youtubeplayer<br> 
 Firebase (soon) 
 
 a playground to practice
