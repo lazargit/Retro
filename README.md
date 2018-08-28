@@ -2,16 +2,16 @@
 app for searching movies and shows and more.<br>
 Retrolambda and other Java 8 support. 
 
-Android App for movies:  
+Android App for movies:<br>  
 clean architecture<br>
-MVP Architecture  
-Dagger2  
-RxJava2,RxAndroid  
-Retrofit2 
+MVP<br> 
+Dagger2<br>  
+RxJava2, RxAndroid<br>  
+Retrofit2<br> 
 Glide<br>
 Realm<br> 
 Youtubeplayer<br> 
-Firebase (soon) 
+Firebase (soon) <br>
 
 a playground to practice, 
 project still in work.
