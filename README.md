@@ -6,7 +6,7 @@ Android App for movies:<br>
 clean architecture<br>
 MVP<br> 
 Dagger2<br>  
-RxJava2, RxAndroid<br>  
+RxJava2, RxAndroid 
 Retrofit2<br> 
 Glide<br>
 Realm<br> 
