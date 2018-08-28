@@ -1,7 +1,7 @@
 package com.shamildev.retro.ui.common.view;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar
  */
 
 import android.os.Bundle;

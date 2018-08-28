@@ -59,18 +59,10 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     RetroImageView splashbg;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.e("onCreateView","SplashFragment");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_splash, container, false);
-
     }
 
-
-    @Override
-    public void showSomething(String something) {
-        //someText.setText(something);
-    }
 
 
 
@@ -96,73 +88,12 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     @Override
     public void navigateToHome(HashMap<String, ResultWrapper> map) {
       navigator.navigateToHome(application,map);
-        // navigator.navigateToMyList(application);
-        // navigator.navigateToSearch(application);
-    }
-
-
-
-
-    @OnClick(R.id.button_save)
-    void onStartBootstrap(View view) {
-        Timber.d("onStartBootstrap");
-        presenter.onDoSomething(R.id.button_save);
 
     }
 
-    @OnClick(R.id.button)
-    void onStartGetConfig(View view) {
-        Timber.d("onStartGetConfig");
-        presenter.onDoSomething(R.id.button);
 
-    }
 
-    @OnClick(R.id.button_genre)
-    void onStartFetchGenre(View view) {
-        Timber.d("onStartFetchGenre");
-        presenter.onDoSomething(R.id.button_genre);
 
-    }
-
-    @OnClick(R.id.button_fetch_upcoming_movies)
-    void onButton_fetch_upcoming_movies(View view) {
-
-        presenter.onDoSomething(R.id.button_fetch_upcoming_movies);
-
-    }
-
-    @OnClick(R.id.button_fetch_popular)
-    void onButton_fetch_popular(View view) {
-
-        presenter.onDoSomething(R.id.button_fetch_popular);
-
-    }
-
-    @OnClick(R.id.button_fetch_now_playing)
-    void onButton_fetch_now_playing(View view) {
-
-        presenter.onDoSomething(R.id.button_fetch_now_playing);
-
-    }
-
-    @OnClick(R.id.button_fetch_movie)
-    void onButton_fetch_movie(View view) {
-
-        presenter.onDoSomething(R.id.button_fetch_movie);
-
-    }
-    @OnClick(R.id.button_fetch_movie2)
-    void onButton_fetch_movie2(View view) {
-
-        presenter.onDoSomething(R.id.button_fetch_movie2);
-
-    }
-    @OnClick(R.id.button_start_bootstrap)
-    void onButton_start_bootstrap(View view) {
-
-        presenter.onStartBootstrap();
-
-    }
 
 
     @Override

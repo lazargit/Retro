@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public interface SplashView extends MVPView {
 
-    void showSomething(String something);
+
 
 
     ImageSliderView getImageSliderView();

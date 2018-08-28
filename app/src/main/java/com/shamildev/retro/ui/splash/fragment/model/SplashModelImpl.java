@@ -4,10 +4,12 @@ import android.util.Log;
 
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.di.scope.PerFragment;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.helper.DataReloading;
+import com.shamildev.retro.domain.helper.ProcessData;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
@@ -20,11 +22,14 @@ import com.shamildev.retro.domain.interactor.InitTables;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.ResultWrapper;
+import com.shamildev.retro.retroimage.core.RetroImage;
+import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -32,6 +37,11 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * Created by Shamil Lazar.
+ *             //https://media.giphy.com/media/87kcVw4PjxGr6/giphy.gif
+ //            ArrayList<String> gifUrl = new ArrayList<>();
+ //            gifUrl.add("https://i.gifer.com/2Gr0.gif");
+ //            gifUrl.add("https://media.giphy.com/media/87kcVw4PjxGr6/giphy.gif");
+ //            gifUrl.add("https://media.giphy.com/media/lR8eXSeYUF5vO/giphy.gif");
  */
 @PerFragment
 public class SplashModelImpl extends SplashModel {
@@ -43,6 +53,7 @@ public class SplashModelImpl extends SplashModel {
     protected AppConfig appConfig;
     @Inject
     DataReloading dataReloading;
+
 
     private  UseCaseHandler useCaseHandler;
     private  GetTMDBConfiguration getTMDBConfiguration;
@@ -72,9 +83,6 @@ public class SplashModelImpl extends SplashModel {
                            GetNowPlayingTVShows getNowPlayingTVShows,
                            GetPopularPerson getPopularPerson,
                            GetMovieById getMovieById) {
-
-
-
         this.useCaseHandler = useCaseHandler;
         this.initTables = initTables;
         this.getTMDBConfiguration = getTMDBConfiguration;
@@ -106,27 +114,25 @@ public class SplashModelImpl extends SplashModel {
 
     @Override
     public void initData() {
-
-        Log.e("TAG","INITTABLES "+dataConfig.language()+" ");
+      //  List<MediaItem> personList = ProcessData.createHomePersonList(map);
         useCaseHandler.execute(initTables, InitTables.Params.with(dataConfig.language()), new DisposableSubscriber<String>() {
             @Override
             public void onNext(String item) {
 
-                Log.e("TAG", "INITTABLES " + item);
-               // view.makeToast(item);
+
 
             }
 
             @Override
             public void onError(Throwable t) {
-                Log.e("TAG","ERROR"+t);
+
             }
 
             @Override
             public void onComplete() {
 
-                Log.e("TAG","onComplete"+ Thread.currentThread().getName());
-               // initConfiguration();
+
+
             }
         });
 
@@ -138,29 +144,20 @@ public class SplashModelImpl extends SplashModel {
         useCaseHandler.execute(getTMDBConfiguration,GetTMDBConfiguration.Params.withCacheTime(1), new DisposableSubscriber<Configuration>() {
             @Override
             public void onNext(Configuration configuration) {
+                presenter.configRetroImage(configuration);
 
-                Log.d("onNext",configuration.backdropSizes().get(0));
             }
 
             @Override
             public void onError(Throwable t) {
-                if(t.getCause() instanceof TMDBError){
-                    TMDBError error = (TMDBError) t.getCause();
-                    Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
+                presenter.onError(t);
 
-                }
-                Log.d("onError",t.getMessage());
             }
 
             @Override
             public void onComplete() {
-
-                //retroImage.setConfigurations(appConfig.getConfigurations());
               initGenres();
-
-              Log.e("onComplete",">> initConfiguration "+ appConfig.getConfigurations().baseUrl());
-
-
+                System.out.println("initConfiguration onComplete "+appConfig.getConfigurations().posterSizes());
             }
         });
 
@@ -168,45 +165,123 @@ public class SplashModelImpl extends SplashModel {
     }
 
     private void initGenres() {
-
         useCaseHandler.execute(getGenre, GetGenre.Params.with(dataConfig.language(), dataConfig.maxCacheTime()), new DisposableSubscriber<List<Genre>>() {
             @Override
             public void onNext(List<Genre> genres) {
-                Log.d("onNext genre",""+genres.size());
 
             }
 
             @Override
             public void onError(Throwable t) {
-
+                presenter.onError(t);
             }
 
             @Override
             public void onComplete() {
                 Log.d("onComplete",">> genre init");
-                // loadNowPlayingMovies();
-                dataReloading.loadTopics(mListTopic,map,new DataReloading.LoadTopicsListener(){
-
-
-                    @Override
-                    public void onDataLoad() {
-                        Log.e("SPLASH","TOPICS  LOADED");
-                        //loadHomeHeaderGallery(map);
-                        //  view.navigateToHome(map);
-                        presenter.finish(map);
-                    }
-
-                    @Override
-                    public void onDataError() {
-
-                    }
-                });
-
+                 loadNowPlayingMovies();
 
             }
         });
 
     }
+
+
+
+    private DisposableSubscriber loadNowPlayingMoviesSubscriber = new DisposableSubscriber<ResultWrapper>() {
+        @Override
+        public void onNext(ResultWrapper resultWrapper) {
+
+            presenter.setBackgroundImage(resultWrapper.results());
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            presenter.onError(t);
+        }
+
+        @Override
+        public void onComplete() {
+            Log.d("onComplete",">> loadUpcomingMovies");
+        }
+    };
+    private void loadNowPlayingMovies(){
+        useCaseHandler.execute(getNowPlayingMovies, GetNowPlayingMovies.Params.withPage(1),loadNowPlayingMoviesSubscriber);
+
+    }
+
+    private DisposableSubscriber loadUpcomingMoviesSubscriber = new DisposableSubscriber<ResultWrapper>() {
+        @Override
+        public void onNext(ResultWrapper resultWrapper) {
+
+            map.put(AppConfig.UPCOMMINGKEY,resultWrapper);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            presenter.onError(t);
+
+        }
+
+        @Override
+        public void onComplete() {
+            loadNowPlayingTVShows();
+        }
+    };
+    private void loadUpcomingMovies(){
+        useCaseHandler.execute(getUpcomingMovies, GetUpcomingMovies.Params.withPage(1),loadUpcomingMoviesSubscriber);
+
+    }
+
+
+    private DisposableSubscriber loadNowPlayingTVShowsSubscriber = new DisposableSubscriber<ResultWrapper>() {
+        @Override
+        public void onNext(ResultWrapper resultWrapper) {
+
+            map.put(AppConfig.NOWPLAYINGTVKEY,resultWrapper);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            presenter.onError(t);
+
+        }
+
+        @Override
+        public void onComplete() {
+            loadPopularPerson();
+        }
+    };
+    private void loadNowPlayingTVShows(){
+        useCaseHandler.execute(getNowPlayingTVShows, GetNowPlayingTVShows.Params.withPage(1),loadNowPlayingTVShowsSubscriber);
+
+    }
+
+
+    private DisposableSubscriber loadPopularPersonSubscriber = new DisposableSubscriber<ResultWrapper>() {
+        @Override
+        public void onNext(ResultWrapper resultWrapper) {
+
+            map.put(AppConfig.POPULARPERSONKEY,resultWrapper);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            presenter.onError(t);
+
+        }
+
+        @Override
+        public void onComplete() {
+            presenter.finish(map);
+        }
+    };
+    private void loadPopularPerson(){
+        useCaseHandler.execute(getPopularPerson, GetPopularPerson.Params.withPage(1),loadPopularPersonSubscriber);
+
+    }
+
+
 
 
 
