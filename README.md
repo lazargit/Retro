@@ -7,7 +7,8 @@ clean architecture<br>
 MVP Architecture  
 Dagger2  
 RxJava2,RxAndroid  
-Retrofit2  
+Retrofit2 
+Glide<br>
 Realm<br> 
 Youtubeplayer<br> 
 Firebase (soon) 
