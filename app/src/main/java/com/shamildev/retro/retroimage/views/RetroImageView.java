@@ -28,6 +28,10 @@ public class RetroImageView extends RelativeLayout {
     private int scaleType;
 
 
+
+    private  boolean mShowProgressBar;
+
+
     public RetroImageView(Context context) {
         super(context);
         init(null);
@@ -58,26 +62,34 @@ public class RetroImageView extends RelativeLayout {
 
             try {
                 mShowFX = a.getBoolean(R.styleable.RetroImageView_showFX, false);
+                mShowProgressBar = a.getBoolean(R.styleable.RetroImageView_showProgressBar, true);
                 scaleType = a.getInteger(R.styleable.RetroImageView_scaleType,0);
+
+
+
+
 
             } finally {
                 a.recycle();
             }
 
+
+            Log.e("mShowProgressBar","mShowProgressBar "+mShowProgressBar);
+            if(mShowFX){
+                this.imageView =  findViewById(R.id.image_customFX);
+                this.imageView.setVisibility(VISIBLE);
+                findViewById(R.id.image_custom).setVisibility(GONE);
+            }else{
+                this.imageView =  findViewById(R.id.image_custom);
+            }
+
+
+
+
+            this.imageView.setScaleType(this.scaleType(scaleType));
+
+
         }
-
-        Log.e("mShowFX","mShowFX "+mShowFX);
-        if(mShowFX){
-            this.imageView =  findViewById(R.id.image_customFX);
-            this.imageView.setVisibility(VISIBLE);
-            findViewById(R.id.image_custom).setVisibility(GONE);
-        }else{
-            this.imageView =  findViewById(R.id.image_custom);
-        }
-
-
-        this.imageView.setScaleType(this.scaleType(scaleType));
-        this.progressBar = findViewById(R.id.progressbar_image);
 
     }
 
@@ -119,5 +131,9 @@ public class RetroImageView extends RelativeLayout {
     public void setmShowFX(boolean mShowFX) {
         this.mShowFX = mShowFX;
     }
+    public boolean isShowProgressBar() {
+        return mShowProgressBar;
+    }
+
 }
 

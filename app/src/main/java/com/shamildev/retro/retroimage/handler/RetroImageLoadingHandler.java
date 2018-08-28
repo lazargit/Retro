@@ -72,7 +72,11 @@ public class RetroImageLoadingHandler {
                  if(imageView instanceof RetroImageView){
 
                        this.imageView = (RetroImageView) imageView;
-                       this.imageView .getProgressBar().setVisibility(View.VISIBLE);
+                       if(this.imageView.isShowProgressBar()){
+                           this.imageView.getProgressBar().setVisibility(View.VISIBLE);
+                       }
+
+                       //this.imageView.getProgressBar().setVisibility(View.VISIBLE);
                        loadFile(o).into(this.imageView .getImageView());
 
                  }else{
@@ -96,7 +100,9 @@ public class RetroImageLoadingHandler {
      //   Log.e("TAG","imageLoadSuccessful "+map.size()+" # "+obj.hashCode());
 
         if(this.imageView != null) {
-            this.imageView.getProgressBar().setVisibility(View.GONE);
+            if(this.imageView.isShowProgressBar()) {
+                this.imageView.getProgressBar().setVisibility(View.GONE);
+            }
         }
         removeFromMap(obj);
         if(map.isEmpty()){
@@ -105,7 +111,10 @@ public class RetroImageLoadingHandler {
     }
     private void imageLoadFailed(GlideException e, Object obj) {
         if(this.imageView != null) {
-            this.imageView.getProgressBar().setVisibility(View.GONE);
+            if(this.imageView.isShowProgressBar()) {
+                this.imageView.getProgressBar().setVisibility(View.GONE);
+            }
+
         }
         removeFromMap(obj);
         imageRequestListener.onLoadFailed();

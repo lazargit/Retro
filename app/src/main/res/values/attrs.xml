@@ -28,7 +28,7 @@
     <declare-styleable name="RetroImageView">
         <attr name="showFX" format="boolean" />
 
-
+        <attr name="showProgressBar" format="boolean" />
         <attr name="fx_duration" format="float" />
 
         <attr name="fx_interpolator" format="float" />

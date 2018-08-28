@@ -4,13 +4,15 @@ apply plugin: 'realm-android'
 buildscript {
     repositories {
         google()
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
         classpath "net.ltgt.gradle:gradle-apt-plugin:0.13"
-        classpath "io.realm:realm-gradle-plugin:4.1.0"
+        classpath "io.realm:realm-gradle-plugin:5.4.1"
+
     }
 }
 
@@ -87,6 +89,13 @@ dependencies {
     compile libraries.dev.timber
 
 
+     //Firebase Authentication
+    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    // Google Sign In SDK (only required for Google Sign In)
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+
+
     //TEST
     implementation project(':domain')
 
@@ -111,3 +120,4 @@ dependencies {
 
 
 }
+apply plugin: 'com.google.gms.google-services'

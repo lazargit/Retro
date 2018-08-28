@@ -45,15 +45,15 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
     @Inject
     Application application;
 
-
-    @BindView(R.id.img_slider)
-    ImageSliderView img_slider;
-
-    @BindView(R.id.img_slider2)
-    ImageSliderView img_slider2;
-
-    @BindView(R.id.customimageview_test)
-    RetroImageView customImageView;
+//
+//    @BindView(R.id.img_slider)
+//    ImageSliderView img_slider;
+//
+//    @BindView(R.id.img_slider2)
+//    ImageSliderView img_slider2;
+//
+//    @BindView(R.id.customimageview_test)
+//    RetroImageView customImageView;
 
     @BindView(R.id.splashbg)
     RetroImageView splashbg;
@@ -65,20 +65,20 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
 
 
 
-
-    @Override
-    public ImageSliderView getImageSliderView() {
-        return img_slider;
-    }
-    @Override
-    public ImageSliderView getImageSliderView2() {
-        return img_slider2;
-    }
-
-    @Override
-    public RetroImageView getCustomImageView() {
-        return customImageView;
-    }
+//
+//    @Override
+//    public ImageSliderView getImageSliderView() {
+//        return img_slider;
+//    }
+//    @Override
+//    public ImageSliderView getImageSliderView2() {
+//        return img_slider2;
+//    }
+//
+//    @Override
+//    public RetroImageView getCustomImageView() {
+//        return customImageView;
+//    }
 
     @Override
     public RetroImageView getSplashBg() {

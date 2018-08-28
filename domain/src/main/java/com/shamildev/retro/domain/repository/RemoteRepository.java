@@ -4,6 +4,7 @@ import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Credits;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.GuestSession;
 import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
@@ -28,6 +29,11 @@ public interface RemoteRepository {
 
     Observable<MovieWrapper> getTestService();
 
+    Flowable<Configuration> fetchConfiguration();
+    Flowable<List<Genre>> fetchGenre(Constants.MEDIA_TYPE mediaType);
+    Flowable<GuestSession> fetchGuestSession();
+
+
     //MOVIE
     Flowable<Movie> fetchMovie(@NonNull Long movieId, String appendToResponse,String includeImageLanguage);
 
@@ -51,17 +57,12 @@ public interface RemoteRepository {
 
 
 
-    Flowable<Configuration> fetchConfiguration();
-
-    Flowable<List<Genre>> fetchGenre(Constants.MEDIA_TYPE mediaType);
-
     /*
      *
      *SEARCH
      */
    // <V extends DomainObject> Flowable<V> fetchMultiSearch(String quary);
     Flowable<ResultWrapper> fetchMultiSearch(String quary,int page);
-
 
     Flowable<ResultWrapper> fetchPopularPerson(int page);
 

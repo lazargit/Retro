@@ -4,12 +4,14 @@ import android.util.Log;
 
 import com.shamildev.retro.data.cache.realm.mapper.RealmMapperHolder;
 import com.shamildev.retro.data.cache.realm.models.GenreRealm;
+import com.shamildev.retro.data.cache.realm.models.UserRealm;
 import com.shamildev.retro.data.cache.realm.models.WatchListRealm;
 import com.shamildev.retro.data.cache.realm.models.TMDbConfigurationRealm;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.TVShow;
+import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.data.cache.realm.models.ConfigurationRealm;
 import com.shamildev.retro.domain.DomainObject;
@@ -60,6 +62,44 @@ final class RealmCacheRepository implements CacheRepository {
         this.realmMapperHolder = realmMapperHolder;
     }
 
+
+    @Override
+    public Flowable<User> fetchUser() {
+        return Flowable.create(e -> {
+            Realm realm = realmProvider.get();
+            RealmQuery<UserRealm> query = realm.where(UserRealm.class);
+            RealmResults<UserRealm> result = query.findAll();
+            if (result.size() == 0) {
+                e.onComplete();
+            }else {
+                UserRealm realmObj  = result.get(0);
+                User map = realmMapperHolder.userRealmMapper().map(realmObj);
+                e.onNext(map);
+                e.onComplete();
+            }
+            realm.close();
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Completable saveUser(DomainObject item) {
+
+        User user = (User) item;
+        final UserRealm realmObj = realmMapperHolder.userRealmMapper().map(user);
+        realmObj.setLast_update(DateUtil.NOW());
+        return Completable.create(e -> {
+            try (Realm realm = realmProvider.get()) {
+                realm.executeTransaction(realm1 -> {
+
+                    realm1.copyToRealmOrUpdate(realmObj);
+                    e.onComplete();
+                });
+            } //autoclose
+
+        });
+
+
+    }
 
 
     @Override

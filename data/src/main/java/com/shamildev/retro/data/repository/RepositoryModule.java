@@ -18,6 +18,7 @@ package com.shamildev.retro.data.repository;
 
 import com.shamildev.retro.data.entity.EntityModule;
 import com.shamildev.retro.data.net.NetModule;
+import com.shamildev.retro.domain.repository.FirebaseRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 
 import dagger.Binds;
@@ -36,6 +37,10 @@ public abstract class RepositoryModule {
     @Binds
     @Reusable
     abstract RemoteRepository businessRepository(TMDBRepository repository);
+
+    @Binds
+    @Reusable
+    abstract FirebaseRepository firebaseRepository(FirebaseRepositoryImpl repository);
 
 
 }

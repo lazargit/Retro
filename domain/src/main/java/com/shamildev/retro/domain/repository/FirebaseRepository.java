@@ -1,7 +1,6 @@
 package com.shamildev.retro.domain.repository;
 
-import com.shamildev.retro.domain.DomainObjectStorable;
-import com.shamildev.retro.domain.util.Constants;
+
 
 import io.reactivex.Flowable;
 
@@ -11,6 +10,6 @@ import io.reactivex.Flowable;
 
 public interface FirebaseRepository {
 
-    Flowable<DomainObjectStorable> streamJsonGenres(Constants.MEDIA_TYPE type, String language);
 
+    Flowable<String> checkUser();
 }

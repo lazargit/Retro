@@ -18,6 +18,7 @@ import com.shamildev.retro.domain.interactor.GetPopularPerson;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
+import com.shamildev.retro.domain.interactor.GetUser;
 import com.shamildev.retro.domain.interactor.InitTables;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
@@ -33,6 +34,7 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observable;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
@@ -47,6 +49,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
 public class SplashModelImpl extends SplashModel {
 
 
+    private final GetUser getUser;
     @Inject
     protected DataConfig dataConfig;
     @Inject
@@ -77,6 +80,7 @@ public class SplashModelImpl extends SplashModel {
                            InitTables initTables,
                            GetTMDBConfiguration getTMDBConfiguration,
                            GetGenre getGenre,
+                           GetUser getUser,
                            GetUpcomingMovies getUpcomingMovies,
                            GetNowPlayingMovies getNowPlayingMovies,
                            GetTopRatedMovies getTopRatedMovies,
@@ -87,6 +91,7 @@ public class SplashModelImpl extends SplashModel {
         this.initTables = initTables;
         this.getTMDBConfiguration = getTMDBConfiguration;
         this.getGenre = getGenre;
+        this.getUser = getUser;
         this.getUpcomingMovies = getUpcomingMovies;
         this.getTopRatedMovies = getTopRatedMovies;
         this.getNowPlayingMovies = getNowPlayingMovies;
@@ -107,7 +112,29 @@ public class SplashModelImpl extends SplashModel {
     @Override
     public Boolean checkUser() {
         Log.e("HomePageModelImpl","CHECK USER");
+        useCaseHandler.execute(getUser, GetUser.Params.withCacheTime(1), new DisposableSubscriber<String>() {
+            @Override
+            public void onNext(String user) {
+                Log.e("onNext",">> user"+ user);
+            }
 
+            @Override
+            public void onError(Throwable t) {
+                Log.e("checkUser onError",">>"+t);
+                presenter.onError(t);
+            }
+
+            @Override
+            public void onComplete() {
+
+                //initGenres();
+
+
+                Log.e("onComplete",">> user ");
+
+
+            }
+        });
 
         return true;
     }
@@ -125,12 +152,12 @@ public class SplashModelImpl extends SplashModel {
 
             @Override
             public void onError(Throwable t) {
-
+                presenter.onError(t);
             }
 
             @Override
             public void onComplete() {
-
+                initConfiguration();
 
 
             }
@@ -156,8 +183,9 @@ public class SplashModelImpl extends SplashModel {
 
             @Override
             public void onComplete() {
-              initGenres();
-                System.out.println("initConfiguration onComplete "+appConfig.getConfigurations().posterSizes());
+
+                initGenres();
+
             }
         });
 
@@ -178,7 +206,7 @@ public class SplashModelImpl extends SplashModel {
 
             @Override
             public void onComplete() {
-                Log.d("onComplete",">> genre init");
+                checkUser();
                  loadNowPlayingMovies();
 
             }
@@ -191,8 +219,8 @@ public class SplashModelImpl extends SplashModel {
     private DisposableSubscriber loadNowPlayingMoviesSubscriber = new DisposableSubscriber<ResultWrapper>() {
         @Override
         public void onNext(ResultWrapper resultWrapper) {
+            map.put(AppConfig.NOWPLAYINGKEY,resultWrapper);
 
-            presenter.setBackgroundImage(resultWrapper.results());
         }
 
         @Override
@@ -202,7 +230,8 @@ public class SplashModelImpl extends SplashModel {
 
         @Override
         public void onComplete() {
-            Log.d("onComplete",">> loadUpcomingMovies");
+            loadUpcomingMovies();
+
         }
     };
     private void loadNowPlayingMovies(){
@@ -215,6 +244,14 @@ public class SplashModelImpl extends SplashModel {
         public void onNext(ResultWrapper resultWrapper) {
 
             map.put(AppConfig.UPCOMMINGKEY,resultWrapper);
+            List<MediaItem> mediaItems = Observable.fromIterable(resultWrapper.results())
+                    .cast(MediaItem.class)
+                    .filter(item -> item.itemPosterPath() != null && item.itemPosterPath() != "")
+                    .toList().blockingGet();
+
+            presenter.setBackgroundImage(
+                    mediaItems.get(new Random().nextInt(mediaItems.size()))
+            );
         }
 
         @Override

@@ -1,13 +1,8 @@
 package com.shamildev.retro.ui.splash.fragment.view;
 
-import android.widget.ImageView;
-
-
 import com.shamildev.retro.domain.models.ResultWrapper;
-import com.shamildev.retro.ui.common.view.MVPView;
 import com.shamildev.retro.retroimage.views.RetroImageView;
-import com.shamildev.retro.views.retroslider.views.ImageSliderView;
-
+import com.shamildev.retro.ui.common.view.MVPView;
 
 import java.util.HashMap;
 
@@ -21,11 +16,7 @@ public interface SplashView extends MVPView {
 
 
 
-    ImageSliderView getImageSliderView();
 
-    ImageSliderView getImageSliderView2();
-
-    RetroImageView getCustomImageView();
 
     RetroImageView getSplashBg();
 

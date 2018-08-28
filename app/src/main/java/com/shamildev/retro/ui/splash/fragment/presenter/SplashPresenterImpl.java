@@ -8,7 +8,6 @@ import android.util.Log;
 import com.shamildev.retro.data.net.NetworkManager;
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.di.scope.PerFragment;
-import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
@@ -22,12 +21,8 @@ import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.splash.fragment.model.SplashModel;
 import com.shamildev.retro.ui.splash.fragment.view.SplashView;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
 
 
 /**
@@ -93,15 +88,7 @@ import io.reactivex.Observable;
         }
 
         @Override
-        public void setBackgroundImage(List<DomainObject> results) {
-            List<MediaItem> mediaItems = Observable.fromIterable(results)
-                    .cast(MediaItem.class)
-                    .filter(item -> item.itemPosterPath() != null && item.itemPosterPath() != "")
-                    .toList().blockingGet();
-            Random rand = new Random();
-            MediaItem mediaItem = mediaItems.get(rand.nextInt(mediaItems.size()));
-
-
+        public void setBackgroundImage(MediaItem mediaItem) {
             retroImage
                     .load(mediaItem)
                     .Poster()
@@ -153,7 +140,7 @@ import io.reactivex.Observable;
         @Override
         public void finish(HashMap<String, ResultWrapper> map) {
             Log.d("finish","finishfinishfinishfinishfinishfinish");
-          //  view.navigateToHome(map);
+           view.navigateToHome(map);
 
 
         }

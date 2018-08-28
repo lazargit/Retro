@@ -44,7 +44,7 @@ public class RetroMediaView extends RelativeLayout {
 
 
         this.imageView =  findViewById(R.id.image_custom);
-        this.progressBar = findViewById(R.id.progressbar_image);
+   ///     this.progressBar = findViewById(R.id.progressbar_image);
 
 
         if(attrs!= null){

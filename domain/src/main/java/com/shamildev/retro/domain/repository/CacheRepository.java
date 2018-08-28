@@ -3,6 +3,7 @@ package com.shamildev.retro.domain.repository;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.util.Constants;
 import java.util.List;
 
@@ -15,6 +16,10 @@ import io.reactivex.Flowable;
  */
 
 public interface CacheRepository {
+
+    Flowable<User> fetchUser();
+
+    Completable saveUser(DomainObject item);
 
     void saveObj(DomainObject object);
 

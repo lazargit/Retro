@@ -3,6 +3,7 @@ package com.shamildev.retro.data.net;
 
 import com.shamildev.retro.data.entity.tmdb.ConfigurationResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.GenresResponseEntity;
+import com.shamildev.retro.data.entity.tmdb.GuestSessionEntity;
 import com.shamildev.retro.data.entity.tmdb.ResponseEntity;
 import com.shamildev.retro.data.entity.tmdb.response.CreditsResponse;
 import com.shamildev.retro.data.entity.tmdb.response.ImagesResponse;
@@ -93,6 +94,20 @@ public interface TMDBServices {
     String PRIMARY_RELEASE_DATE_GTE = "primary_release_date.gte";
     String APPEND_TO_RESPONSE = "append_to_response";
     String INCLUDE_IMAGE_LANGUAGE = "include_image_language";
+
+    //**************************************************************************************************************************//
+    /*
+     *
+     * AUTH
+     *
+     */
+    //**************************************************************************************************************************//
+
+    // https://api.themoviedb.org/3/authentication/guest_session/new?api_key=XXX
+    @GET("3/authentication/guest_session/new")
+    Single<GuestSessionEntity> guestSession(
+            @Query(API_KEY) String apikey
+    );
     //**************************************************************************************************************************//
     /*
     *

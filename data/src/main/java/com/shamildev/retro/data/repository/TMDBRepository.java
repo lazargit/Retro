@@ -31,6 +31,7 @@ import com.shamildev.retro.data.net.TMDBServices;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Credits;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.GuestSession;
 import com.shamildev.retro.domain.models.Images;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
@@ -100,6 +101,15 @@ public final class TMDBRepository implements RemoteRepository{
             e.onNext(map.blockingGet());
         });
     }
+
+    @Override
+    public Flowable<GuestSession> fetchGuestSession() {
+        return  tmdbServices
+                .guestSession(dataConfig.authClientSecret()).toFlowable()
+                .flatMap(entity -> Flowable.just(new GuestSession(entity.getSuccess(), entity.getGuestSessionId(), entity.getExpiresAt())))
+                ;
+    }
+
 
     @Override
     public Flowable<Configuration> fetchConfiguration() {
