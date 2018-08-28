@@ -3,7 +3,7 @@ app for searching movies and shows and more.<br>
 Retrolambda and other Java 8 support. 
 
 Android App for movies:<br>  
-clean architecture<br>
+Clean architecture<br>
 MVP<br>
 Dagger2<br> 
 RxJava2, RxAndroid<br>
