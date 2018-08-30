@@ -14,7 +14,7 @@ public abstract class HomeModel extends BaseModel<HomeModelImpl> {
 
 
 
-    public abstract void initData();
+
 
 
 }

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.MediaItem;
+import com.shamildev.retro.domain.bootstrap.Bootstrap;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
@@ -20,9 +21,11 @@ import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
 import com.shamildev.retro.domain.interactor.GetUser;
 import com.shamildev.retro.domain.interactor.InitTables;
+import com.shamildev.retro.domain.models.AppUser;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.ResultWrapper;
+import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.retroimage.core.RetroImage;
 import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
@@ -35,6 +38,7 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
@@ -46,7 +50,7 @@ import io.reactivex.subscribers.DisposableSubscriber;
  //            gifUrl.add("https://media.giphy.com/media/lR8eXSeYUF5vO/giphy.gif");
  */
 @PerFragment
-public class SplashModelImpl extends SplashModel {
+public class SplashModelImpl extends SplashModel implements Bootstrap {
 
 
     private final GetUser getUser;
@@ -73,6 +77,8 @@ public class SplashModelImpl extends SplashModel {
     private final ArrayList<String> mListTopic = new ArrayList<String>();
 
 
+    @Inject
+    AppUser appUser;
 
     @Inject
     public SplashModelImpl(
@@ -109,13 +115,38 @@ public class SplashModelImpl extends SplashModel {
 
 
 
+
+
+
     @Override
-    public Boolean checkUser() {
-        Log.e("HomePageModelImpl","CHECK USER");
+    public void initData() {
+      //  List<MediaItem> personList = ProcessData.createHomePersonList(map);
+        useCaseHandler.execute(initTables, InitTables.Params.with(dataConfig.language()),
+                new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+
+                        presenter.toast("ok"+appUser.getTmdb_guest_session());
+
+                        initUser();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        presenter.onError(e);
+                    }
+                }
+        );
+
+    }
+
+    public void initUser() {
+        Log.e("HomePageModelImpl","INIT USER");
         useCaseHandler.execute(getUser, GetUser.Params.withCacheTime(1), new DisposableSubscriber<String>() {
             @Override
             public void onNext(String user) {
                 Log.e("onNext",">> user"+ user);
+                presenter.toast("init user"+user);
             }
 
             @Override
@@ -136,34 +167,9 @@ public class SplashModelImpl extends SplashModel {
             }
         });
 
-        return true;
-    }
-
-    @Override
-    public void initData() {
-      //  List<MediaItem> personList = ProcessData.createHomePersonList(map);
-        useCaseHandler.execute(initTables, InitTables.Params.with(dataConfig.language()), new DisposableSubscriber<String>() {
-            @Override
-            public void onNext(String item) {
-
-
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                presenter.onError(t);
-            }
-
-            @Override
-            public void onComplete() {
-                initConfiguration();
-
-
-            }
-        });
 
     }
+
 
     @Override
     public void initConfiguration(){
@@ -206,7 +212,7 @@ public class SplashModelImpl extends SplashModel {
 
             @Override
             public void onComplete() {
-                checkUser();
+
                  loadNowPlayingMovies();
 
             }
@@ -319,7 +325,18 @@ public class SplashModelImpl extends SplashModel {
     }
 
 
+    @Override
+    public void onBootstrapNext(Class clazz) {
 
+    }
 
+    @Override
+    public void onBootstrapComplete() {
 
+    }
+
+    @Override
+    public void onBootstrapError(Throwable t) {
+
+    }
 }

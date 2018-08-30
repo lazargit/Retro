@@ -22,6 +22,7 @@ import io.reactivex.annotations.Nullable;
  public abstract class User implements DomainObject {
 
 
+        public static final String anonymus  = "anonymus";
 
         @Nullable
         public abstract String user_id();
@@ -32,13 +33,8 @@ import io.reactivex.annotations.Nullable;
         @Nullable
         public abstract String tmdb_guest_session();
         @Nullable
-        public abstract String tmdb_expires_at();
+        public abstract Long tmdb_expires_at();
 
-    public static User create(String language) {
-        return builder()
-                .language(language)
-                .build();
-    }
     private User.Builder getBuilder() {
         return builder()
                 .user_id(user_id())
@@ -48,7 +44,18 @@ import io.reactivex.annotations.Nullable;
                 .tmdb_expires_at(tmdb_expires_at())
                 ;
     }
-    public User setSession(String guest_session, String expired_at) {
+
+    public static User create(String user_id, String name, String language, String tmdb_guest_session, Long tmdb_expires_at) {
+        return builder()
+                .user_id(user_id)
+                .name(name)
+                .language(language)
+                .tmdb_guest_session(tmdb_guest_session)
+                .tmdb_expires_at(tmdb_expires_at)
+                .build();
+    }
+
+    public User setSession(String guest_session, Long expired_at) {
 
         return getBuilder()
                 .tmdb_guest_session(guest_session)
@@ -60,6 +67,7 @@ import io.reactivex.annotations.Nullable;
         return new AutoValue_User.Builder();
     }
 
+
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder user_id(String user_id);
@@ -70,8 +78,10 @@ import io.reactivex.annotations.Nullable;
 
         public abstract Builder tmdb_guest_session(String tmdb_guest_session);
 
-        public abstract Builder tmdb_expires_at(String tmdb_expires_at);
+        public abstract Builder tmdb_expires_at(Long tmdb_expires_at);
 
         public abstract User build();
     }
+
+
 }

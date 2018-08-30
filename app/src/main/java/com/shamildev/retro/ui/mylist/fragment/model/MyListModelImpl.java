@@ -78,34 +78,6 @@ public class MyListModelImpl extends MyListModel {
 
 
 
-    @Override
-    public void initData() {
-
-        Log.e("TAG","INITTABLES "+dataConfig.language()+" ");
-        useCaseHandler.execute(initTables, InitTables.Params.with(dataConfig.language()), new DisposableSubscriber<String>() {
-            @Override
-            public void onNext(String item) {
-
-                Log.e("TAG", "INITTABLES " + item);
-               // view.makeToast(item);
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                Log.e("TAG","ERROR"+t);
-            }
-
-            @Override
-            public void onComplete() {
-
-                Log.e("TAG","onComplete"+ Thread.currentThread().getName());
-               // initConfiguration();
-            }
-        });
-
-    }
-
 
 
 

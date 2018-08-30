@@ -2,10 +2,7 @@ package com.shamildev.retro;
 
 import android.app.Application;
 
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-
 
 import javax.inject.Singleton;
 

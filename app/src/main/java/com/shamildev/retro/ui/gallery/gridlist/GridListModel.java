@@ -13,7 +13,5 @@ public abstract class GridListModel extends BaseModel {
 
 
 
-    public abstract void initData();
-
 
 }

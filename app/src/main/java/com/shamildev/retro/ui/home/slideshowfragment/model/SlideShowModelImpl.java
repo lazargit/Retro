@@ -76,72 +76,9 @@ public class SlideShowModelImpl extends SlideShowModel {
     }
 
 
-    @Override
-    public Boolean checkUser() {
-        Log.e("HomePageModelImpl","CHECK USER");
-
-        return true;
-    }
-
-    @Override
-    public void initData() {
-
-        Log.e("TAG","INITTABLES "+dataConfig.language()+" ");
-        useCaseHandler.execute(initTables, InitTables.Params.with(dataConfig.language()), new DisposableSubscriber<String>() {
-            @Override
-            public void onNext(String item) {
-
-                Log.e("TAG", "INITTABLES " + item);
-               // view.makeToast(item);
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                Log.e("TAG","ERROR"+t);
-            }
-
-            @Override
-            public void onComplete() {
-
-                Log.e("TAG","onComplete"+ Thread.currentThread().getName());
-               // initConfiguration();
-            }
-        });
-
-    }
-
-    @Override
-    public void initConfiguration(){
-        useCaseHandler.execute(getTMDBConfiguration,GetTMDBConfiguration.Params.withCacheTime(1), new DisposableSubscriber<Configuration>() {
-            @Override
-            public void onNext(Configuration configuration) {
-
-                Log.d("onNext",configuration.backdropSizes().get(0));
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                if(t.getCause() instanceof TMDBError){
-                    TMDBError error = (TMDBError) t.getCause();
-                    Log.d("onError","<<<<< "+error.getResponseCode()+" : "+error.getMessage()+" : "+error.getStatusCode()+" : "+error.getSuccess());
-
-                }
-                Log.d("onError",t.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
-                //retroImage.setConfigurations(appConfig.getConfigurations());
-                //initGenres();
-              Log.d("onComplete",">> initConfiguration "+ appConfig.getConfigurations().baseUrl());
-
-            }
-        });
 
 
-    }
+
 
 
 

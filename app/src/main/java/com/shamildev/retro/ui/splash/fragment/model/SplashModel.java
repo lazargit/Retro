@@ -14,8 +14,9 @@ public abstract class SplashModel extends BaseModel<SplashPresenter> {
 
 
 
-     public abstract Boolean checkUser();
+
      public abstract void initData();
      public abstract void initConfiguration();
 
+    public abstract void initUser();
 }

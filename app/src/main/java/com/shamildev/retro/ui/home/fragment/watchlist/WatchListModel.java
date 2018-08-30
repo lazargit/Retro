@@ -12,8 +12,4 @@ public abstract class WatchListModel extends BaseModel {
 
 
 
-
-    public abstract void initData();
-
-
 }

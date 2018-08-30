@@ -10,6 +10,6 @@ import io.reactivex.Flowable;
 
 public interface FirebaseRepository {
 
-
+    Flowable<String> initUser();
     Flowable<String> checkUser();
 }

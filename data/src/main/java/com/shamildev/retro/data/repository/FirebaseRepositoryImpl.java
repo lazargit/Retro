@@ -26,6 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.shamildev.retro.domain.config.DataConfig;
+import com.shamildev.retro.domain.models.AppUser;
 import com.shamildev.retro.domain.repository.FirebaseRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 
@@ -50,6 +51,8 @@ public final class FirebaseRepositoryImpl implements FirebaseRepository {
      private FirebaseAuth mAuth;
 
 
+     @Inject
+     AppUser appUser;
 
 
     @Inject
@@ -64,11 +67,18 @@ public final class FirebaseRepositoryImpl implements FirebaseRepository {
     }
 
 
-
+    @Override
+    public Flowable<String> initUser() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user!=null){
+            return Flowable.empty();
+        }
+        return Flowable.empty();
+    }
 
     @Override
     public Flowable<String> checkUser() {
-        Log.e("FIREBASE","check user shamil@aaa.de ");
+        Log.e("FIREBASE","check user shamil@aaa.de "+appUser.getName());
        // FirebaseUser currentUser = mAuth.getCurrentUser();
 
 
@@ -81,15 +91,17 @@ public final class FirebaseRepositoryImpl implements FirebaseRepository {
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d("TAG", "createUserWithEmail:onComplete");
+                                Log.d("TAG", "signInWithEmailAndPassword:onComplete");
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Log.d("TAG", "signInWithEmail:success");
+
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     user.getEmail();
-
-                                   e.onNext(user.getUid());
-                                   e.onComplete();
+                                    user.getDisplayName();
+                                    Log.d("TAG", "signInWithEmail:success"+user.getEmail()+" "+user.getDisplayName()+" "+user.getUid());
+                                    appUser.setEmail(user.getEmail());
+                                    e.onNext(user.getUid());
+                                    e.onComplete();
 
                                 } else {
                                     // If sign in fails, display a message to the user.

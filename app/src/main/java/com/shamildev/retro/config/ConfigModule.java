@@ -7,6 +7,8 @@ import android.util.Log;
 import com.shamildev.retro.BuildConfig;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
+import com.shamildev.retro.domain.models.AppUser;
+import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.util.Pair;
 import com.shamildev.retro.util.Constants;
 import com.shamildev.retro.util.DeviceUtils;
@@ -59,11 +61,22 @@ public class ConfigModule extends BaseConfigModule {
 
     @Provides
     @Singleton
-    static AppConfig appConfig(Application application) {
+    static AppConfig appConfig(Application application,DataConfig dataConfig) {
 
         Pair<Integer, Integer> screenSizes = new Pair<>(DeviceUtils.getScreenWidth(application), DeviceUtils.getScreenHeight(application));
-        Log.e("TAG","appConfig");
-        return new AppConfig(screenSizes,DeviceUtils.isFirstLaunch(application));
+        boolean firstLaunch = DeviceUtils.isFirstLaunch(application);
+        Log.e("TAG","appConfig isFirstLaunch"+firstLaunch);
+        return new AppConfig(screenSizes,firstLaunch);
+
+    }
+
+    @Provides
+    @Singleton
+    static AppUser appUser(DataConfig dataConfig) {
+
+
+        Log.e("TAG","appUser"+dataConfig.language());
+        return new AppUser(User.anonymus,dataConfig.language());
 
     }
 

@@ -12,8 +12,4 @@ public abstract class SearchModel extends BaseModel {
 
 
 
-
-    public abstract void initData();
-
-
 }

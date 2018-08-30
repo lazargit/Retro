@@ -107,8 +107,9 @@ dependencies {
     compile presentationDependencies.rx.rxBinding
     compile presentationDependencies.rx.rxBindingsupport
     compile presentationDependencies.rx.rxBindingappcompat
-    implementation 'com.github.bumptech.glide:glide:4.2.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     compile presentationDependencies.butterKnife.core
     annotationProcessor presentationDependencies.butterKnife.compiler
     implementation presentationDependencies.dagger.core

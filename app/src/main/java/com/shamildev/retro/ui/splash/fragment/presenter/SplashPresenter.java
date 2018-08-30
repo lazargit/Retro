@@ -16,11 +16,9 @@ import java.util.HashMap;
  */
 public interface SplashPresenter extends Presenter {
 
-    void startApp();
     void configRetroImage(Configuration configuration);
     void finish(HashMap<String, ResultWrapper> map);
-
+    void toast(Object obj);
     void onError(Throwable t);
-
     void setBackgroundImage(MediaItem results);
 }

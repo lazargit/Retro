@@ -18,6 +18,7 @@ package com.shamildev.retro.domain.interactor;
 
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
+import com.shamildev.retro.domain.models.AppUser;
 import com.shamildev.retro.domain.models.GuestSession;
 import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.params.ParamsBasic;
@@ -25,9 +26,12 @@ import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.FirebaseRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 
+import org.reactivestreams.Publisher;
+
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -42,6 +46,11 @@ public final class GetUser implements UseCaseFlowable<ParamsBasic, String> {
 
     @Inject
     AppConfig appConfig;
+
+
+
+    @Inject
+    AppUser appUser;
 
 
     @Inject
@@ -61,7 +70,8 @@ public final class GetUser implements UseCaseFlowable<ParamsBasic, String> {
     public Flowable<String> execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
 
-         //  firebaseRepository.checkUser().blockingSingle();
+    //  firebaseRepository.checkUser().blockingSingle();
+
 
 
         return firebaseRepository.checkUser();
@@ -112,16 +122,17 @@ public final class GetUser implements UseCaseFlowable<ParamsBasic, String> {
     }
 
     private Flowable<User> initUser() {
-       return Flowable.just(dataConfig.language())
-                .map(User::create)
-                .flatMap(u -> Flowable.just(u)
-                                        .map(s -> {
-                                            GuestSession guestSession = fetchGuestSession()
-                                                    .blockingSingle();
-                                            return  u.setSession(guestSession.getGuestSessionId(), guestSession.getExpiresAt());
-                                        })
-
-                );
+//       return Flowable.just(dataConfig.language())
+//                .map(User::create)
+//                .flatMap(u -> Flowable.just(u)
+//                                        .map(s -> {
+//                                            GuestSession guestSession = fetchGuestSession()
+//                                                    .blockingSingle();
+//                                            return  u.setSession(guestSession.getGuestSessionId(), guestSession.getExpiresAt());
+//                                        })
+//
+//                );
+       return Flowable.empty();
     }
 
     private Flowable<GuestSession> fetchGuestSession() {

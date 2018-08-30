@@ -2,8 +2,10 @@ package com.shamildev.retro.domain.interactor;
 
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
+import com.shamildev.retro.domain.models.AppUser;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.params.ParamsBasic;
 import com.shamildev.retro.domain.repository.CacheRepository;
 import com.shamildev.retro.domain.repository.LocalRepository;
@@ -15,19 +17,24 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import io.reactivex.BackpressureStrategy;
+import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
+import io.reactivex.CompletableSource;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 
 
-public final class InitTables implements UseCaseFlowable<ParamsBasic,String> {
+public final class InitTables implements UseCaseCompletable<ParamsBasic> {
 
     private final RemoteRepository repository;
     private final CacheRepository cache;
@@ -40,11 +47,17 @@ public final class InitTables implements UseCaseFlowable<ParamsBasic,String> {
     @Inject
     AppConfig appConfig;
 
+    @Inject
+    AppUser user;
+
 
 
 
     @Inject
-    InitTables(RemoteRepository repository, CacheRepository cache,LocalRepository localRepository, DataConfig dataConfig) {
+    InitTables(RemoteRepository repository,
+               CacheRepository cache,
+               LocalRepository localRepository,
+               DataConfig dataConfig) {
         this.repository = repository;
         this.cache = cache;
         this.local = localRepository;
@@ -54,87 +67,53 @@ public final class InitTables implements UseCaseFlowable<ParamsBasic,String> {
 
 
 
-
-
-
     @Override
-    public Flowable<String> execute(ParamsBasic params) {
+    public Completable execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
          String pLanguage = ((Params) params).language;
 
         String language = !Arrays.asList(anArray).contains(pLanguage) ? anArray[0] : pLanguage;
 
-
-
-        // aBoolean -> (aBoolean) ? fetchAllGenreFromNet() : fetchAllGenreFromCache(language))
-
-//        if(!Arrays.asList(anArray).contains(language)){
-//            language = anArray[0];
-//        }
-
         System.out.println("execute: " + Thread.currentThread().getName());
 
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.set(Calendar.MONTH, 8); // Months are 0-based!
-        currentDate.set(Calendar.DAY_OF_MONTH, 16); // Clearer than DATE
-        currentDate.set(Calendar.YEAR, 2018); // Clearer than DATE
-
-        java.text.DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss z", Locale.GERMANY);
-
-       String finalLanguage = language;
+//        Calendar currentDate = Calendar.getInstance();
+//        currentDate.set(Calendar.MONTH, 8); // Months are 0-based!
+//        currentDate.set(Calendar.DAY_OF_MONTH, 16); // Clearer than DATE
+//        currentDate.set(Calendar.YEAR, 2018); // Clearer than DATE
+//
+//        java.text.DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss z", Locale.GERMANY);
 
 
 
 
 
-      return Flowable.create((FlowableEmitter<String> e) -> {
-
-          //Get Configuration from local JSON file and save to local cache DB
-
-          System.out.println("init create: " + Thread.currentThread().getName());
 
 
-
-          local.streamJsonCongiguration()
-                  .cast(Configuration.class)
-                  .flatMapCompletable(cache::saveTMDbConfiguration)
-                  .doOnComplete(() -> e.onNext("CONFIG"))
-                  .doOnError(e::onError)
-                  .subscribeOn(Schedulers.io())
-                  .subscribe();
-
-          //Get Genres from local JSON file and save to local cache DB
-                  local.streamJsonGenres(Constants.MEDIA_TYPE.MOVIE, finalLanguage)
-                          .cast(Genre.class)
-                          .flatMapCompletable(cache::saveGenre)
-                          .doOnError(e::onError)
-                          .doOnComplete(() ->
-                              e.onNext("GENRES MOVIE")
-
-                          )
-                          .subscribeOn(Schedulers.io())
-                          .subscribe();
-
-
-
-          local.streamJsonGenres(Constants.MEDIA_TYPE.TV, finalLanguage)
-                  .cast(Genre.class)
-                  .flatMapCompletable(cache::saveGenre)
-                  .doOnError(e::onError)
-                  .doOnComplete(() -> {
-                      e.onNext("GENRES TV");
-                      e.onComplete();}
-                  )
-                  .subscribeOn(Schedulers.io())
-                  .subscribe();
-
-
-      }, BackpressureStrategy.BUFFER);
-
-
-
-
-
+      return Completable.create(e -> repository.fetchGuestSession()
+              .flatMapCompletable(guestSession ->
+                      cache.saveUser(User.builder()
+                              .language(dataConfig.language())
+                              .name(User.anonymus)
+                              .tmdb_guest_session(guestSession.getGuestSessionId())
+                              .tmdb_expires_at(DateUtil.convertStringUtcToMilSec(guestSession.getExpiresAt()))
+                              .build()))
+              .andThen(local.streamJsonCongiguration()
+                      .cast(Configuration.class)
+                      .flatMapCompletable(cache::saveTMDbConfiguration))
+              .andThen(local.streamJsonGenres(Constants.MEDIA_TYPE.MOVIE, language)
+                      .cast(Genre.class)
+                      .flatMapCompletable(cache::saveGenre))
+              .andThen(local.streamJsonGenres(Constants.MEDIA_TYPE.TV, language)
+                      .cast(Genre.class)
+                      .flatMapCompletable(cache::saveGenre))
+              .doOnComplete(() ->{
+                  User user = cache.fetchUser().blockingSingle();
+                   this.user.setUser(user);
+                   e.onComplete();
+              })
+              .doOnError(e::onError)
+              .subscribeOn(Schedulers.io())
+              .subscribe());
     }
 
 

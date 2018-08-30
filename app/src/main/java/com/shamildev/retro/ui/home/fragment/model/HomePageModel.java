@@ -13,7 +13,5 @@ public abstract class HomePageModel extends BaseModel {
 
 
 
-    public abstract void initData();
-
 
 }

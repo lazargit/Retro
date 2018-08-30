@@ -1,17 +1,17 @@
 package com.shamildev.retro.domain.util;
 
-import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.DomainObjectStorable;
-import com.shamildev.retro.domain.models.Configuration;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
-import io.reactivex.Observable;
 
 /**
  * Created by Schamil Mischijew on 26.11.2017.
@@ -31,6 +31,38 @@ public class DateUtil {
 
 
         return formatter.format(calendar.getTime()); //DateFormat.format("dd/MM/yyyy hh:mm:ss", dateInMilliseconds).toString();
+    }
+
+    public static Timestamp convertStringUtcToDate(String str) {
+
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss UTC",Locale.GERMANY);
+            Date parsedDate = dateFormat.parse(str);
+            Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
+            return timestamp;
+        } catch(Exception e) { //this generic but you can control another types of exception
+            // look the origin of excption
+        }
+            return null;
+    }
+
+
+    public static Long convertStringUtcToMilSec(String str) {
+
+        try {
+            SimpleDateFormat outputFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                             outputFmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date parsedDate = outputFmt.parse(str);
+          //  Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
+            return parsedDate.getTime();
+        } catch(Exception e) { //this generic but you can control another types of exception
+            // look the origin of excption
+
+        }
+        return 0L;
     }
 
 //    public static Long convertDateToTimestamp(long dateInMilliseconds) {

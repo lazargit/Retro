@@ -107,6 +107,7 @@ public final class YoutubePlayerFragment extends BaseViewFragmentV4<YoutubePlaye
                 if (!b) {
                     YPlayer = youTubePlayer;
                     YPlayer.setFullscreen(false);
+
                     YPlayer.loadVideo("-AvUavKYfcw");
                     YPlayer.play();
                 }

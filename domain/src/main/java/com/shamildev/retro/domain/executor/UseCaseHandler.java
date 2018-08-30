@@ -3,6 +3,7 @@ package com.shamildev.retro.domain.executor;
 
 
 import com.shamildev.retro.domain.interactor.UseCase;
+import com.shamildev.retro.domain.interactor.UseCaseCompletable;
 import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
@@ -72,7 +74,22 @@ public final class UseCaseHandler {
         }
     }
 
+    public <K> void execute(UseCaseCompletable<K> useCase, @Nullable K params,
+                            DisposableCompletableObserver observer) {
+        // setLastUseCase(useCase, params);
+        Disposable disposable = useCase.execute(params)
 
+
+                //.subscribeOn(Schedulers.io())
+
+                //  .observeOn(postExecutionThread.scheduler())
+                .subscribeOn(executionThread.scheduler())
+                .observeOn(postExecutionThread.scheduler())
+                .subscribeWith(observer);
+        if(disposables != null) {
+            disposables.add(disposable);
+        }
+    }
 
     public <K, V> void execute(UseCase<K, V> useCase, DisposableObserver<V> observer) {
         execute(useCase, null, observer);
@@ -83,6 +100,9 @@ public final class UseCaseHandler {
         execute(useCase, null, observer);
     }
 
+    public <K> void execute(UseCaseCompletable<K> useCase, DisposableCompletableObserver observer) {
+        execute(useCase, null, observer);
+    }
 
 
 

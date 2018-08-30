@@ -3,6 +3,7 @@ package com.shamildev.retro.domain.config;
 import com.shamildev.retro.domain.DomainObject;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
+import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.util.Pair;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class AppConfig {
 
 
     private Configuration configurations;
+    private User user;
+
 
     private List<Genre> genres;
     private List<DomainObject> watchList = new ArrayList<>();
@@ -89,5 +92,14 @@ public class AppConfig {
 
     public Boolean isFirstStart() {
         return this.firststart;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

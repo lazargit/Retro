@@ -2,6 +2,7 @@ package com.shamildev.retro;
 
 import android.app.Application;
 
+import com.bumptech.glide.module.AppGlideModule;
 import com.shamildev.retro.android.executor.ExecutorModule;
 import com.shamildev.retro.android.executor.IOExecutionThread;
 import com.shamildev.retro.android.executor.MainPostExecutionThread;
@@ -55,6 +56,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 
        )
 public abstract class AppModule {
+
 
 
 

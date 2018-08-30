@@ -21,8 +21,11 @@ import com.shamildev.retro.ui.common.presenter.BasePresenter;
 import com.shamildev.retro.ui.splash.fragment.model.SplashModel;
 import com.shamildev.retro.ui.splash.fragment.view.SplashView;
 import java.util.HashMap;
+import java.util.Timer;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 
 /**
@@ -72,12 +75,13 @@ import javax.inject.Inject;
 
         @Override
         public void onStart(@Nullable Bundle savedInstanceState) {
-            Log.e("BasePresenter","onStart!!!!");
+            Log.e("BasePresenter","onStart!!!! "+this.appConfig.isFirstStart());
             if(this.appConfig.isFirstStart()){
                 this.model.initData();
-                this.model.checkUser();
+               // this.model.checkUser();
             }else{
-                this.model.initConfiguration();
+                this.model.initUser();
+               // this.model.initConfiguration();
             }
 
         }
@@ -112,14 +116,7 @@ import javax.inject.Inject;
         }
 
 
-        @Override
-        public void startApp() {
-            if(this.appConfig.isFirstStart()){
-                model.initData();
-            }else{
-                model.initConfiguration();
-            }
-        }
+
 
 
 
@@ -139,15 +136,21 @@ import javax.inject.Inject;
 
         @Override
         public void finish(HashMap<String, ResultWrapper> map) {
-            Log.d("finish","finishfinishfinishfinishfinishfinish");
-           view.navigateToHome(map);
+            Timber.d("FINISH","map",map);
+           //view.navigateToHome(map);
 
 
+        }
+
+        @Override
+        public void toast(Object obj) {
+            view.makeToast((String) obj);
         }
 
 
         @Override
         public void onNetworkAvailable() {
+
             Log.d("test","onNetworkAvailable");
         }
         private void refreshData() {

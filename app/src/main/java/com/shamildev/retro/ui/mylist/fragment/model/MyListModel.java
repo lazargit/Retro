@@ -13,7 +13,7 @@ public abstract class MyListModel extends BaseModel {
 
 
 
-    public abstract void initData();
+
 
 
 }

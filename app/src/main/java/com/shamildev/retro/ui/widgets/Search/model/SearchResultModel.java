@@ -11,7 +11,6 @@ import com.shamildev.retro.ui.common.model.BaseModel;
 
 public abstract class SearchResultModel extends BaseModel {
 
-    public abstract void initData();
 
 
 }

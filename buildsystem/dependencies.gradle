@@ -32,14 +32,14 @@ ext {
     rxjavaVersion = "2.1.0"
     javaxAnnotationVersion = '1.0'
    */
-  androidBuildToolsVersion = "27.0.2"
+  androidBuildToolsVersion = "27.1.0"
   androidMinSdkVersion = 19
   androidTargetSdkVersion = 27
   androidCompileSdkVersion = 27
 
 
   //androidSupport
-  androidSupportVersion = '27.0.2'
+  androidSupportVersion = '27.1.0'
   constraintlayoutVersion = "1.0.2"
 
   //dagger

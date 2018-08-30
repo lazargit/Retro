@@ -17,7 +17,7 @@ public class UserRealm extends RealmObject {
     private String name;
     private String language;
     private String tmdb_guest_session;
-    private String expires_at;
+    private long expires_at;
     private long last_update;
 
 
@@ -59,11 +59,11 @@ public class UserRealm extends RealmObject {
 
 
 
-    public String getExpires_at() {
+    public long getExpires_at() {
         return expires_at;
     }
 
-    public void setExpires_at(String expires_at) {
+    public void setExpires_at(long expires_at) {
         this.expires_at = expires_at;
     }
 
