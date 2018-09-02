@@ -15,6 +15,14 @@
         android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
 
 
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity android:name="com.shamildev.retro.ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,6 +55,13 @@
 
             android:label="@string/activity__home">
         </activity>
+        <activity
+            android:name=".ui.account.AccountActivity"
+            android:theme="@style/AppFullScreenTheme"
+
+            android:label="@string/activity_account">
+        </activity>
+
         <activity
             android:name=".ui.watchlist.WatchListActivity"
             android:label="@string/activity__watchlist">

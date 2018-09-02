@@ -15,6 +15,8 @@ import com.shamildev.retro.domain.executor.ExecutionThread;
 import com.shamildev.retro.domain.executor.PostExecutionThread;
 import com.shamildev.retro.retroimage.core.ProcessImageModule;
 import com.shamildev.retro.retrovideo.core.VideoPlayerModule;
+import com.shamildev.retro.ui.account.AccountActivity;
+import com.shamildev.retro.ui.account.AccountActivityModule;
 import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.details.DetailsActivityModule;
 import com.shamildev.retro.ui.home.HomeActivity;
@@ -96,6 +98,13 @@ public abstract class AppModule {
 
 
 
+    /**
+     * Provides the injector for the {@link AccountActivity}, which has access to the dependencies
+     * provided by this application instance (singleton scoped objects).
+     */
+    @PerActivity
+    @ContributesAndroidInjector(modules = AccountActivityModule.class)
+    abstract AccountActivity accounthActivityInjector();
 
 
     /**

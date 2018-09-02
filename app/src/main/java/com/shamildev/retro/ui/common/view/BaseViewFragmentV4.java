@@ -1,7 +1,7 @@
 package com.shamildev.retro.ui.common.view;
 
 /**
- * Created by Shamil Lazar on 13.12.2017.
+ * Created by Shamil Lazar.
  */
 
 import android.content.Context;
@@ -30,38 +30,22 @@ import dagger.android.support.DaggerFragment;
  *
  * @param <T> the type of the {@link Presenter}.
  */
-public abstract class BaseViewFragmentV4<T extends Presenter> extends DaggerFragment
-        implements MVPView {
+public abstract class BaseViewFragmentV4<T extends Presenter> extends DaggerFragment implements MVPView {
 
+    private Unbinder viewUnbinder;
     @Inject
     protected T presenter;
-
-
-
-
     @Inject
     @Named(BaseFragmentModule.CHILD_FRAGMENT_V4_MANAGER)
     protected FragmentManager childFragmentManager;
-   // private Unbinder viewUnbinder;
+
 
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        /*
-         * The Presenter.onStart method is called in onViewStateRestored so that the Fragment’s
-         * views are bound before the presentation begins. This ensures that no NullPointerException
-         * occurs if the Presenter calls an MVPView method that uses a bound view.
-         *
-         * Furthermore, Fragments that do not return a non-null View in onCreateView will result in
-         * onViewStateRestored not being called. This results in Presenter.onStart not being
-         * invoked. Therefore, no-UI Fragments do not support Presenter-View pairs. We could modify
-         * our code to support Presenter-View pairs in no-UI Fragments if needed. However, I will
-         * keep things as is since I do not consider it appropriate to have a Presenter-View pair
-         * in a no-UI Fragment. Do feel free to disagree and refactor.
-         */
         presenter.onStart(savedInstanceState);
-       // viewUnbinder = ButterKnife.bind(this, getView());
+        viewUnbinder = ButterKnife.bind(this, getView());
     }
 
     @Override

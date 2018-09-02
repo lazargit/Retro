@@ -1,6 +1,7 @@
 package com.shamildev.retro.ui.home.fragment.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -92,22 +93,31 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
 
     private void loadImage(MediaItem item, WideItemHolder viewHolder){
 
-        this.retroImage
-                .load(item)
-                .Poster()
-                .w780().into(viewHolder.imageView, new RetroImageRequestListener() {
+        Log.e("START LOAD IMAGE",item.itemPosterPath());
+
+
+        if(viewHolder.drawable==null){
+            retroImage
+                    .load(item)
+                    .Poster()
+                    .w500()
+                    .into(viewHolder.imageView, new RetroImageRequestListener() {
                         @Override
                         public boolean onLoadFailed() {
+                            Log.e("TAG", "IMAGES LOAD FAILED.");
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady() {
-                            fragment.startPostponedEnterTransition();
-                            return false;
+                            Log.e("TAG", "ALL IMAGES PRELOADED...!");
+                            viewHolder.drawable = viewHolder.imageView.getImageView().getDrawable();
 
+                            return false;
                         }
-               });
+                    });
+
+        }
 
 
 
@@ -156,6 +166,7 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
         private final AtomicBoolean enterTransitionStarted;
         RetroImageView imageView;
         TextView vote;
+        Drawable drawable = null;
 
 
         public WideItemHolder(View itemView) {
@@ -203,6 +214,7 @@ public class RecyclerViewPagerAdapter extends RecyclerView.Adapter {
 
 
                 if(imagePath!=null) {
+
                     loadImage((MediaItem) movieItems.get(adapterPosition), this);
                     vote.setText(popularity.toString());
 

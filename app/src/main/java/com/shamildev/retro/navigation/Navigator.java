@@ -9,6 +9,7 @@ import com.shamildev.retro.di.scope.ApplicationScope;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
 import com.shamildev.retro.domain.models.ResultWrapper;
+import com.shamildev.retro.ui.account.AccountActivity;
 import com.shamildev.retro.ui.details.DetailsActivity;
 import com.shamildev.retro.ui.home.HomeActivity;
 import com.shamildev.retro.ui.mylist.MyListActivity;
@@ -47,10 +48,16 @@ public final class Navigator {
 
       public void navigateToHome(Context context, HashMap<String,ResultWrapper> map) {
 
-          Log.e("TAG","navigateToHome>>> "+context);
-
         if (context != null) {
             Intent intent = HomeActivity.getCallingIntent(context, map);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+    public void navigateToAccount(Context context) {
+
+        if (context != null) {
+            Intent intent = AccountActivity.getCallingIntent(context);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }

@@ -87,7 +87,8 @@ public final class SplashFragment extends BaseViewFragment<SplashPresenter> impl
 
     @Override
     public void navigateToHome(HashMap<String, ResultWrapper> map) {
-      navigator.navigateToHome(application,map);
+       //navigator.navigateToHome(application,map);
+       navigator.navigateToAccount(application);
 
     }
 

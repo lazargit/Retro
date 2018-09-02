@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.shamildev.retro.data.net.NetworkManager;
 
 import javax.inject.Inject;
@@ -13,6 +15,8 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import timber.log.Timber;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
@@ -31,11 +35,18 @@ public class App extends Application implements HasActivityInjector {
     @Override
     public void onCreate() {
         super.onCreate();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+//        Log.d("App","test"+BuildConfig.FACEBOOK_API_TOKEN);
+//        FacebookSdk.setApplicationId(BuildConfig.FACEBOOK_API_TOKEN);
+//        FacebookSdk.sdkInitialize(getApplicationContext());
+//
+//        AppEventsLogger.activateApp(this);
         initialiseLogger();
         initCalligraphy();
         DaggerAppComponent.builder().create(this).inject(this);
 
-        Log.d("App","test");
+
        // boolean debug = BuildConfig.MOVIE_DB_API_TOKEN;
         networkManager.start();
 

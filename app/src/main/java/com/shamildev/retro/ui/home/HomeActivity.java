@@ -2,6 +2,7 @@ package com.shamildev.retro.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import android.support.design.widget.AppBarLayout;
@@ -142,11 +143,11 @@ public class HomeActivity extends BaseActivitySupport {
 
 
 
-       getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragmentContainer, YoutubePlayerFragment.instance(),YoutubePlayerFragment.TAG)
-                .addToBackStack(WatchListFragment.TAG)
-                .commit();
+//       getSupportFragmentManager()
+//                .beginTransaction()
+//                .add(R.id.fragmentContainer, YoutubePlayerFragment.instance(),YoutubePlayerFragment.TAG)
+//                .addToBackStack(WatchListFragment.TAG)
+//                .commit();
 
        // this.requestManager = Glide.with( this);
        //setSupportActionBar(toolBar);
@@ -154,7 +155,7 @@ public class HomeActivity extends BaseActivitySupport {
 
 
 
-      // initializeActivity(savedInstanceState);
+     // initializeActivity(savedInstanceState);
 
        // initializeYoutubePlayer();
 
@@ -177,7 +178,7 @@ public class HomeActivity extends BaseActivitySupport {
 //                    .add(R.id.mainFragmentContainer, new GridFragment(), GridFragment.class.getSimpleName())
 //                    .commit();
 
-            //  addFragment(R.id.fragmentContainer, HomeFragment.with(map));
+            addFragment(R.id.fragmentContainer, HomeFragment.with(map));
        // replaceFragment(R.id.fragmentContainer,HomeFragment.with(map),HomeFragment.TAG);
 
 
@@ -237,9 +238,10 @@ public class HomeActivity extends BaseActivitySupport {
     private void initImghHeader(HashMap<String, ResultWrapper> hashMap) {
 
 
-        List<MediaItem> homeGalleryList = ProcessData.createTopRatedGalleryList(hashMap);
+        Log.e("HOME",">"+ map.size());
+        //List<MediaItem> homeGalleryList = ProcessData.createTopRatedGalleryList(hashMap);
       //  imgsliderHeader.startSlide(homeGalleryList,retroImage);
-        img_slider.startSlide(homeGalleryList,retroImage);
+        //img_slider.startSlide(homeGalleryList,retroImage);
 
 
 

@@ -71,6 +71,9 @@ public abstract class DataConfig {
     public abstract int maxCacheTime();
 
     @Nullable
+    public abstract String facebookApiToken();
+
+    @Nullable
     public abstract Long lastUpdate();
 
     @Nullable
@@ -122,7 +125,7 @@ public abstract class DataConfig {
                     .genres(this.genres());
     }
 
-    public static DataConfig create(String baseUrl, String youtubeKey, String authGrantType, String authClientId, String authClientSecret, String cacheRootDir, String cacheDir, int cacheMaxSizeMb, int offlineCacheTimeDays, int networkCacheTimeSeconds, boolean debug, String language, String country, int maxCacheTime, Long lastUpdate, Configuration configurations, List<Genre> genres) {
+    public static DataConfig create(String baseUrl, String youtubeKey, String authGrantType, String authClientId, String authClientSecret, String cacheRootDir, String cacheDir, int cacheMaxSizeMb, int offlineCacheTimeDays, int networkCacheTimeSeconds, boolean debug, String language, String country, int maxCacheTime, String facebookApiToken, Long lastUpdate, Configuration configurations, List<Genre> genres) {
         return builder()
                 .baseUrl(baseUrl)
                 .youtubeKey(youtubeKey)
@@ -138,6 +141,7 @@ public abstract class DataConfig {
                 .language(language)
                 .country(country)
                 .maxCacheTime(maxCacheTime)
+                .facebookApiToken(facebookApiToken)
                 .lastUpdate(lastUpdate)
                 .configurations(configurations)
                 .genres(genres)
@@ -188,7 +192,10 @@ public abstract class DataConfig {
 
         public abstract Builder youtubeKey(String youtubeKey);
 
+        public abstract Builder facebookApiToken(String facebookApiToken);
+
         public abstract DataConfig build();
+
 
 
     }

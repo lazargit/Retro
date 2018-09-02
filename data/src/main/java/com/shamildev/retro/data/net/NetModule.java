@@ -1,5 +1,8 @@
 package com.shamildev.retro.data.net;
 
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.shamildev.retro.data.net.auth.AuthRequestInterceptor;
 import com.shamildev.retro.data.scope.ApplicationScope;
 
@@ -7,6 +10,7 @@ import com.shamildev.retro.data.scope.ApplicationScope;
 import java.io.File;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;

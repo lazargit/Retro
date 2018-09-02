@@ -12,6 +12,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.retroimage.core.RetroImageRequest;
@@ -67,23 +68,33 @@ public class RetroImageLoadingHandler {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            map.forEach((o, s) -> {
 
-                 if(imageView instanceof RetroImageView){
+            try {
+                map.forEach((o, s) -> {
 
-                       this.imageView = (RetroImageView) imageView;
-                       if(this.imageView.isShowProgressBar()){
-                           this.imageView.getProgressBar().setVisibility(View.VISIBLE);
-                       }
+                    if(imageView instanceof RetroImageView){
 
-                       //this.imageView.getProgressBar().setVisibility(View.VISIBLE);
-                       loadFile(o).into(this.imageView .getImageView());
+                        this.imageView = (RetroImageView) imageView;
+                        if(this.imageView.isShowProgressBar()){
+                            this.imageView.getProgressBar().setVisibility(View.VISIBLE);
+                        }
 
-                 }else{
-                       loadFile(o).preload();
-                 }
+                        //this.imageView.getProgressBar().setVisibility(View.VISIBLE);
+                        if(this.imageView.getImageCircle()){
+                            loadFile(o).apply(RequestOptions.circleCropTransform()).into(this.imageView.getImageView());
+                        }else {
+                            loadFile(o).into(this.imageView.getImageView());
+                        }
 
-            });
+                    }else{
+                        loadFile(o).preload();
+                    }
+
+                });
+            }catch (Exception t) {
+
+          }
+
         }
 
 
@@ -134,7 +145,7 @@ public class RetroImageLoadingHandler {
             String path="";
 
 
-           // Log.e("TAG","MEDIAITEM.....TYPE"+this.imageRequest.getImageType()+" ,,,,,,,,,, "+this.imageRequest.getImageSizeSetting()+" ");
+
                 switch (this.imageRequest.getImageType()){
                     case POSTER:
                         if(item.itemPosterPath()!=null)
@@ -147,6 +158,7 @@ public class RetroImageLoadingHandler {
                     case PROFILE:
                         if(item.itemPosterPath()!=null)
                          path = this.imageRequest.getConfigurations().baseUrl() + tmdbConfigurationSizes + item.itemPosterPath();
+                        Log.e("TAG","MEDIAITEM.....TYPE"+this.imageRequest.getImageType()+" ,,,,,,,,,, "+this.imageRequest.getImageSizeSetting()+" ");
                         break;
                     case LOGO:
 

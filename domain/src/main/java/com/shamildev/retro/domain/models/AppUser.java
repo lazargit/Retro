@@ -2,19 +2,27 @@ package com.shamildev.retro.domain.models;
 
 import com.shamildev.retro.domain.DomainObject;
 
+
+
 /**
  * Created by Shamil Lazar
  */
 public class AppUser implements DomainObject {
 
-    private static final String anonymus  = "anonymus";
+    private static final String anonymus = "anonymus";
     private String name;
     private String language;
-
-    private  String user_id;
+    private String user_id;
     private String tmdb_guest_session;
     private Long tmdb_expires_at;
     private String email;
+    private String uid;
+    private Boolean isLoggedIn;
+
+
+
+    private String photoUrl;
+    private String sigin_provider;
 
 
     public AppUser(String name, String language) {
@@ -61,6 +69,7 @@ public class AppUser implements DomainObject {
     public void setTmdb_expires_at(Long tmdb_expires_at) {
         this.tmdb_expires_at = tmdb_expires_at;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -69,7 +78,13 @@ public class AppUser implements DomainObject {
         return email;
     }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
+    public String getUid() {
+        return uid;
+    }
 
     public void setUser(User user) {
         setName(user.name());
@@ -78,6 +93,42 @@ public class AppUser implements DomainObject {
         setTmdb_expires_at(user.tmdb_expires_at());
     }
 
+    public void setFirebaseUser(String uid, String email, String name,String providerId, String photoUrl) {
+        setUid(uid);
+        setEmail(email);
+        setName(name);
+        setSigin_provider(providerId);
+        setPhotoUrl(photoUrl);
+        setLoggedIn(true);
+    }
+    public void removetFirebaseUser() {
+        setUid(null);
+        setEmail(null);
+        setName(null);
+        setSigin_provider(null);
+        setLoggedIn(false);
+    }
+    public Boolean getLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(Boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+    public String getSigin_provider() {
+        return sigin_provider;
+    }
+
+    public void setSigin_provider(String sigin_provider) {
+        this.sigin_provider = sigin_provider;
+    }
 
     @Override
     public String toString() {
@@ -88,6 +139,10 @@ public class AppUser implements DomainObject {
                 ", tmdb_guest_session='" + tmdb_guest_session + '\'' +
                 ", tmdb_expires_at=" + tmdb_expires_at +
                 ", email='" + email + '\'' +
+                ", uid='" + uid + '\'' +
+                ", isLoggedIn=" + isLoggedIn +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", sigin_provider='" + sigin_provider + '\'' +
                 '}';
     }
 }

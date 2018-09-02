@@ -15,9 +15,13 @@
  */
 
 package com.shamildev.retro.data.firebase;
-import com.shamildev.retro.domain.repository.FirebaseRepository;
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import dagger.Reusable;
 
 
@@ -27,11 +31,9 @@ import dagger.Reusable;
 
 
 @Module
-public abstract class FirebaseModule {
+public class FirebaseModule {
 
-    @Binds
-    @Reusable
-    abstract FirebaseRepository firebaseRepository(FirebaseRepository repository);
+
 
 }
 

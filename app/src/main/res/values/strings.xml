@@ -35,6 +35,8 @@
 		aliquet quis orci. Curabitur maximus augue ut bibendum sagittis.
 	</string>
     <string name="activity__home">Home</string>
+    <string name="activity_search">Search</string>
+    <string name="activity_account">Account</string>
     <string name="search">Suche</string>
     <string name="image_description">image</string>
     <string name="nowplaying">im Kino</string>
@@ -47,6 +49,8 @@
     <string name="lorem_ipsum">khylkhsdklhfklsdklfhklsdhfklhsdklfklhsdklfhlksdhklfhklsdhfklhsdklfhklsdhfklhsdklhfklsdhklfhklsdhfklhsdklvhhfoihewiohowiehcoiwehiohecoihwecioheowifh hhfiowehfiowehfo oihfiowehe wfioheiofh heiofhiowe hf</string>
     <string name="delete">Delete</string>
     <string name="activity_mylist">My list</string>
-    <string name="activity_search">Search</string>
+
+
+
 
 </resources>

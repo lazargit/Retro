@@ -62,14 +62,22 @@ dependencies {
 
     def libraries = rootProject.ext.presentationDependencies
     implementation project(':domain')
+    //Firebase Authentication
+    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
+    implementation 'com.google.firebase:firebase-storage:16.0.1'
+    implementation 'com.google.firebase:firebase-firestore:17.1.0'
+    // Google Sign In SDK (only required for Google Sign In)
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+
     //DAGGER
-    compile                    libraries.dagger.core
+    implementation                    libraries.dagger.core
     annotationProcessor        libraries.dagger.compiler
     annotationProcessor        libraries.dagger.android.processor
-    compile                    libraries.dagger.android.core
+    implementation                    libraries.dagger.android.core
     //RX
-    compile                    libraries.rx.rxJava
-    compile                    libraries.rx.rxAndroid
+    implementation                    libraries.rx.rxJava
+    implementation                    libraries.rx.rxAndroid
     //AUTO-VALUE
     compileOnly                libraries.autoValue.autoValueAnnotations
     compileOnly                libraries.autoValue.autoValueGson
@@ -89,11 +97,7 @@ dependencies {
     compile libraries.dev.timber
 
 
-     //Firebase Authentication
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.firebase:firebase-auth:16.0.3'
-    // Google Sign In SDK (only required for Google Sign In)
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+
 
 
     //TEST

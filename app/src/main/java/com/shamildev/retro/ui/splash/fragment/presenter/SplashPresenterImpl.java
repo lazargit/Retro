@@ -137,7 +137,7 @@ import timber.log.Timber;
         @Override
         public void finish(HashMap<String, ResultWrapper> map) {
             Timber.d("FINISH","map",map);
-           //view.navigateToHome(map);
+            view.navigateToHome(map);
 
 
         }

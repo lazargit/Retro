@@ -17,9 +17,12 @@
 package com.shamildev.retro.data.repository;
 
 import com.shamildev.retro.data.entity.EntityModule;
+import com.shamildev.retro.data.firebase.FirebaseModule;
 import com.shamildev.retro.data.net.NetModule;
-import com.shamildev.retro.domain.repository.FirebaseRepository;
+import com.shamildev.retro.domain.repository.BaseRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
+
+import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
@@ -31,6 +34,7 @@ import dagger.Reusable;
 @Module( includes = {
         EntityModule.class,
         NetModule.class
+
 })
 public abstract class RepositoryModule {
 
@@ -39,8 +43,8 @@ public abstract class RepositoryModule {
     abstract RemoteRepository businessRepository(TMDBRepository repository);
 
     @Binds
-    @Reusable
-    abstract FirebaseRepository firebaseRepository(FirebaseRepositoryImpl repository);
+    @Singleton
+    abstract BaseRepository baseRepository(FirebaseRepositoryImpl repository);
 
 
 }

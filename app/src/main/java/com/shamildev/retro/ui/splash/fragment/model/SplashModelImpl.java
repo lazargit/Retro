@@ -2,7 +2,6 @@ package com.shamildev.retro.ui.splash.fragment.model;
 
 import android.util.Log;
 
-import com.shamildev.retro.data.net.error.TMDBError;
 import com.shamildev.retro.di.scope.PerFragment;
 import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.bootstrap.Bootstrap;
@@ -10,7 +9,6 @@ import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
 import com.shamildev.retro.domain.executor.UseCaseHandler;
 import com.shamildev.retro.domain.helper.DataReloading;
-import com.shamildev.retro.domain.helper.ProcessData;
 import com.shamildev.retro.domain.interactor.GetGenre;
 import com.shamildev.retro.domain.interactor.GetMovieById;
 import com.shamildev.retro.domain.interactor.GetNowPlayingMovies;
@@ -19,15 +17,12 @@ import com.shamildev.retro.domain.interactor.GetPopularPerson;
 import com.shamildev.retro.domain.interactor.GetTMDBConfiguration;
 import com.shamildev.retro.domain.interactor.GetTopRatedMovies;
 import com.shamildev.retro.domain.interactor.GetUpcomingMovies;
-import com.shamildev.retro.domain.interactor.GetUser;
+import com.shamildev.retro.domain.interactor.user.GetUser;
 import com.shamildev.retro.domain.interactor.InitTables;
 import com.shamildev.retro.domain.models.AppUser;
 import com.shamildev.retro.domain.models.Configuration;
 import com.shamildev.retro.domain.models.Genre;
 import com.shamildev.retro.domain.models.ResultWrapper;
-import com.shamildev.retro.domain.models.User;
-import com.shamildev.retro.retroimage.core.RetroImage;
-import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
 import com.shamildev.retro.ui.splash.fragment.presenter.SplashPresenter;
 
 import java.util.ArrayList;
@@ -127,7 +122,7 @@ public class SplashModelImpl extends SplashModel implements Bootstrap {
                     public void onComplete() {
 
                         presenter.toast("ok"+appUser.getTmdb_guest_session());
-
+                        loadNowPlayingMovies();
                         initUser();
                     }
 
@@ -141,12 +136,17 @@ public class SplashModelImpl extends SplashModel implements Bootstrap {
     }
 
     public void initUser() {
+        initConfiguration();
+
+
         Log.e("HomePageModelImpl","INIT USER");
-        useCaseHandler.execute(getUser, GetUser.Params.withCacheTime(1), new DisposableSubscriber<String>() {
+        useCaseHandler.execute(getUser, GetUser.Params.withCacheTime(1), new DisposableSubscriber<AppUser>() {
             @Override
-            public void onNext(String user) {
-                Log.e("onNext",">> user"+ user);
-                presenter.toast("init user"+user);
+            public void onNext(AppUser user) {
+                Log.e("onNext",">> user "+ user.toString());
+
+                    presenter.toast("init user" + user.getEmail());
+
             }
 
             @Override

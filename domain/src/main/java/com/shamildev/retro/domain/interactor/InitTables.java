@@ -70,26 +70,9 @@ public final class InitTables implements UseCaseCompletable<ParamsBasic> {
     @Override
     public Completable execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
-         String pLanguage = ((Params) params).language;
-
+        String pLanguage = ((Params) params).language;
         String language = !Arrays.asList(anArray).contains(pLanguage) ? anArray[0] : pLanguage;
-
-        System.out.println("execute: " + Thread.currentThread().getName());
-
-//        Calendar currentDate = Calendar.getInstance();
-//        currentDate.set(Calendar.MONTH, 8); // Months are 0-based!
-//        currentDate.set(Calendar.DAY_OF_MONTH, 16); // Clearer than DATE
-//        currentDate.set(Calendar.YEAR, 2018); // Clearer than DATE
-//
-//        java.text.DateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm:ss z", Locale.GERMANY);
-
-
-
-
-
-
-
-      return Completable.create(e -> repository.fetchGuestSession()
+        return Completable.create(e -> repository.fetchGuestSession()
               .flatMapCompletable(guestSession ->
                       cache.saveUser(User.builder()
                               .language(dataConfig.language())

@@ -34,6 +34,19 @@
         </include>
 
 
+
+
+    <com.shamildev.retro.retroimage.views.RetroImageView
+        android:id="@+id/imageview_person"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        app:circle="true"
+        app:showProgressBar = "false"
+
+
+        />
+
+
 </LinearLayout>
   </android.support.v4.widget.NestedScrollView>
 

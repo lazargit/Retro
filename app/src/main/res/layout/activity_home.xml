@@ -118,23 +118,23 @@
         <!--app:layout_constraintBottom_toBottomOf="parent"-->
         <!--app:menu="@menu/bottom_menu" />-->
 
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bb_height"
-        android:layout_alignParentBottom="true"
+    <!--<com.roughike.bottombar.BottomBar-->
+        <!--android:id="@+id/bottomBar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/bb_height"-->
+        <!--android:layout_alignParentBottom="true"-->
 
-        app:layout_anchorGravity="bottom"
-        android:layout_gravity="bottom"
-        android:background="@color/brand_primary"
-        app:bb_behavior="shy|shifting"
-        app:bb_tabXmlResource="@xml/bottombar_tabs"
-        app:bb_inActiveTabAlpha="0.6"
-        app:bb_activeTabAlpha="1"
-        app:bb_activeTabColor="@color/blue_grey_200"
-        app:bb_showShadow="false"
-        app:bb_inActiveTabColor="@color/blue_grey_900"
-        app:bb_badgesHideWhenActive="true"/>
+        <!--app:layout_anchorGravity="bottom"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:background="@color/brand_primary"-->
+        <!--app:bb_behavior="shy|shifting"-->
+        <!--app:bb_tabXmlResource="@xml/bottombar_tabs"-->
+        <!--app:bb_inActiveTabAlpha="0.6"-->
+        <!--app:bb_activeTabAlpha="1"-->
+        <!--app:bb_activeTabColor="@color/blue_grey_200"-->
+        <!--app:bb_showShadow="false"-->
+        <!--app:bb_inActiveTabColor="@color/blue_grey_900"-->
+        <!--app:bb_badgesHideWhenActive="true"/>-->
 
 
 

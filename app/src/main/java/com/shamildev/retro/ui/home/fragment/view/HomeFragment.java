@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.shamildev.retro.R;
 import com.shamildev.retro.domain.DomainObject;
+import com.shamildev.retro.domain.MediaItem;
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.models.Movie;
 import com.shamildev.retro.domain.models.MovieWrapper;
@@ -22,6 +23,8 @@ import com.shamildev.retro.helper.TranslateItemAnimator;
 import com.shamildev.retro.navigation.Navigator;
 
 import com.shamildev.retro.retroimage.core.RetroImage;
+import com.shamildev.retro.retroimage.core.RetroImageRequestListener;
+import com.shamildev.retro.retroimage.views.RetroImageView;
 import com.shamildev.retro.ui.common.view.BaseViewFragmentV4;
 import com.shamildev.retro.ui.home.HomeActivity;
 import com.shamildev.retro.ui.home.fragment.adapter.RecyclerViewPagerAdapter;
@@ -37,6 +40,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.everything.android.ui.overscroll.HorizontalOverScrollBounceEffectDecorator;
@@ -78,10 +82,11 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 
 
 //
-//    @BindView(R.id.recyclerView_nowplaying)
+
 //    RecyclerView mRecyclerView_nowplaying;
 //
-//    @BindView(R.id.recyclerView_nowplayingtv)
+     @BindView(R.id.imageview_person)
+     RetroImageView imageViewperson;
 //    RecyclerView mRecyclerView_nowplayingtv;
 //
 //    @BindView(R.id.recyclerView_upcomming)
@@ -97,7 +102,7 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
     private ResultWrapper resultNowplayingTv;
     private HashMap<String, ResultWrapper> map;
     private ResultWrapper resultUpcomming;
-
+    private ResultWrapper resultPopularPerson;
 
 
     public HomeFragment() {
@@ -144,11 +149,12 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 
 
 
-//        map = (HashMap<String, ResultWrapper> ) getArguments().getSerializable(PARAM_MOVIE);
-//        resultNowplaying = map.get(AppConfig.NOWPLAYINGKEY);
-//        resultNowplayingTv = map.get(AppConfig.NOWPLAYINGTVKEY);
-//        resultUpcomming = map.get(AppConfig.UPCOMMINGKEY);
-//
+        map = (HashMap<String, ResultWrapper> ) getArguments().getSerializable(PARAM_MOVIE);
+        resultNowplaying = map.get(AppConfig.NOWPLAYINGKEY);
+        resultNowplayingTv = map.get(AppConfig.NOWPLAYINGTVKEY);
+        resultUpcomming = map.get(AppConfig.UPCOMMINGKEY);
+        resultPopularPerson= map.get(AppConfig.POPULARPERSONKEY);
+
 //
 //
 //
@@ -164,8 +170,48 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 //
 //        setupRecyclerView(recyclerView,resultNowplayingTv);
 
+        MediaItem person = (MediaItem)resultPopularPerson.results().get(1);
+        Log.e("person","person  "+person.itemTitle());
+
+//        retroImage
+//                .load(item)
+//                .Poster()
+//                .w500()
+//                .into(viewHolder.imageView, new RetroImageRequestListener() {
+//                    @Override
+//                    public boolean onLoadFailed() {
+//                        Log.e("TAG", "IMAGES LOAD FAILED.");
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady() {
+//                        Log.e("TAG", "ALL IMAGES PRELOADED...!");
+//                        viewHolder.drawable = viewHolder.imageView.getImageView().getDrawable();
+//
+//                        return false;
+//                    }
+//                });
 
 
+        retroImage
+                .load(person)
+                .Profile()
+                .w185()
+                .into(imageViewperson, new RetroImageRequestListener() {
+                    @Override
+                    public boolean onLoadFailed() {
+                        Log.e("TAG", "IMAGES LOAD FAILED.");
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady() {
+                        Log.e("TAG", "PERSON IMAGE LOAD !");
+
+                        return false;
+                    }
+                });
 
         return view;
 
@@ -174,6 +220,9 @@ public final class HomeFragment extends BaseViewFragmentV4<HomePresenter> implem
 
 
     private void setupRecyclerView(RecyclerView recyclerView, ResultWrapper resultWrapper) {
+
+        Timber.e("setupRecyclerView",resultWrapper.results().size());
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
 

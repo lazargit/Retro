@@ -27,6 +27,7 @@
 
     <declare-styleable name="RetroImageView">
         <attr name="showFX" format="boolean" />
+        <attr name="circle" format="boolean" />
 
         <attr name="showProgressBar" format="boolean" />
         <attr name="fx_duration" format="float" />

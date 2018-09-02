@@ -8,6 +8,7 @@ android {
     compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
     buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
 
+
     defaultConfig {
         applicationId 'com.shamildev.retro'
         minSdkVersion 21//globalConfiguration.getAt("androidMinSdkVersion")
@@ -28,6 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            ext.alwaysUpdateBuildId = false
             signingConfig signingConfigs.debug
         }
     }
@@ -41,6 +43,8 @@ android {
     buildTypes.each{
         it.buildConfigField 'String', 'MOVIE_DB_API_TOKEN', MovieDBApiToken
         it.buildConfigField 'String', 'YOUTUBE_API_TOKEN', YouTubeApiToken
+        it.buildConfigField 'String', 'FACEBOOK_API_TOKEN', FacebookAppId
+
     }
 
 
@@ -107,16 +111,24 @@ dependencies {
     compile presentationDependencies.rx.rxBinding
     compile presentationDependencies.rx.rxBindingsupport
     compile presentationDependencies.rx.rxBindingappcompat
+    //GLIDE
     implementation 'com.github.bumptech.glide:glide:4.7.1'
-
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    //BUTTERKNIFE
     compile presentationDependencies.butterKnife.core
     annotationProcessor presentationDependencies.butterKnife.compiler
+    //DAGGER
     implementation presentationDependencies.dagger.core
     annotationProcessor presentationDependencies.dagger.compiler
     annotationProcessor presentationDependencies.dagger.android.processor
     implementation presentationDependencies.dagger.android.core
     implementation presentationDependencies.dagger.android.support
+    //FACEBOOK
+    // Facebook Login only
+    //implementation 'com.facebook.android:facebook-login:4.33.0'
+    implementation 'com.facebook.android:facebook-android-sdk:4.33.0'
+
+
     implementation 'me.everything:overscroll-decor-android:1.0.4'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'

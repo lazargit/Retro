@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.shamildev.retro.domain.interactor;
+package com.shamildev.retro.domain.interactor.user;
 
 import com.shamildev.retro.domain.config.AppConfig;
 import com.shamildev.retro.domain.config.DataConfig;
+import com.shamildev.retro.domain.interactor.UseCaseFlowable;
 import com.shamildev.retro.domain.models.AppUser;
 import com.shamildev.retro.domain.models.GuestSession;
 import com.shamildev.retro.domain.models.User;
 import com.shamildev.retro.domain.params.ParamsBasic;
+import com.shamildev.retro.domain.repository.BaseRepository;
 import com.shamildev.retro.domain.repository.CacheRepository;
-import com.shamildev.retro.domain.repository.FirebaseRepository;
 import com.shamildev.retro.domain.repository.RemoteRepository;
 
 import org.reactivestreams.Publisher;
@@ -37,10 +38,10 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Use case for getting a businesses with a given id.
  */
-public final class GetUser implements UseCaseFlowable<ParamsBasic, String> {
+public final class GetUser implements UseCaseFlowable<ParamsBasic, AppUser> {
 
     private final RemoteRepository repository;
-    private final FirebaseRepository firebaseRepository;
+    private final BaseRepository baseRepository;
     private final CacheRepository cache;
     private DataConfig dataConfig;
 
@@ -56,10 +57,10 @@ public final class GetUser implements UseCaseFlowable<ParamsBasic, String> {
     @Inject
     GetUser(RemoteRepository repository,
             CacheRepository cache,
-            FirebaseRepository firebaseRepository,
+            BaseRepository baseRepository,
             DataConfig dataConfig) {
         this.repository = repository;
-        this.firebaseRepository = firebaseRepository;
+        this.baseRepository = baseRepository;
         this.cache = cache;
         this.dataConfig = dataConfig;
     }
@@ -67,14 +68,30 @@ public final class GetUser implements UseCaseFlowable<ParamsBasic, String> {
 
 
     @Override
-    public Flowable<String> execute(ParamsBasic params) {
+    public Flowable<AppUser> execute(ParamsBasic params) {
         int cacheTime = ((Params) params).cacheTime;
 
-    //  firebaseRepository.checkUser().blockingSingle();
 
 
 
-        return firebaseRepository.checkUser();
+        return  Flowable.just(appUser)
+                .flatMap(appUser-> cache.fetchUser()
+                                    .flatMap(user->{
+                                        appUser.setUser(user);
+
+                                        return Flowable.just(appUser);
+                                    }))
+                .flatMap( appUser -> baseRepository.checkUser()
+                                        .map(appUser1 -> {
+                                            if(appUser1.getUid()!=null) {
+                                                appUser1.setLoggedIn(true);
+                                            }
+                                            return appUser1;
+                                        }))
+
+               // .switchIfEmpty(baseRepository.signIn())
+                ;
+
 
 
 

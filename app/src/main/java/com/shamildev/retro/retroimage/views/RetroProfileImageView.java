@@ -4,44 +4,45 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.shamildev.retro.R;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 /**
  * Created by Shamil Lazar on 08.05.2018.
  */
 
-public class RetroImageView extends RelativeLayout {
+public class RetroProfileImageView extends RelativeLayout {
 
     private ImageView imageView;
-    private CircleImageView circleImageView;
     private ProgressBar progressBar;
-    private boolean mShowFX=false;
+
+
+
+    private boolean mShowFX;
     private int mFXValue;
     private float mFXduartion;
     private float mFXinterpolator;
-    private int scaleType=0;
-    private  boolean mShowProgressBar=true;
-    private boolean mCircle=false;
+    private int scaleType;
 
 
-    public RetroImageView(Context context) {
+
+    private  boolean mShowProgressBar;
+
+
+    public RetroProfileImageView(Context context) {
         super(context);
         init(null);
     }
 
-    public RetroImageView(Context context, Boolean mShowFX) {
+    public RetroProfileImageView(Context context, Boolean mShowFX) {
         super(context);
         this.mShowFX = mShowFX;
         init(null);
     }
-    public RetroImageView(Context context, AttributeSet attrs) {
+    public RetroProfileImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
@@ -52,38 +53,43 @@ public class RetroImageView extends RelativeLayout {
     }
 
     private void init(AttributeSet attrs) {
+        inflate(getContext(), R.layout.view_custom_image,this);
+
         if(attrs!= null){
             TypedArray a = getContext().getTheme().obtainStyledAttributes(
                     attrs,
                     R.styleable.RetroImageView,  0, 0);
+
             try {
-                mCircle = a.getBoolean(R.styleable.RetroImageView_circle, false);
                 mShowFX = a.getBoolean(R.styleable.RetroImageView_showFX, false);
                 mShowProgressBar = a.getBoolean(R.styleable.RetroImageView_showProgressBar, true);
                 scaleType = a.getInteger(R.styleable.RetroImageView_scaleType,0);
+
+
+
+
+
             } finally {
                 a.recycle();
             }
 
 
-            Log.e("RetroImageView","attr  "+mCircle);
-        }
-
-        if(mCircle) {
-           // View inflate = inflate(getContext(), R.layout.view_profile_image, this);
-            View inflate = inflate(getContext(), R.layout.view_custom_image, this);
-            this.imageView =  inflate.findViewById(R.id.image_custom);
-        }else{
+            Log.e("mShowProgressBar","mShowProgressBar "+mShowProgressBar);
             if(mShowFX){
-                inflate(getContext(), R.layout.view_retro_imagefx, this);
+                this.imageView =  findViewById(R.id.image_customFX);
+                this.imageView.setVisibility(VISIBLE);
+                findViewById(R.id.image_custom).setVisibility(GONE);
             }else{
-                inflate(getContext(), R.layout.view_custom_image, this);
-
+                this.imageView =  findViewById(R.id.image_custom);
             }
-            this.imageView =  findViewById(R.id.image_custom);
-            this.imageView.setScaleType(this.scaleType(scaleType));
-        }
 
+
+
+
+            this.imageView.setScaleType(this.scaleType(scaleType));
+
+
+        }
 
     }
 
@@ -129,8 +135,5 @@ public class RetroImageView extends RelativeLayout {
         return mShowProgressBar;
     }
 
-    public Boolean getImageCircle() {
-        return mCircle;
-    }
 }
 

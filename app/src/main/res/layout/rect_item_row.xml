@@ -20,14 +20,16 @@
         android:id="@+id/cardView">
 
 
-    <com.shamildev.retro.retroimage.views.RetroImageView
-        android:id="@+id/imageViewRectItem"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:foregroundGravity="left"
 
-        android:transitionName="test"
-        app:srcCompat="@drawable/material_flat" />
+        <com.shamildev.retro.retroimage.views.RetroImageView
+            android:id="@+id/imageViewRectItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:showProgressBar = "false"
+            app:showFX="false"
+            app:scaleType="CENTER_CROP"/>
+
+
 
 
 
